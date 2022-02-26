@@ -76,7 +76,7 @@
 		font-weight: 400;
 		font-size: 1.2rem;
 		text-transform: lowercase;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.02em;
 		text-decoration: none;
 		transition: 0.2s;
 	}
