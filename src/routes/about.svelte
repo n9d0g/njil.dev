@@ -15,29 +15,36 @@
 </script>
 
 <svelte:head>
-	<title>About</title>
+	<title>about</title>
 </svelte:head>
 
 <div class="content">
-	<h1>About this app</h1>
+	<h1>about me</h1>
 
 	<p>
-		This is a <a href="https://kit.svelte.dev">SvelteKit</a> app. You can make your own by typing the
-		following into your command line and following the prompts:
-	</p>
-
-	<!-- TODO lose the @next! -->
-	<pre>npm init svelte@next</pre>
-
-	<p>
-		The page you're looking at is purely static HTML, with no client-side interactivity needed.
-		Because of that, we don't need to load any JavaScript. Try viewing the page's source, or opening
-		the devtools network panel and reloading.
+		I graduated from <span>Conestoga College</span> in Spring 2021 with an Advanced Diploma in
+		<span>Software Engineering Technology.</span>
+		Since then, I've been working as a software developer with a focus in web development.
 	</p>
 
 	<p>
-		The <a href="/todos">TODOs</a> page illustrates SvelteKit's data loading and form handling. Try using
-		it with JavaScript disabled!
+		I'm currently a software developer at <span>Leon's Furniture Limited</span>, where I help
+		maintain and update multiple full-fledged Shopify sites using HTML, CSS, JavaScript, and jQuery.
+	</p>
+
+	<p>
+		My goal is to always improve and hone my skills as a developer, while also cultivating an eye
+		for creative, intuitive, and clean design. I thoroughly enjoy exploring and keeping up to date
+		with new web technologies to push the limits of the ever-changing software development industry.
+	</p>
+
+	<p>
+		When I'm not coding, I love a nice game of chess, playing basketball, and making/creating music.
+	</p>
+
+	<p>
+		Feel free to reach out to me at <span>nathanjlardizabal@gmail.com</span>! I'd love to connect
+		with you whether professionally or casually.
 	</p>
 </div>
 
@@ -46,5 +53,14 @@
 		width: 100%;
 		max-width: var(--column-width);
 		margin: var(--column-margin-top) auto 0 auto;
+	}
+
+	p {
+		font-size: 1.3rem;
+	}
+
+	span {
+		text-decoration: underline;
+		color: var(--accent-color);
 	}
 </style>

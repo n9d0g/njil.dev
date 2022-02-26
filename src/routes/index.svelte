@@ -1,32 +1,23 @@
-<script context="module">
+<script context="module" lang="ts">
 	export const prerender = true;
 </script>
 
-<script>
-	import Counter from '$lib/Counter.svelte';
-</script>
-
 <svelte:head>
-	<title>Home</title>
+	<title>home</title>
 </svelte:head>
 
 <section>
 	<h1>
-		<div class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</div>
-
-		to your new<br />SvelteKit app
+		Hi!<br />My name is Nathan Lardizabal.
 	</h1>
 
-	<h2>
-		try editing <strong>src/routes/index.svelte</strong>
-	</h2>
-
-	<Counter />
+	<p>
+		I'm a front-end software developer primarily focused on building web applications with
+		TypeScript and React.js ⚛ Currently, I am working as a software developer for <span
+			>Leon's Furniture Limited</span
+		> based in Toronto, ON 🇨🇦 In my free time, I enjoy a nice game of chess ♟️ playing basketball 🏀
+		and making/creating music 🎵
+	</p>
 </section>
 
 <style>
@@ -36,24 +27,16 @@
 		justify-content: center;
 		align-items: center;
 		flex: 1;
+		margin: var(--column-margin-top-home) auto 0 auto;
 	}
-
 	h1 {
 		width: 100%;
+		text-align: left;
 	}
-
-	.welcome {
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+	p {
+		font-size: 1.5rem;
 	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+	span {
+		color: var(--accent-colour);
 	}
 </style>
