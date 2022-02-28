@@ -8,7 +8,7 @@ export const experience = [
     points: [{ point: 'text' }],
   },
   {
-    title: 'automation software developer',
+    title: 'automation software developer (co-op)',
     company: 'manulife financial',
     location: 'toronto',
     dateStart: 'sep 2019',
@@ -16,7 +16,7 @@ export const experience = [
     points: [{ point: 'text' }, { point: 'text' }],
   },
   {
-    title: 'applications software developer',
+    title: 'applications software developer (co-op)',
     company: 'activa holdings',
     location: 'waterloo',
     dateStart: 'apr 2019',
