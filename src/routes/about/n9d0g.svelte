@@ -39,4 +39,11 @@
 	p {
 		font-size: 1.3rem;
 	}
+
+	@media (max-width: 60em) {
+		.content {
+			margin: 0 auto;
+			justify-content: flex-start;
+		}
+	}
 </style>

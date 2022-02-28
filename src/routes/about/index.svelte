@@ -70,7 +70,7 @@
 
 	a {
 		display: flex;
-		justify-content: right;
+		justify-content: flex-end;
 	}
 
 	h3 {
