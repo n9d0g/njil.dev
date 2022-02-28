@@ -26,7 +26,7 @@ body {
   margin: 0;
   background-color: var(--primary-color);
   background: var(--primary-color);
-  overflow: hidden;
+  overflow-x: none;
 }
 
 body::before {

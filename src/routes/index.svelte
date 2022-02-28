@@ -38,10 +38,23 @@
 		text-align: left;
 		margin-top: 0;
 	}
+
 	p {
+		width: 100%;
 		font-size: 1.5rem;
 	}
+
 	span {
 		color: var(--accent-colour);
+	}
+
+	@media (max-width: 60em) {
+		h1 {
+			font-size: 2rem;
+		}
+
+		p {
+			font-size: 1rem;
+		}
 	}
 </style>

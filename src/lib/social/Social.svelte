@@ -27,4 +27,11 @@
 	img:hover {
 		transform: scale(1.2);
 	}
+
+	@media (max-width: 60em) {
+		img {
+			height: 1.2rem;
+			width: 1.2rem;
+		}
+	}
 </style>

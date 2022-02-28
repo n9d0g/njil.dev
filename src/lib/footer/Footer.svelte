@@ -13,6 +13,7 @@
 </script>
 
 <footer>
+	<hr>
 	<ul>
 		<Social link="https://github.com/n9d0g" svg={github} alt="Nathan's Github" />
 		<Social link="https://www.linkedin.com/in/njlardizabal/" svg={linkedin} alt="Nathan's LinkedIn" />
@@ -29,10 +30,14 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		padding: 0.5rem;
+		padding: 1rem;
 		width: 100%;
 		max-width: 80em;
 		margin: 0 auto;
+	}
+
+	hr {
+		display: none;
 	}
 
 	ul {
@@ -44,14 +49,33 @@
 		padding: 0;
 	}
 
+	p {
+		display: flex;
+		justify-content: flex-end;
+		max-width: 80rem;
+		width: 100%;
+		margin: 0 auto;
+		padding: 0;
+	}
+
 	@media (max-width: 60em) {
+		hr {
+			display: block;
+			width: 90%;
+			color: var(--accent-color);
+		}
+
 		footer {
 			flex-direction: column;
+			gap: 0.7rem;
 			justify-content: center;
+			padding: 0 0 1rem 0;
 		}
 
 		p {
 			text-align: center;
+			font-size: 0.8rem;
+			justify-content: center;
 		}
 	}
 </style>
