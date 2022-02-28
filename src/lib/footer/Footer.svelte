@@ -43,4 +43,15 @@
 		margin: 0;
 		padding: 0;
 	}
+
+	@media (max-width: 60em) {
+		footer {
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		p {
+			text-align: center;
+		}
+	}
 </style>

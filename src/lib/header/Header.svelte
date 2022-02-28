@@ -4,6 +4,7 @@
 	import { nav } from '../../data/nav.js'
 	import sun from './sun.svg'
 	import moon from './moon.svg'
+	import menu from './menu.svg'
 
 	let theme = true;
 	const toggleTheme = () => theme = !theme;
@@ -28,6 +29,10 @@
 			<img src={moon} alt="toggle light/dark" in:fade>
 		{/if}
 	</article>
+
+	<article class="menu">
+		<img src={menu} alt="menu" in:fade>
+	</article>
 </header>
 
 <style>
@@ -38,6 +43,8 @@
 		max-width: 80em;
 		margin: 0 auto;
 	}
+
+
 
 	nav {
 		display: flex;
@@ -56,6 +63,24 @@
 		list-style: none;
 		background: var(--background);
 		background-size: contain;
+	}
+
+	.menu {
+		display: none;
+	}
+
+	@media (max-width: 60em) {
+		header {
+			justify-content: right;
+		}
+
+		ul {
+			display: none;
+		}
+
+		.menu {
+			display: flex;
+		}
 	}
 
 	li {

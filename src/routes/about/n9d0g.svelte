@@ -39,18 +39,4 @@
 	p {
 		font-size: 1.3rem;
 	}
-
-	span {
-		text-decoration: underline;
-		color: var(--accent-color);
-	}
-
-	a {
-		display: flex;
-		justify-content: right;
-	}
-
-	h3 {
-		font-weight: 400;
-	}
 </style>
