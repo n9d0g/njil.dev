@@ -21,5 +21,10 @@
 		padding: 0 1rem;
 		height: 2rem;
 		width: 2rem;
+		transition: .1s ease-in;
+	}
+
+	img:hover {
+		transform: scale(1.2);
 	}
 </style>

@@ -4,7 +4,8 @@
 	import resume from './resume.svg';
 	import soundcloud from './soundcloud.svg';
 	import spotify from './spotify.svg';
-import Social from '$lib/social/Social.svelte';
+	import chess from './chess.svg';
+	import Social from '$lib/social/Social.svelte';
 
 	const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
 	const date = new Date()
@@ -18,6 +19,7 @@ import Social from '$lib/social/Social.svelte';
 		<Social link="https://soundcloud.com/n9d0g" svg={resume} alt="Nathan's Resume" />
 		<Social link="https://soundcloud.com/n9d0g" svg={soundcloud} alt="Nathan's Soundcloud" />
 		<Social link="https://open.spotify.com/user/nathanjlardizabal?si=9547f92287a042d3" svg={spotify} alt="Nathan's Spotify" />
+		<Social link="https://www.chess.com/member/n9d0g" svg={chess} alt="Play Chess with Nathan" />
 	</ul>
 	<p>nathan james lardizabal | have a good {day} :)</p>
 </footer>

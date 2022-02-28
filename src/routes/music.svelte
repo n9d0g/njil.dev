@@ -16,11 +16,11 @@
 </script>
 
 <svelte:head>
-	<title>hobbies</title>
+	<title>music</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
-	<h1>apart from coding..</h1>
+	<h1>dim7</h1>
 </div>
 
 <style>

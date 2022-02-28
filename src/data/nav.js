@@ -16,8 +16,8 @@ export const nav = [
     text: 'experience',
   },
   {
-    pathname: '/hobbies',
-    text: 'hobbies',
+    pathname: '/music',
+    text: 'music',
   },
   {
     pathname: '/contact',
