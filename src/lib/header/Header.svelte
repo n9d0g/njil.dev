@@ -1,6 +1,12 @@
 <script>
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { nav } from '../../data/nav.js'
+	import sun from './sun.svg'
+	import moon from './moon.svg'
+
+	let theme = true;
+	const toggleTheme = () => theme = !theme;
 </script>
 
 <header>
@@ -14,12 +20,23 @@
 			{/each}
 		</ul>
 	</nav>
+
+	<article on:click={toggleTheme}>
+		{#if theme}
+			<img src={sun} alt="toggle light/dark" in:fade>
+		{:else}
+			<img src={moon} alt="toggle light/dark" in:fade>
+		{/if}
+	</article>
 </header>
 
 <style>
 	header {
 		display: flex;
 		justify-content: space-between;
+		width: 100%;
+		max-width: 80em;
+		margin: 0 auto;
 	}
 
 	nav {
@@ -69,12 +86,47 @@
 		text-transform: lowercase;
 		letter-spacing: 0.02em;
 		text-decoration: none;
-		transition: 0.2s;
+		transition: 0.25s ease-in;
+		position: relative;
+	}
+
+	nav a::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0.5rem;
+		width: 75%;
+		height: 4px;
+		background: var(--accent-color);
+		transform: scale(0);
+		transform-origin: left;
+		transition: 0.25s ease-in;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	nav a:hover::after {
+		transform: scale(1);
 	}
 
 	a:hover {
 		color: var(--accent-color);
-		text-decoration: underline;
-		transform: translateY(-2.5%);
 	}
+
+	article {
+		cursor: pointer;
+	}
+
+	img {
+		padding: 1rem;
+		height: 2rem;
+		width: 2rem;
+		transition: 0.5s ease-in;
+	}
+
+	img:hover {
+		transform: scale(1.3);
+	}
+
 </style>

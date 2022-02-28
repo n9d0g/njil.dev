@@ -46,6 +46,10 @@
 		Feel free to reach out to me at <span>nathanjlardizabal@gmail.com</span>! I'd love to connect
 		with you whether professionally or casually.
 	</p>
+
+	<a href="/about/n9d0g" in:fade={{ delay: 5500 }}>
+		<h3>what's with the name "n9d0g?"</h3>
+	</a>
 </div>
 
 <style>
@@ -62,5 +66,14 @@
 	span {
 		text-decoration: underline;
 		color: var(--accent-color);
+	}
+
+	a {
+		display: flex;
+		justify-content: right;
+	}
+
+	h3 {
+		font-weight: 400;
 	}
 </style>
