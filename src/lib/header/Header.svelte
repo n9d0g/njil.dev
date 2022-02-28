@@ -1,26 +1,17 @@
 <script>
 	import { page } from '$app/stores';
+	import { nav } from '../../data/nav.js'
 </script>
 
 <header>
+	<!-- svelte-ignore component-name-lowercase -->
 	<nav>
 		<ul>
-			<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">home</a></li>
-			<li class:active={$page.url.pathname === '/about'}>
-				<a sveltekit:prefetch href="/about">about</a>
-			</li>
-			<li class:active={$page.url.pathname === '/projects'}>
-				<a sveltekit:prefetch href="/projects">projects</a>
-			</li>
-			<li class:active={$page.url.pathname === '/experience'}>
-				<a sveltekit:prefetch href="/experience">experience</a>
-			</li>
-			<li class:active={$page.url.pathname === '/hobbies'}>
-				<a sveltekit:prefetch href="/hobbies">hobbies</a>
-			</li>
-			<li class:active={$page.url.pathname === '/contact'}>
-				<a sveltekit:prefetch href="/contact">contact</a>
-			</li>
+			{#each nav as navItem}
+				<li class:active={$page.url.pathname === navItem.pathname}>
+					<a sveltekit:prefetch href={navItem.pathname}>{navItem.text}</a>
+				</li>
+			{/each}
 		</ul>
 	</nav>
 </header>

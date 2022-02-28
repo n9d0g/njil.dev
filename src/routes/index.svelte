@@ -1,23 +1,26 @@
 <script context="module" lang="ts">
 	export const prerender = true;
+	import { fade } from 'svelte/transition'
 </script>
 
 <svelte:head>
 	<title>home</title>
 </svelte:head>
 
-<section>
-	<h1>
-		Hi!<br />My name is Nathan Lardizabal.
-	</h1>
+<section in:fade={{ duration: 1000 }}>
+		<h1>
+			<span in:fade={{ delay: 200 }}>Hi!</span>
+			<br />
+			<span in:fade={{ delay: 750 }}>My name is Nathan Lardizabal.</span>
+		</h1>
 
-	<p>
-		I'm a front-end software developer primarily focused on building web applications with
-		TypeScript and React.js ⚛ Currently, I am working as a software developer for <span
-			>Leon's Furniture Limited</span
-		> based in Toronto, ON 🇨🇦 In my free time, I enjoy a nice game of chess ♟️ playing basketball 🏀
-		and making/creating music 🎵
-	</p>
+		<p in:fade={{ delay: 1500 }}>
+			I'm a front-end software developer primarily focused on building web applications with
+			TypeScript and React.js ⚛ Currently, I am working as a software developer for <span
+				>Leon's Furniture Limited</span
+			> based in Toronto, ON 🇨🇦 In my free time, I enjoy a nice game of chess ♟️ playing basketball 🏀
+			and making/creating music 🎵
+		</p>
 </section>
 
 <style>
@@ -29,9 +32,11 @@
 		flex: 1;
 		margin: var(--column-margin-top-home) auto 0 auto;
 	}
+
 	h1 {
 		width: 100%;
 		text-align: left;
+		margin-top: 0;
 	}
 	p {
 		font-size: 1.5rem;

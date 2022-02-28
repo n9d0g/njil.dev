@@ -16,8 +16,9 @@
   --heading-color: #0a080d;
   --text-color: #0a080d;
   --background-without-opacity: rgba(255, 255, 255, 0.7);
-  --column-width: 42rem;
+  --column-width: 70rem;
   --column-margin-top: 4rem;
+  --column-margin-top-home: 2rem;
 }
 
 body {
@@ -25,6 +26,7 @@ body {
   margin: 0;
   background-color: var(--primary-color);
   background: var(--primary-color);
+  overflow: hidden;
 }
 
 body::before {
@@ -67,7 +69,7 @@ a:hover {
 
 h1 {
   font-size: 3rem;
-  text-align: center;
+  text-align: left;
 }
 
 h2 {

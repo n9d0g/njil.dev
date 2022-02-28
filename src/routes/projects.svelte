@@ -1,5 +1,6 @@
 <script context="module">
 	import { browser, dev } from '$app/env';
+	import { fade } from 'svelte/transition';
 
 	// we don't need any JS on this page, though we'll load
 	// it in dev so that we get hot module replacement...
@@ -18,7 +19,7 @@
 	<title>projects</title>
 </svelte:head>
 
-<div class="content">
+<div class="content" in:fade={{ duration: 1000 }}>
 	<h1>my projects</h1>
 </div>
 

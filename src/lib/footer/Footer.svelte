@@ -3,6 +3,8 @@
 	import github from './github.svg';
 	import resume from './resume.svg';
 	import soundcloud from './soundcloud.svg';
+	import spotify from './spotify.svg';
+import Social from '$lib/social/Social.svelte';
 
 	const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
 	const date = new Date()
@@ -11,26 +13,11 @@
 
 <footer>
 	<ul>
-		<li>
-			<a href="https://github.com/n9d0g" target="_blank">
-				<img src={github} alt="Nathan's Github">
-			</a>
-		</li>
-		<li>
-			<a href="https://www.linkedin.com/in/njlardizabal/" target="_blank">
-				<img src={linkedin} alt="Nathan's LinkedIn">
-			</a>
-		</li>
-		<li>
-			<a href="https://soundcloud.com/n9d0g" target="_blank">
-				<img src={resume} alt="Nathan's Resume">
-			</a>
-		</li>
-		<li>
-			<a href="https://soundcloud.com/n9d0g" target="_blank">
-				<img src={soundcloud} alt="Nathan's Soundcloud">
-			</a>
-		</li>
+		<Social link="https://github.com/n9d0g" svg={github} alt="Nathan's Github" />
+		<Social link="https://www.linkedin.com/in/njlardizabal/" svg={linkedin} alt="Nathan's LinkedIn" />
+		<Social link="https://soundcloud.com/n9d0g" svg={resume} alt="Nathan's Resume" />
+		<Social link="https://soundcloud.com/n9d0g" svg={soundcloud} alt="Nathan's Soundcloud" />
+		<Social link="https://open.spotify.com/user/nathanjlardizabal?si=9547f92287a042d3" svg={spotify} alt="Nathan's Spotify" />
 	</ul>
 	<p>nathan james lardizabal | have a good {day} :)</p>
 </footer>
@@ -53,17 +40,5 @@
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
-	}
-	
-	li {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	img {
-		padding: 0 1rem;
-		height: 2rem;
-		width: 2rem;
 	}
 </style>

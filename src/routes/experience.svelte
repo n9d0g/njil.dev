@@ -1,5 +1,8 @@
 <script context="module">
 	import { browser, dev } from '$app/env';
+	import Job from '$lib/job/Job.svelte';
+	import { experience } from '../data/experience.js'
+	import { fade, slide } from 'svelte/transition';
 
 	// we don't need any JS on this page, though we'll load
 	// it in dev so that we get hot module replacement...
@@ -18,8 +21,15 @@
 	<title>work experience</title>
 </svelte:head>
 
-<div class="content">
+<div class="content" in:fade={{ duration: 1000 }}>
 	<h1>my work experience</h1>
+	{#each experience as exp}
+	 <div in:fade={{ delay: 500 }}>
+		<Job title={exp.title} company={exp.company} location={exp.location} 
+			dateStart={exp.dateStart} dateEnd={exp.dateEnd} 
+			points={exp.points} />
+	 </div>
+	{/each}
 </div>
 
 <style>
