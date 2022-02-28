@@ -76,4 +76,10 @@
 	h3 {
 		font-weight: 400;
 	}
+
+	@media (max-width: 60em) {
+		.content {
+			margin: 0 auto;
+		}
+	}
 </style>

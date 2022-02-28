@@ -49,12 +49,16 @@
 	}
 
 	@media (max-width: 60em) {
+		section {
+			justify-content: flex-start;
+		}
+
 		h1 {
 			font-size: 2rem;
 		}
 
 		p {
-			font-size: 1rem;
+			font-size: 1.3rem;
 		}
 	}
 </style>

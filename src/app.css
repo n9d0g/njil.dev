@@ -26,7 +26,6 @@ body {
   margin: 0;
   background-color: var(--primary-color);
   background: var(--primary-color);
-  overflow-x: none;
 }
 
 body::before {
@@ -95,4 +94,22 @@ button {
 
 button:focus:not(:focus-visible) {
   outline: none;
+}
+
+@media (max-width: 60em) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1.3rem;
+  }
 }

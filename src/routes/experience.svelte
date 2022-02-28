@@ -38,4 +38,11 @@
 		max-width: var(--column-width);
 		margin: var(--column-margin-top) auto 0 auto;
 	}
+
+	@media (max-width: 60em) {
+		.content {
+			justify-content: flex-start;
+			margin: 0 auto;
+		}
+	}
 </style>
