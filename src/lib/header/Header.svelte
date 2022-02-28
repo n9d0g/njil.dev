@@ -71,7 +71,7 @@
 
 	@media (max-width: 60em) {
 		header {
-			justify-content: right;
+			justify-content: flex-end;
 		}
 
 		ul {
