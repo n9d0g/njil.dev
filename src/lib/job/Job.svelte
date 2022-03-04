@@ -1,5 +1,4 @@
 <script>
-	import { page } from '$app/stores';
   export let title;
   export let company;
   export let location;
@@ -37,8 +36,12 @@
   }
 
   ul {
-    list-style-type: none;
+    list-style-type: disc;
     padding: 1rem;
     margin: 0;
+  }
+
+  li {
+    padding: 0.25rem 0;
   }
 </style>

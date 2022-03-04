@@ -5,9 +5,13 @@
 	import sun from './sun.svg'
 	import moon from './moon.svg'
 	import menu from './menu.svg'
+	import cancel from './cancel.svg'
 
 	let theme = true;
 	const toggleTheme = () => theme = !theme;
+
+	let isOpen = false;
+	const toggleIsOpen = () => isOpen = !isOpen;
 </script>
 
 <header>
@@ -30,21 +34,25 @@
 		{/if}
 	</article>
 
-	<article class="menu">
-		<img src={menu} alt="menu" in:fade>
+	<article class="menu" on:click={toggleIsOpen}>
+		{#if isOpen}
+			<img src={cancel} alt="close menu" in:fade>
+		{:else}
+			<img src={menu} alt="menu" in:fade>
+		{/if}
 	</article>
 </header>
 
 <style>
 	header {
+		position: sticky;
+		top: 0;
 		display: flex;
 		justify-content: space-between;
 		width: 100%;
 		max-width: 80em;
 		margin: 0 auto;
 	}
-
-
 
 	nav {
 		display: flex;
@@ -67,20 +75,6 @@
 
 	.menu {
 		display: none;
-	}
-
-	@media (max-width: 60em) {
-		header {
-			justify-content: flex-end;
-		}
-
-		ul {
-			display: none;
-		}
-
-		.menu {
-			display: flex;
-		}
 	}
 
 	li {
@@ -153,5 +147,24 @@
 	img:hover {
 		transform: scale(1.3);
 	}
+
+	/* media queries */
+	@media (max-width: 60em) {
+		header {
+			justify-content: flex-end;
+			inset: 0 0 0 40%;
+			background: hsl(0 0% 100% / 0.1);
+			/* backdrop-filter: blur(50rem); */
+		}
+
+		ul {
+			display: none;
+		}
+
+		.menu {
+			display: flex;
+		}
+	}
+
 
 </style>
