@@ -2,7 +2,7 @@
 	import { browser, dev } from '$app/env';
 	import Job from '$lib/job/Job.svelte';
 	import { experience } from '../data/experience.js'
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	// we don't need any JS on this page, though we'll load
 	// it in dev so that we get hot module replacement...
