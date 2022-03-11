@@ -23,6 +23,11 @@
 					<a sveltekit:prefetch href={navItem.pathname}>{navItem.text}</a>
 				</li>
 			{/each}
+			<li>
+				<a href="mailto:nathanjlardizabal@gmail.com">
+					<span class="contact">contact</span>
+				</a>
+			</li>
 		</ul>
 	</nav>
 
@@ -92,6 +97,10 @@
 		left: calc(50% - var(--size));
 		border: var(--size) solid transparent;
 		border-top: var(--size) solid var(--accent-color);
+	}
+	
+	.contact {
+		color: var(--accent-color);
 	}
 
 	nav a {

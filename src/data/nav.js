@@ -15,12 +15,8 @@ export const nav = [
     pathname: '/experience',
     text: 'experience',
   },
-  {
-    pathname: '/music',
-    text: 'music',
-  },
-  {
-    pathname: '/contact',
-    text: 'contact',
-  },
+  // {
+  //   pathname: '/music',
+  //   text: 'music',
+  // },
 ]

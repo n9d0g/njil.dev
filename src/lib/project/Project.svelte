@@ -14,7 +14,7 @@
 		<a href={github} class="icon" target="_blank">
 			<img src={githubIcon} alt="{title} Github">
 		</a>
-		<a href={link} class="icon">
+		<a href={link} class="icon" target="_blank">
 			<img src={globe} alt="{title} Site">
 		</a>
 	</div>
@@ -41,13 +41,14 @@
 
 	img {
 		padding: 0 0.75rem;
-		height: 2rem;
-		width: 2rem;
+		height: 1.5rem;
+		width: 1.5rem;
 		transition: .15s ease-in;
 	}
 
 	img:hover {
 		transform: scale(1.1);
+		opacity: 0.5;
 	}
 
 
@@ -61,12 +62,27 @@
 		padding: 0;
 	}
 
-	ul > li {
+	li {
 		display: inline-block;
 		padding-right: 5px;
+		color: var(--accent-color);
 	}
 
 	li::after {
-		content: " | "
+		content: " • "
+	}
+
+	li:last-child::after {
+		content: "";
+	}
+
+	@media (max-width: 60em) {
+		p {
+			font-size: 1rem;
+		}
+
+		li {
+			font-size: 0.8rem;
+		}
 	}
 </style>

@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>music</title>
+	<title>n9 | music</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
@@ -24,6 +24,9 @@
 </div>
 
 <style>
+	h1 {
+		color: var(--accent-color);
+	}
 	.content {
 		width: 100%;
 		max-width: var(--column-width);

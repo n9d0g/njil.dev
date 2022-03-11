@@ -19,8 +19,8 @@
 
 	img {
 		padding: 0 1rem;
-		height: 2rem;
-		width: 2rem;
+		height: 1.5rem;
+		width: 1.5rem;
 		transition: .1s ease-in;
 	}
 

@@ -18,11 +18,11 @@
 </script>
 
 <svelte:head>
-	<title>projects</title>
+	<title>n9 | projects</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
-	<h1>my projects</h1>
+	<h1>projects.</h1>
 	<section class="container">
 	{#each projects as project}
 		<Project title={project.title} description={project.description} github={project.github} link={project.link} stack={project.stack} />
@@ -32,6 +32,10 @@
 </div>
 
 <style>
+	h1 {
+		color: var(--accent-color);
+	}
+
 	.content {
 		width: 100%;
 		max-width: var(--column-width);

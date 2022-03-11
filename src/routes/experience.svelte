@@ -18,11 +18,11 @@
 </script>
 
 <svelte:head>
-	<title>work experience</title>
+	<title>n9 | experience</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
-	<h1>my work experience</h1>
+	<h1>experience.</h1>
 	{#each experience as exp}
 	 <div in:fade={{ delay: 500 }}>
 		<Job title={exp.title} company={exp.company} location={exp.location} 
@@ -33,6 +33,10 @@
 </div>
 
 <style>
+	h1 {
+		color: var(--accent-color);
+	}
+
 	.content {
 		width: 100%;
 		max-width: var(--column-width);

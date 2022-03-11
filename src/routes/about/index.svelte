@@ -16,11 +16,11 @@
 </script>
 
 <svelte:head>
-	<title>about</title>
+	<title>n9 | about</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
-	<h1 in:slide={{ delay: 250 }}>about me</h1>
+	<h1 in:slide={{ delay: 250 }}>about.</h1>
 	<p in:fade={{ delay: 500 }}>
 		I graduated from <span>Conestoga College</span> in Spring 2021 with an Advanced Diploma in
 		<span>Software Engineering Technology.</span>
@@ -34,8 +34,8 @@
 
 	<p in:fade={{ delay: 2500 }}>
 		My goal is to always improve and hone my skills as a developer, while also cultivating an eye
-		for creative, intuitive, and clean design. I thoroughly enjoy exploring and keeping up to date
-		with new web technologies to push the limits of the ever-changing software development industry.
+		for creative, intuitive, and clean design. I enjoy exploring new web technologies to push the 
+		limits of the ever-changing software development industry.
 	</p>
 
 	<p in:fade={{ delay: 3500 }}>
@@ -53,6 +53,10 @@
 </div>
 
 <style>
+	h1 {
+		color: var(--accent-color);
+	}
+
 	.content {
 		width: 100%;
 		max-width: var(--column-width);

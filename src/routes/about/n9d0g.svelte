@@ -16,12 +16,12 @@
 </script>
 
 <svelte:head>
-	<title>n9d0g</title>
+	<title>n9 | n9d0g</title>
 </svelte:head>
 
 <div class="content" in:fade={{ duration: 1000 }}>
 	<h1 in:slide={{ delay: 250 }}>n9d0g?</h1>
-  <p>
+  <p in:slide={{ delay: 750 }}>
     The tag/username comes from a time when I was playing JackBox with my church friends many years ago. 
     For most of my life whenever creating usernames, I would shorten "Nate Dog" to "n8dog" - except this time,
     my finger slipped up and pressed the 9 instead of the 8 🤦 All of my friends laughed at me, but I stuck with

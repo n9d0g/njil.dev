@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>home</title>
+	<title>n9 | home</title>
 </svelte:head>
 
 <section in:fade={{ duration: 1000 }}>
@@ -37,6 +37,7 @@
 		width: 100%;
 		text-align: left;
 		margin-top: 0;
+		color: var(--accent-color);
 	}
 
 	p {
