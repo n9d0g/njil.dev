@@ -4,7 +4,7 @@
 	import './styles.css';
 </script>
 
-<div class="flex min-h-screen flex-col justify-between">
+<div class="flex container min-h-screen flex-col justify-between">
 	<Header />
 	<main>
 		<slot />
