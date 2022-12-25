@@ -15,7 +15,7 @@
 	}
 </script>
 
-<header class="flex relative justify-end md:justify-center p-4">
+<header class="flex relative justify-end md:justify-center md:items-center p-4">
 	<!-- desktop -->
 	<nav class="flex justify-center">
 		<ul
@@ -25,12 +25,20 @@
 			<HeaderItem hrefLink="/experience" link="experience" />
 			<HeaderItem hrefLink="/projects" link="projects" />
 		</ul>
+		<button on:click={changeTheme} class="hidden md:flex px-4" aria-label="theme button">
+			{#if theme}
+				<Sun />
+			{:else}
+				<Moon />
+			{/if}
+		</button>
 	</nav>
 	<!-- mobile -->
 	<nav class="fixed flex gap-2 backdrop-blur-sm">
 		<button
 			on:click={changeTheme}
 			class="flex justify-self-right md:hidden py-2 px-4 border rounded"
+			aria-label="theme button"
 		>
 			{#if theme}
 				<Sun />
@@ -39,7 +47,10 @@
 			{/if}
 		</button>
 		<Menu>
-			<MenuButton class="flex justify-self-right md:hidden py-2 px-4 border rounded">
+			<MenuButton
+				class="flex justify-self-right md:hidden py-2 px-4 border rounded"
+				aria-label="navigation"
+			>
 				<BurgerMenu />
 			</MenuButton>
 			<MenuItems
