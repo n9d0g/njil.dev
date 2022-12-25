@@ -1,4 +1,4 @@
-# 📰 Freedom in Christ Church Website
+# n9.dog
 
 ![Vercel](https://vercelbadge.vercel.app/api/n9d0g/portfolio)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/n9d0g/portfolio)
