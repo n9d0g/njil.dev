@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="flex container bg-[var(--bg-light)] dark:bg-[var(--bg-dark)] min-h-screen flex-col justify-between dark:text-[var(--colour-text-dark)]"
+	class="flex bg-[var(--bg-light)] dark:bg-[var(--bg-dark)] min-h-screen flex-col justify-between dark:text-[var(--colour-text-dark)]"
 >
 	<Header />
 	<main>
