@@ -1,17 +1,19 @@
 <script lang="ts">
 	export let link: string;
+	export let aria: string;
 </script>
 
-<a
-	class="no-underline dark:text-[var(--colour-text-dark)]"
-	href={link}
-	target="_blank"
-	rel="noreferrer"
->
-	<button>
+<button aria-label={aria}>
+	<a
+		class="no-underline dark:text-[var(--colour-text-dark)]"
+		href={link}
+		target="_blank"
+		rel="noreferrer"
+		aria-label={aria}
+	>
 		<slot />
-	</button>
-</a>
+	</a>
+</button>
 
 <style>
 	a {

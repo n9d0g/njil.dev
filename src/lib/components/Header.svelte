@@ -31,6 +31,7 @@
 		<button
 			on:click={changeTheme}
 			class="flex justify-self-right md:hidden py-2 px-4 border rounded"
+			aria-label="theme button"
 		>
 			{#if theme}
 				<Sun />
@@ -39,7 +40,10 @@
 			{/if}
 		</button>
 		<Menu>
-			<MenuButton class="flex justify-self-right md:hidden py-2 px-4 border rounded">
+			<MenuButton
+				class="flex justify-self-right md:hidden py-2 px-4 border rounded"
+				aria-label="navigation"
+			>
 				<BurgerMenu />
 			</MenuButton>
 			<MenuItems

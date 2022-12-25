@@ -5,7 +5,7 @@
 </script>
 
 <li class="relative h-full" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-	<button>
+	<button aria-label={link}>
 		<a
 			class="flex h-full items-center py-0 px-2 text-sm lowercase tracking-wide no-underline transition"
 			href={hrefLink}
