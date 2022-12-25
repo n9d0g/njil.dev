@@ -4,7 +4,9 @@
 	import './styles.css';
 </script>
 
-<div class="flex container min-h-screen flex-col justify-between">
+<div
+	class="flex container bg-[var(--bg-light)] dark:bg-[var(--bg-dark)] min-h-screen flex-col justify-between dark:text-[var(--colour-text-dark)]"
+>
 	<Header />
 	<main>
 		<slot />
