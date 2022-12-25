@@ -9,7 +9,7 @@
 </svelte:head>
 
 <section class="flex flex-col justify-center items-center p-6 max-w-2xl my-0 mx-auto">
-	<h1>experience</h1>
+	<h1>n9's experience</h1>
 	{#each experiences as exp}
 		<article class="flex flex-col  w-full mb-4">
 			<div class="flex flex-col">
