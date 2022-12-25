@@ -4,10 +4,14 @@
 	import BurgerMenu from '$lib/icons/BurgerMenu.svelte';
 	import Sun from '$lib/icons/Sun.svelte';
 	import Moon from '$lib/icons/Moon.svelte';
-	import { lightTheme } from '../../stores/store';
+
+	let theme = true;
 
 	function changeTheme() {
-		lightTheme.update((theme) => !theme);
+		theme = !theme;
+
+		let body = document.body;
+		body.classList.toggle('dark');
 	}
 </script>
 
@@ -28,7 +32,7 @@
 			on:click={changeTheme}
 			class="flex justify-self-right md:hidden py-2 px-4 border rounded"
 		>
-			{#if $lightTheme}
+			{#if theme}
 				<Sun />
 			{:else}
 				<Moon />
@@ -39,14 +43,25 @@
 				<BurgerMenu />
 			</MenuButton>
 			<MenuItems
-				class="flex flex-col absolute right-0 w-56 mt-2 p-2 ring-opacity-5 border rounded bg-white backdrop-blur-sm"
+				class="flex flex-col absolute right-0 w-56 mt-2 p-2 ring-opacity-5 border rounded bg-white dark:bg-[var(--bg-dark)] backdrop-blur-sm"
 			>
-				<MenuItem href="/" class="rounded-md p-2 text-[var(--colour-text)]">home</MenuItem>
-				<MenuItem href="/experience" class="rounded-md p-2 text-[var(--colour-text)]"
-					>experience
+				<MenuItem
+					href="/"
+					class="rounded-md p-2 text-[var(--colour-text)] dark:text-[var(--colour-text-dark)]"
+				>
+					home
 				</MenuItem>
-				<MenuItem href="/projects" class="rounded-md p-2 text-[var(--colour-text)]"
-					>projects
+				<MenuItem
+					href="/experience"
+					class="rounded-md p-2 text-[var(--colour-text)] dark:text-[var(--colour-text-dark)]"
+				>
+					experience
+				</MenuItem>
+				<MenuItem
+					href="/projects"
+					class="rounded-md p-2 text-[var(--colour-text)] dark:text-[var(--colour-text-dark)]"
+				>
+					projects
 				</MenuItem>
 			</MenuItems>
 		</Menu>

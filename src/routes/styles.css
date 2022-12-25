@@ -9,7 +9,10 @@
 	--font-mono: 'Fira Mono', monospace;
 	--colour-theme-1: #006bb6;
 	--colour-theme-2: #ed174c;
+	--bg-light: #fff;
+	--bg-dark: #121212;
 	--colour-text: rgba(0, 0, 0, 0.7);
+	--colour-text-dark: #efefef;
 	font-family: var(--font-body);
 	color: var(--colour-text);
 }

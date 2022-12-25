@@ -8,8 +8,8 @@
 	import Spotify from '$lib/icons/Spotify.svelte';
 </script>
 
-<footer class="flex flex-col justify-center items-center p-4 ">
-	<div class="flex items-center justify-center gap-4 py-2">
+<footer class="flex flex-col justify-center items-center p-4">
+	<div class="flex items-center justify-center gap-4 py-2 ">
 		<SocialIcon link="https://github.com/n9d0g">
 			<GitHub />
 		</SocialIcon>

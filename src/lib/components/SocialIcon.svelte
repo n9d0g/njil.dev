@@ -2,7 +2,12 @@
 	export let link: string;
 </script>
 
-<a class="no-underline" href={link} target="_blank" rel="noreferrer">
+<a
+	class="no-underline dark:text-[var(--colour-text-dark)]"
+	href={link}
+	target="_blank"
+	rel="noreferrer"
+>
 	<button>
 		<slot />
 	</button>
