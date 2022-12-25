@@ -1,4 +1,5 @@
 <script>
+	import { Menu, MenuButton, MenuItems, MenuItem } from '@rgossiaux/svelte-headlessui';
 	import HeaderItem from './HeaderItem.svelte';
 	import BurgerMenu from '$lib/icons/BurgerMenu.svelte';
 	import Sun from '$lib/icons/Sun.svelte';
@@ -10,16 +11,19 @@
 	}
 </script>
 
-<header class="flex justify-end md:justify-center py-4 px-2">
+<header class="flex relative justify-end md:justify-center p-4">
+	<!-- desktop -->
 	<nav class="flex justify-center">
-		<ul class="hidden md:flex relative justify-center items-center list-none bg-contain p-0 m-0">
+		<ul
+			class="hidden md:flex relative justify-center items-center list-none bg-contain p-0 m-0 bg-[var(--background)]"
+		>
 			<HeaderItem hrefLink="/" link="home" />
-			<HeaderItem hrefLink="/about" link="about" />
 			<HeaderItem hrefLink="/experience" link="experience" />
 			<HeaderItem hrefLink="/projects" link="projects" />
 		</ul>
 	</nav>
-	<nav class="flex gap-2">
+	<!-- mobile -->
+	<nav class="fixed flex gap-2 backdrop-blur-sm">
 		<button
 			on:click={changeTheme}
 			class="flex justify-self-right md:hidden py-2 px-4 border rounded"
@@ -30,14 +34,21 @@
 				<Moon />
 			{/if}
 		</button>
-		<button class="flex justify-self-right md:hidden py-2 px-4 border rounded">
-			<BurgerMenu />
-		</button>
+		<Menu>
+			<MenuButton class="flex justify-self-right md:hidden py-2 px-4 border rounded">
+				<BurgerMenu />
+			</MenuButton>
+			<MenuItems
+				class="flex flex-col absolute right-0 w-56 mt-2 p-2 ring-opacity-5 border rounded bg-white backdrop-blur-sm"
+			>
+				<MenuItem href="/" class="rounded-md p-2 text-[var(--colour-text)]">home</MenuItem>
+				<MenuItem href="/experience" class="rounded-md p-2 text-[var(--colour-text)]"
+					>experience
+				</MenuItem>
+				<MenuItem href="/projects" class="rounded-md p-2 text-[var(--colour-text)]"
+					>projects
+				</MenuItem>
+			</MenuItems>
+		</Menu>
 	</nav>
 </header>
-
-<style>
-	ul {
-		background: var(--background);
-	}
-</style>
