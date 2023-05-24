@@ -1,8 +1,2 @@
-<svelte:head>
-	<title>n9 | home</title>
-</svelte:head>
-
-<section class="flex flex-col container justify-center items-center">
-	<h1>n9d0g</h1>
-	<p>Hello, I'm a front-end developer based in Toronto!</p>
-</section>
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
