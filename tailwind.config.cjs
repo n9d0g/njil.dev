@@ -4,8 +4,8 @@ module.exports = {
 	theme: {
 		extend: {
 			minHeight: {
-				main: "calc(100vh - 112px)"
-			}
+				main: 'calc(100vh - 112px)',
+			},
 		},
 	},
 	plugins: [],

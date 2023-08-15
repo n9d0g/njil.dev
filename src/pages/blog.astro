@@ -1,7 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro'
+
+const allPosts = await Astro.glob('./blog/*.md')
 ---
 
 <Layout title="Nathan Lardizabal | Blog">
 	<h1 class="font-bold text-4xl">Blog page</h1>
+	{allPosts.map((blog) => <a href={blog.url}>{blog.frontmatter.title}</a>)}
 </Layout>
