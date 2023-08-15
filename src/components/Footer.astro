@@ -1,1 +1,13 @@
-<footer class="container mx-auto flex justify-center py-4">footer</footer>
+---
+import SpotifyNowPlaying from '@components/footer/SpotifyNowPlaying.astro'
+---
+
+<footer class="bg-gray-200">
+	<div class="container mx-auto flex justify-center py-4 gap-4">
+		<div>
+			Developed by &nbsp; <span class="font-bold">Nathan Lardizabal</span>
+			 &nbsp;🤠
+		</div>
+		<SpotifyNowPlaying />
+	</div>
+</footer>
