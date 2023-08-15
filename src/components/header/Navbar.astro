@@ -1,12 +1,14 @@
 ---
 const pathname = new URL(Astro.request.url).pathname
 const currentPath = pathname.slice(1)
+
+console.log(pathname)
 ---
 
 <nav class="flex justify-center gap-4 py-4">
 	<a class={currentPath === '' ? 'font-bold' : ''} href="/">home</a>
-	<a class={currentPath === 'work' ? 'font-bold' : ''} href="/work">work</a>
-	<a class={currentPath === 'projects' ? 'font-bold' : ''} href="/projects">projects</a>
-	<a class={currentPath === 'blog' ? 'font-bold' : ''} href="/blog">blog</a>
-	<a class={currentPath === 'contact' ? 'font-bold' : ''} href="/contact">contact</a>
+	<a class={currentPath.includes('work') ? 'font-bold' : ''} href="/work">work</a>
+	<a class={currentPath.includes('projects') ? 'font-bold' : ''} href="/projects">projects</a>
+	<a class={currentPath.includes('blog') ? 'font-bold' : ''} href="/blog">blog</a>
+	<a class={currentPath.includes('contact') ? 'font-bold' : ''} href="/contact">contact</a>
 </nav>
