@@ -63,7 +63,7 @@
 {#await getCurrentlyPlaying() then} 
 <div class="flex items-center gap-3">
   <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
-  <div class="flex flex-col md:flex-row items-center">
+  <div class="flex flex-col md:flex-row md:items-center">
     <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
     <span class="hidden md:block">&nbsp;-&nbsp;</span>
     <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>
