@@ -1,9 +1,10 @@
 ---
-import SpotifyNowPlaying from '@components/footer/SpotifyNowPlaying.astro'
+import SpotifyNowPlaying from './footer/SpotifyNowPlaying.astro'
 ---
 
 <footer class="pb-40 bg-slate-950">
 	<div class="container max-w-2xl mx-auto flex justify-start py-4 gap-4">
 		<SpotifyNowPlaying />
+		<!-- <CurrentlyPlaying client:only /> -->
 	</div>
 </footer>
