@@ -7,10 +7,10 @@
   export let refreshToken
 
   let res
-  let data
-  let dataLink
-  let artist
-  let artistLink
+  let data = ''
+  let dataLink = ''
+  let artist = ''
+  let artistLink = ''
 
   const basic = btoa(`${clientId}:${clientSecret}`)
   const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
@@ -53,12 +53,10 @@
       artist = res.item.artists[0].name
       artistLink = res.item.artists[0].external_urls.spotify
     }
-
-    console.log(res)
   })
 </script>
 
-{#await getCurrentlyPlaying() then res} 
+{#await getCurrentlyPlaying() then} 
  <div class="flex flex-col">
   <a href={dataLink} target="_blank" class="hover:underline text-normal">{data}</a>
   <a href={artistLink} target="_blank" class="hover:underline text-xs italic">{artist}</a>
