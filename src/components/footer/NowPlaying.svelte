@@ -6,7 +6,8 @@
   export let clientSecret
   export let refreshToken
 
-  let res
+  let res = ''
+  let resType = ''
   let data = ''
   let dataLink = ''
   let artist = ''
@@ -46,28 +47,51 @@
   onMount(async () => {
     const response = await getCurrentlyPlaying()
     if (response.status === 204 || response.status > 400) {
-      data = 'Currently not listening to Spotify.'
-    } else {
-      res = await response.json()
-      data = res.item.name
-      dataLink = res.item.external_urls.spotify
-      artist = res.item.artists[0].name
-      artistLink = res.item.artists[0].external_urls.spotify
-      art = res.item.album.images[0].url
+      return false
     }
 
-    console.log(res)
+    res = await response.json()
+    resType = res.currently_playing_type
+
+    switch (resType) {
+      case "track":
+        data = res.item.name
+        dataLink = res.item.external_urls.spotify
+        artist = res.item.artists[0].name
+        artistLink = res.item.artists[0].external_urls.spotify
+        art = res.item.album.images[0].url
+        break
+      
+      case "episode":
+        return false
+        break
+
+      default:
+        return false
+        break
+    }
   })
 </script>
 
-{#await getCurrentlyPlaying() then} 
-<div class="flex items-center gap-3">
-  <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
-  <div class="flex flex-col md:flex-row md:items-center">
-    <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
-    <span class="hidden md:block">&nbsp;-&nbsp;</span>
-    <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>
+{#await getCurrentlyPlaying() then res} 
+{#if resType === "track"}
+  <div class="flex items-center gap-3">
+    <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
+    <div class="flex flex-col md:flex-row md:items-center">
+      <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
+      <span class="hidden md:block">&nbsp;-&nbsp;</span>
+     <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>&nbsp;&nbsp;🎶
+    </div> 
   </div> 
-</div> 
+ {:else if resType === "episode"} 
+ <div class="flex gap-2 items-center">
+  <p class="text-sm italic">listening to a podcast rn</p>🎧
+ </div>
+ {:else} 
+ <div class="flex gap-2 items-center">
+  <p class="text-sm italic">not listening to spotify rn</p>😴
+ </div>
+{/if}
+
 {/await}
 
