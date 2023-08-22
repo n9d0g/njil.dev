@@ -3,12 +3,14 @@ const pathname = new URL(Astro.request.url).pathname
 const currentPath = pathname.slice(1)
 ---
 
-<nav class="flex justify-end gap-4 py-4">
-	<a class={currentPath === '' ? 'font-bold' : 'transition hover:underline'} href="/">home</a>
-	<a class={currentPath.includes('work') ? 'font-bold' : 'transition hover:underline'} href="/work">work</a>
-	<a class={currentPath.includes('projects') ? 'font-bold' : 'transition hover:underline'} href="/projects">
+<nav class="flex justify-start gap-4 py-4 font-light mb-16">
+	<a class={currentPath === '' ? 'font-semibold' : 'transition hover:underline'} href="/">home</a>
+	<a class={currentPath.includes('work') ? 'font-semibold' : 'transition hover:underline'} href="/work">work</a>
+	<a class={currentPath.includes('projects') ? 'font-semibold' : 'transition hover:underline'} href="/projects">
 		projects
 	</a>
-	<a class={currentPath.includes('blog') ? 'font-bold' : 'transition hover:underline'} href="/blog">blog</a>
-	<a class={currentPath.includes('contact') ? 'font-bold' : 'transition hover:underline'} href="/contact"> contact</a>
+	<a class={currentPath.includes('blog') ? 'font-semibold' : 'transition hover:underline'} href="/blog">blog</a>
+	<a class={currentPath.includes('contact') ? 'font-semibold' : 'transition hover:underline'} href="/contact">
+		contact</a
+	>
 </nav>

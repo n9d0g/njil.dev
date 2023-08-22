@@ -1,5 +1,8 @@
 ---
+const response = await fetch('https://api.spotify.com/me/player/currently-playing?market=CA&')
+const data = await response.json()
 
+console.log(data)
 ---
 
-<div class="bg-green-400">spotify now playing</div>
+<div class="font-light">spotify now playing</div>
