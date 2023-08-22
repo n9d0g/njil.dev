@@ -11,6 +11,7 @@
   let dataLink = ''
   let artist = ''
   let artistLink = ''
+  let art = ''
 
   const basic = btoa(`${clientId}:${clientSecret}`)
   const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
@@ -52,14 +53,21 @@
       dataLink = res.item.external_urls.spotify
       artist = res.item.artists[0].name
       artistLink = res.item.artists[0].external_urls.spotify
+      art = res.item.album.images[0].url
     }
+
+    console.log(res)
   })
 </script>
 
 {#await getCurrentlyPlaying() then} 
- <div class="flex flex-col">
-  <a href={dataLink} target="_blank" class="hover:underline text-normal">{data}</a>
-  <a href={artistLink} target="_blank" class="hover:underline text-xs italic">{artist}</a>
+<div class="flex items-center gap-3">
+  <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
+  <div class="flex flex-col md:flex-row items-center">
+    <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
+    <span class="hidden md:block">&nbsp;-&nbsp;</span>
+    <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>
+  </div> 
 </div> 
 {/await}
 
