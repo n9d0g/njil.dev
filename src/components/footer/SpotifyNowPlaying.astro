@@ -1,63 +1,15 @@
 ---
-import querystring from 'querystring'
 import { Icon } from 'astro-icon'
 import NowPlaying from './NowPlaying.svelte'
 
 const clientId = import.meta.env.SPOTIFY_CLIENT_ID
 const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET
 const refreshToken = import.meta.env.SPOTIFY_REFRESH_TOKEN
-
-const basic = btoa(`${clientId}:${clientSecret}`)
-const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
-const CURRENTLY_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`
-
-let res
-let data
-let dataLink
-let artist
-let artistLink
-
-const getAccessToken = async () => {
-	const response = await fetch(TOKEN_ENDPOINT, {
-		method: 'POST',
-		headers: {
-			Authorization: `Basic ${basic}`,
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-		body: querystring.stringify({
-			grant_type: 'refresh_token',
-			refresh_token: refreshToken,
-		}),
-	})
-
-	return response.json()
-}
-
-const getCurrentlyPlaying = async () => {
-	const { access_token } = await getAccessToken()
-
-	return fetch(`${CURRENTLY_PLAYING_ENDPOINT}?market=ES`, {
-		headers: {
-			Authorization: `Bearer ${access_token}`,
-		},
-	})
-}
-
-const response = await getCurrentlyPlaying()
-if (response.status === 204 || response.status > 400) {
-	data = 'Currently not listening to Spotify.'
-} else {
-	res = await response.json()
-	data = res.item.name
-	dataLink = res.item.external_urls.spotify
-	artist = res.item.artists[0].name
-	artistLink = res.item.artists[0].external_urls.spotify
-}
 ---
 
 <div class="font-light text-slate-400 pt-10">
 	<div class="flex justify-start items-center">
 		<Icon name="logos:spotify-icon" class="w-8 h-8 mr-2" />
-		<NowPlaying data={data} dataLink={dataLink} artist={artist} artistLink={artistLink} client:load />
+		<NowPlaying clientId={clientId} clientSecret={clientSecret} refreshToken={refreshToken} client:load />
 	</div>
 </div>
