@@ -1,6 +1,7 @@
 ---
 import querystring from 'querystring'
 import { Icon } from 'astro-icon'
+import NowPlaying from './NowPlaying.svelte'
 
 const clientId = import.meta.env.SPOTIFY_CLIENT_ID
 const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET
@@ -10,6 +11,7 @@ const basic = btoa(`${clientId}:${clientSecret}`)
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
 const CURRENTLY_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`
 
+let res
 let data
 let dataLink
 let artist
@@ -45,7 +47,7 @@ const response = await getCurrentlyPlaying()
 if (response.status === 204 || response.status > 400) {
 	data = 'Currently not listening to Spotify.'
 } else {
-	const res = await response.json()
+	res = await response.json()
 	data = res.item.name
 	dataLink = res.item.external_urls.spotify
 	artist = res.item.artists[0].name
@@ -56,9 +58,6 @@ if (response.status === 204 || response.status > 400) {
 <div class="font-light text-slate-400 pt-10">
 	<div class="flex justify-start items-center">
 		<Icon name="logos:spotify-icon" class="w-8 h-8 mr-2" />
-		<div class="flex flex-col">
-			<a href={dataLink} target="_blank" class="hover:underline text-normal">{data}</a>
-			<a href={artistLink} target="_blank" class="hover:underline text-xs italic">{artist}</a>
-		</div>
+		<NowPlaying data={data} dataLink={dataLink} artist={artist} artistLink={artistLink} client:load />
 	</div>
 </div>
