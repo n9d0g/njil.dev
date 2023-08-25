@@ -1,0 +1,40 @@
+---
+import { Icon } from 'astro-icon'
+
+const socials = [
+	{
+		icon: 'mdi:github',
+		href: 'https://github.com/n9d0g/',
+	},
+	{
+		icon: 'mdi:linkedin',
+		href: 'https://www.linkedin.com/in/njlardizabal/',
+	},
+	{
+		icon: 'mdi:document',
+		href: 'https://rxresu.me/nathanjlardizabal/nathan-lardizabal-resume-2022',
+	},
+	{
+		icon: 'mdi:email',
+		href: 'mailto:nathanjlardizabal@gmail.com',
+	},
+	{
+		icon: 'mdi:spotify',
+		href: 'https://open.spotify.com/user/nathanjlardizabal?si=3330f6bb15e64082',
+	},
+	{
+		icon: 'mdi:soundcloud',
+		href: 'https://soundcloud.com/n9d0g',
+	},
+]
+---
+
+<section class="flex justify-center gap-4">
+	{
+		socials.map((social) => (
+			<a href={social.href} class="h-6 w-6">
+				<Icon name={social.icon} class="text-gray-600 transition hover:text-gray-50" />
+			</a>
+		))
+	}
+</section>

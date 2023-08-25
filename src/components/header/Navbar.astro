@@ -3,9 +3,9 @@ const pathname = new URL(Astro.request.url).pathname
 const currentPath = pathname.slice(1)
 ---
 
-<nav class="flex justify-start gap-4 py-4 font-light mb-16">
+<nav class="flex justify-center gap-4 py-4 font-light mb-16 md:justify-start">
 	<a
-		class={currentPath === '' ? 'font-semibold text-slate-50' : 'transition text-slate-200 hover:text-slate-100'}
+		class={currentPath === '' ? 'font-semibold text-slate-50' : 'transition text-slate-400 hover:text-slate-100'}
 		href="/">home</a
 	>
 	<a

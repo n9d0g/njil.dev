@@ -74,24 +74,23 @@
 </script>
 
 {#await getCurrentlyPlaying() then res} 
-{#if resType === "track"}
-  <div class="flex items-center gap-3">
-    <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
-    <div class="flex flex-col md:flex-row md:items-center">
-      <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
-      <span class="hidden md:block">&nbsp;-&nbsp;</span>
-     <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>&nbsp;&nbsp;🎶
+  {#if resType === "track"}
+    <div class="flex items-center gap-3">
+      <img src={art} alt="Nathan's Now Playing" class="w-8 h-8 rounded">
+      <div class="flex flex-col justify-center md:flex-row md:items-center">
+        <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
+        <span class="hidden md:block">&nbsp;-&nbsp;</span>
+        <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}&nbsp;&nbsp;🎵</a>
+      </div> 
     </div> 
-  </div> 
- {:else if resType === "episode"} 
- <div class="flex gap-2 items-center">
-  <p class="text-sm italic">listening to a podcast rn</p>🎧
- </div>
- {:else} 
- <div class="flex gap-2 items-center">
-  <p class="text-sm italic">not listening to spotify rn</p>😴
- </div>
-{/if}
-
+  {:else if resType === "episode"} 
+    <div class="flex gap-2 items-center">
+      <p class="text-sm italic">listening to a podcast rn <span class="not-italic">🎧</span></p>
+    </div>
+  {:else} 
+    <div class="flex gap-2 items-center">
+      <p class="text-sm italic">not listening to spotify rn <span class="not-italic">😴</span></p>
+    </div>
+  {/if}
 {/await}
 
