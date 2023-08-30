@@ -6,14 +6,18 @@ const currentPath = pathname.slice(1)
 <nav class="flex justify-center gap-4 py-4 font-light mb-16 md:justify-start">
 	<a
 		class={currentPath === '' ? 'font-semibold text-slate-50' : 'transition text-slate-400 hover:text-slate-100'}
-		href="/">home</a
+		href="/"
 	>
+		home
+	</a>
 	<a
 		class={currentPath.includes('work')
 			? 'font-semibold text-slate-50'
 			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/work">work</a
+		href="/work"
 	>
+		work
+	</a>
 	<a
 		class={currentPath.includes('projects')
 			? 'font-semibold text-slate-50'
@@ -22,11 +26,13 @@ const currentPath = pathname.slice(1)
 	>
 		projects
 	</a>
-	<a
+	<!-- <a
 		class={currentPath.includes('blog')
 			? 'font-semibold text-slate-50'
 			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/blog">blog</a
+		href="/blog"
 	>
+		blog
+	</a> -->
 	<a class="transition hover:text-slate-100 text-slate-400" href="mailto:nathanjlardizabal@gmail.com"> contact</a>
 </nav>
