@@ -80,7 +80,9 @@
       <div class="flex flex-col justify-center md:flex-row md:items-center">
         <a href={dataLink} target="_blank" class="hover:underline text-xs md:text-sm font-semibold">{data}</a>
         <span class="hidden md:block">&nbsp;-&nbsp;</span>
-        <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}&nbsp;&nbsp;🎵</a>
+        <div>
+          <a href={artistLink} target="_blank" class="hover:underline text-xs md:text-sm italic">{artist}</a>&nbsp;&nbsp;🎶
+        </div>
       </div> 
     </div> 
   {:else if resType === "episode"} 

@@ -1,0 +1,18 @@
+---
+import type { GetStaticPaths } from 'astro'
+import Layout from '@layouts/Layout.astro'
+
+export const getStaticPaths = (() => {
+	return [
+		{
+			params: { blog: 'blog1' },
+		},
+	]
+}) satisfies GetStaticPaths
+
+const { blog } = Astro.params
+---
+
+<Layout title=`Nathan Lardizabal | ${blog}`>
+	<h1 class="font-semibold text-2xl mb-8">{blog}</h1>
+</Layout>
