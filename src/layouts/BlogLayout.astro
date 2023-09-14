@@ -1,0 +1,57 @@
+---
+import Footer from '@components/Footer.astro'
+import Header from '@components/Header.astro'
+import { ViewTransitions } from 'astro:transitions'
+
+interface Props {
+	title: string
+}
+
+console.log(Astro.props)
+
+const { title, frontmatter } = Astro.props
+---
+
+<!doctype html>
+<html lang="en" class="bg-slate-950">
+	<head>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"></script>
+		<script>
+			window.dataLayer = window.dataLayer || []
+			function gtag() {
+				dataLayer.push(arguments)
+			}
+			gtag('js', new Date())
+
+			gtag('config', 'G-JVLQSN0MBB')
+		</script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+			rel="stylesheet"
+		/>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{frontmatter.title}</title>
+		<ViewTransitions />
+	</head>
+	<body class="min-h-screen pt-8 bg-slate-950 text-white px-4 md:px-0 flex flex-col justify-between">
+		<div class="flex-grow">
+			<Header />
+			<main class="container mx-auto max-w-2xl bg-slate-950">
+				<slot />
+			</main>
+		</div>
+		<Footer />
+		<style is:global>
+			html {
+				font-family: 'Open Sans', sans-serif;
+			}
+		</style>
+	</body>
+</html>

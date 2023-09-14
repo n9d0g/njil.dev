@@ -1,9 +1,9 @@
 ---
+layout: '../../layouts/BlogLayout.astro'
 title: 'test blog'
 pubDate: 2023-09-14
 description: 'This is the first post of my new Astro blog.'
 author: 'Astro Learner'
-href: '/blog1'
 image:
   url: 'https://docs.astro.build/assets/full-logo-light.png'
   alt: 'The full Astro logo.'
