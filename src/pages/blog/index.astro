@@ -17,11 +17,11 @@ const allBlogs = await getCollection('blog')
 				<article>
 					<a
 						href={`/blog/${blog.slug}`}
-						class="w-fit font-light transition hover:opacity-80"
+						class="w-fit font-light lowercase transition hover:opacity-80"
 					>
 						{blog.data.title}
 					</a>
-					<p class="my-1 text-sm font-extralight italic text-gray-500">
+					<p class="my-1 text-xs lowercase text-gray-500">
 						{blog.data.published.toDateString()}
 					</p>
 				</article>
