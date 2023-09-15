@@ -21,6 +21,7 @@ const jobCollection = defineCollection({
 		startDate: z.date(),
 		endDate: z.date(),
 		description: z.string(),
+		tech: z.array(z.string()),
 		points: z.array(z.string()),
 	}),
 })
