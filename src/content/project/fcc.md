@@ -1,7 +1,7 @@
 ---
 title: 'Freedom in Christ Church Website'
 url: 'https://sauga.church'
-repo: 'https:github.com/n9d0g/fcc'
+repo: 'https://github.com/n9d0g/fcc'
 location: 'Mississauga, ON'
 slug: 'fcc'
 startDate: 2022-03-01

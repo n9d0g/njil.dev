@@ -1,7 +1,7 @@
 ---
 title: 'njil.dev'
 url: 'https://njil.dev'
-repo: 'https:github.com/n9d0g/njil.dev'
+repo: 'https://github.com/n9d0g/njil.dev'
 location: 'Mississauga, ON'
 slug: 'njil'
 startDate: 2022-10-01
