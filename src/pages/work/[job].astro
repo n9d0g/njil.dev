@@ -2,6 +2,8 @@
 import type { GetStaticPaths } from 'astro'
 import Layout from '@layouts/Layout.astro'
 
+export const prerender = true
+
 export const getStaticPaths = (() => {
 	return [
 		{
@@ -20,5 +22,5 @@ const { job } = Astro.params
 ---
 
 <Layout title=`Nathan Lardizabal | ${job}`>
-	<h1 class="font-semibold text-2xl mb-8">{job}</h1>
+	<h1 class="mb-8 text-2xl font-semibold">{job}</h1>
 </Layout>

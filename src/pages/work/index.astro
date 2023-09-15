@@ -1,12 +1,50 @@
 ---
 import Layout from '@layouts/Layout.astro'
+import Icon from 'astro-icon'
+import { getCollection } from 'astro:content'
+
+const data = await getCollection('job')
+const allJobs = data.sort((a, b) =>
+	a.data.startDate < b.data.startDate ? 1 : -1
+)
 ---
 
 <Layout title="Nathan Lardizabal | Work">
-	<h1 class="font-semibold text-2xl mb-8">work</h1>
-	<section class="flex flex-col gap-4">
-		<a href="/work/quotemedia">quotemedia</a>
-		<a href="/work/leons">leons</a>
-		<a href="/work/manulife">manulife</a>
+	<h1 class="mb-8 text-2xl font-semibold">work</h1>
+	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
+		{
+			allJobs.map((job, index) => {
+				let startDate = `${job.data.startDate.getUTCMonth()}/${job.data.startDate.getUTCFullYear()}`
+				let endDate = `${job.data.endDate.getUTCMonth()}/${job.data.endDate.getUTCFullYear()}`
+				if (job.id === 'quotemedia.md') endDate = 'present'
+
+				return (
+					<article class="flex flex-col justify-between rounded border border-gray-700 px-2 py-4 transition hover:border-gray-400">
+						<div>
+							<a href="/" class="text-base text-slate-100 hover:opacity-80">
+								{job.data.position}
+							</a>
+							<h3 class="my-1 text-xs font-light text-gray-300">
+								{job.data.company}
+							</h3>
+							<p class="my-1 text-xs font-light text-gray-500">
+								{startDate} - {endDate}
+							</p>
+							<p class="mb-6 mt-2 text-sm font-light text-slate-300">
+								{job.data.description}
+							</p>
+						</div>
+						<div class="flex justify-end">
+							<a
+								href={`/work/${job.slug}`}
+								class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
+							>
+								see more <Icon name="mdi:chevron-right" class="h-4 w-auto" />
+							</a>
+						</div>
+					</article>
+				)
+			})
+		}
 	</section>
 </Layout>

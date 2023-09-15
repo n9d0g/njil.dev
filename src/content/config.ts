@@ -1,8 +1,7 @@
-// 1. Import utilities from `astro:content`
 import { z, defineCollection } from 'astro:content'
-// 2. Define your collection(s)
+
 const blogCollection = defineCollection({
-	type: 'content', // v2.5.0 and later
+	type: 'content',
 	schema: z.object({
 		title: z.string(),
 		author: z.string(),
@@ -12,8 +11,21 @@ const blogCollection = defineCollection({
 		draft: z.boolean(),
 	}),
 })
-// 3. Export a single `collections` object to register your collection(s)
-//    This key should match your collection directory name in "src/content"
+
+const jobCollection = defineCollection({
+	type: 'content',
+	schema: z.object({
+		company: z.string(),
+		position: z.string(),
+		location: z.string(),
+		startDate: z.date(),
+		endDate: z.date(),
+		description: z.string(),
+		points: z.array(z.string()),
+	}),
+})
+
 export const collections = {
 	blog: blogCollection,
+	job: jobCollection,
 }
