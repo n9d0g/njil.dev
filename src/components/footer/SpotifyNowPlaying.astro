@@ -7,9 +7,9 @@ const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET
 const refreshToken = import.meta.env.SPOTIFY_REFRESH_TOKEN
 ---
 
-<div class="font-light text-slate-400 pt-4">
-	<div class="flex justify-center items-center h-10">
-		<Icon name="logos:spotify-icon" class="w-7 h-7 mr-2" />
+<div class="font-light text-slate-400">
+	<div class="flex h-10 items-center justify-center">
+		<Icon name="logos:spotify-icon" class="mr-2 h-7 w-7" />
 		<NowPlaying
 			clientId={clientId}
 			clientSecret={clientSecret}
