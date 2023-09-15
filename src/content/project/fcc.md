@@ -11,7 +11,6 @@ tech:
   [
     'logos:typescript-icon',
     'vscode-icons:file-type-svelte',
-    'vscode-icons:file-type-astro',
     'vscode-icons:file-type-tailwind',
     'simple-icons:vercel',
   ]
