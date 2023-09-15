@@ -6,7 +6,7 @@ location: 'Mississauga, ON'
 slug: 'njil'
 startDate: 2022-10-01
 endDate: 2024-02-14
-description: "Simple portfolio website you're currently viewing! Site built with Astro and TailwindCSS. Using Spotify API to retrieve current listening status. Deployed with Vercel."
+description: "Simple portfolio website you're currently viewing! Site built with TypeScript, Astro and TailwindCSS. Using Spotify API to retrieve current listening status. Deployed with Vercel."
 tech:
   [
     'logos:typescript-icon',
