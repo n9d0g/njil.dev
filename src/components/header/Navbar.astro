@@ -5,7 +5,9 @@ const currentPath = pathname.slice(1)
 
 <nav class="flex justify-center gap-4 py-4 font-light mb-16 md:justify-start">
 	<a
-		class={currentPath === '' ? 'font-semibold text-slate-50' : 'transition text-slate-400 hover:text-slate-100'}
+		class={currentPath === ''
+			? 'font-semibold text-slate-50'
+			: 'transition text-slate-400 hover:text-slate-100'}
 		href="/"
 	>
 		home
@@ -34,5 +36,10 @@ const currentPath = pathname.slice(1)
 	>
 		blog
 	</a>
-	<a class="transition hover:text-slate-100 text-slate-400" href="mailto:nathanjlardizabal@gmail.com"> contact</a>
+	<a
+		class="transition hover:text-slate-100 text-slate-400"
+		href="mailto:nathanjlardizabal@gmail.com"
+	>
+		contact</a
+	>
 </nav>

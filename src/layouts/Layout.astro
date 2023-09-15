@@ -14,7 +14,8 @@ const { title } = Astro.props
 <html lang="en" class="bg-slate-950">
 	<head>
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"
+		></script>
 		<script>
 			window.dataLayer = window.dataLayer || []
 			function gtag() {
@@ -38,7 +39,9 @@ const { title } = Astro.props
 		<title>{title}</title>
 		<ViewTransitions />
 	</head>
-	<body class="min-h-screen pt-8 bg-slate-950 text-white px-4 md:px-0 flex flex-col justify-between">
+	<body
+		class="min-h-screen pt-8 bg-slate-950 text-white px-4 md:px-0 flex flex-col justify-between"
+	>
 		<div class="flex-grow">
 			<Header />
 			<main class="container mx-auto max-w-2xl bg-slate-950">

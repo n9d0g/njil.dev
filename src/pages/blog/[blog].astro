@@ -1,18 +1,29 @@
 ---
-import type { GetStaticPaths } from 'astro'
-import Layout from '@layouts/Layout.astro'
-
-export const getStaticPaths = (() => {
-	return [
-		{
-			params: { blog: 'blog1' },
-		},
-	]
-}) satisfies GetStaticPaths
+import BlogLayout from '@layouts/BlogLayout.astro'
+import { getEntry } from 'astro:content'
 
 const { blog } = Astro.params
+if (blog === undefined) {
+	throw new Error('Blog is required')
+}
+
+const entry = await getEntry('blog', blog)
+
+if (entry === undefined) {
+	return Astro.redirect('/404')
+}
+
+const { Content } = await entry.render()
 ---
 
-<Layout title=`Nathan Lardizabal | ${blog}`>
-	<h1 class="font-semibold text-2xl mb-8">{blog}</h1>
-</Layout>
+<BlogLayout title={`Nathan Lardizabal | ${entry.data}`} blogData={entry.data}>
+	<article class="prose dark:prose-invert">
+		<h1 class="font-semibold text-2xl mb-2 lowercase">{entry.data.title}</h1>
+		<p class="text-sm italic text-gray-400 font-light">
+			by {entry.data.author} | {entry.data.published.toLocaleDateString()}
+		</p>
+		<div class="my-8 font-light">
+			<Content />
+		</div>
+	</article>
+</BlogLayout>

@@ -10,6 +10,11 @@ const refreshToken = import.meta.env.SPOTIFY_REFRESH_TOKEN
 <div class="font-light text-slate-400 pt-4">
 	<div class="flex justify-center items-center h-10">
 		<Icon name="logos:spotify-icon" class="w-7 h-7 mr-2" />
-		<NowPlaying clientId={clientId} clientSecret={clientSecret} refreshToken={refreshToken} client:load />
+		<NowPlaying
+			clientId={clientId}
+			clientSecret={clientSecret}
+			refreshToken={refreshToken}
+			client:load
+		/>
 	</div>
 </div>

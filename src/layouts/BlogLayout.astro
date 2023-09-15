@@ -5,18 +5,18 @@ import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
 	title: string
+	blogData: object
 }
 
-console.log(Astro.props)
-
-const { title, frontmatter } = Astro.props
+const { title, blogData } = Astro.props
 ---
 
 <!doctype html>
 <html lang="en" class="bg-slate-950">
 	<head>
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"
+		></script>
 		<script>
 			window.dataLayer = window.dataLayer || []
 			function gtag() {
@@ -33,14 +33,16 @@ const { title, frontmatter } = Astro.props
 			rel="stylesheet"
 		/>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
+		<meta name="description" content={blogData.description} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{frontmatter.title}</title>
+		<title class="uppercase">Nathan Lardizabal | {blogData.title}</title>
 		<ViewTransitions />
 	</head>
-	<body class="min-h-screen pt-8 bg-slate-950 text-white px-4 md:px-0 flex flex-col justify-between">
+	<body
+		class="min-h-screen pt-8 bg-slate-950 text-white px-4 md:px-0 flex flex-col justify-between"
+	>
 		<div class="flex-grow">
 			<Header />
 			<main class="container mx-auto max-w-2xl bg-slate-950">
