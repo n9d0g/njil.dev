@@ -18,9 +18,9 @@ const allProjects = data.sort((a, b) =>
 				let httpsURL = 'https://'
 
 				return (
-					<article class="flex flex-col justify-between rounded border border-gray-700 px-2 py-4 transition hover:border-gray-400">
+					<article class="flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400">
 						<div>
-							<div class="flex flex-col gap-1">
+							<div class="flex flex-col">
 								<h2 class="text-base text-slate-100">{project.data.title}</h2>
 								<a
 									class="my-1 text-sm font-light text-gray-300 transition hover:opacity-80"
@@ -30,7 +30,7 @@ const allProjects = data.sort((a, b) =>
 									{project.data.url.replace(httpsURL, '')}
 								</a>
 							</div>
-							<p class="my-1 text-xs font-light text-gray-500">
+							<p class="mb-1 text-xs font-light text-gray-400">
 								{startDate} - present
 							</p>
 							<p class="my-2 text-sm font-light text-slate-300">

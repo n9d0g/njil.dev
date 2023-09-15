@@ -6,18 +6,18 @@ const allBlogs = await getCollection('blog')
 ---
 
 <Layout title="Nathan Lardizabal | Blog">
-	<h1 class="font-semibold text-2xl mb-8">read my blog</h1>
+	<h1 class="mb-8 text-2xl font-semibold">my blog</h1>
 	<section class="flex flex-col gap-4">
 		{
 			allBlogs.map((blog) => (
 				<article>
 					<a
 						href={`/blog/${blog.slug}`}
-						class="font-light transition hover:opacity-80 w-fit"
+						class="w-fit font-light transition hover:opacity-80"
 					>
 						{blog.data.title}
 					</a>
-					<p class="text-sm text-gray-500 font-extralight my-1 italic">
+					<p class="my-1 text-sm font-extralight italic text-gray-500">
 						{blog.data.published.toDateString()}
 					</p>
 				</article>

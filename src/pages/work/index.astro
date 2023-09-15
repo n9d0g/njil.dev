@@ -10,16 +10,16 @@ const allJobs = data.sort((a, b) =>
 ---
 
 <Layout title="Nathan Lardizabal | Work">
-	<h1 class="mb-8 text-2xl font-semibold">work</h1>
+	<h1 class="mb-8 text-2xl font-semibold">my work</h1>
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{
-			allJobs.map((job, index) => {
+			allJobs.map((job) => {
 				let startDate = `${job.data.startDate.getUTCMonth()}/${job.data.startDate.getUTCFullYear()}`
 				let endDate = `${job.data.endDate.getUTCMonth()}/${job.data.endDate.getUTCFullYear()}`
 				if (job.id === 'quotemedia.md') endDate = 'present'
 
 				return (
-					<article class="flex flex-col justify-between rounded border border-gray-700 px-2 py-4 transition hover:border-gray-400">
+					<article class="flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400">
 						<div>
 							<a
 								href={`/work/${job.slug}`}
@@ -30,7 +30,7 @@ const allJobs = data.sort((a, b) =>
 							<h3 class="my-1 text-xs font-light text-gray-300">
 								{job.data.company} | {job.data.location}
 							</h3>
-							<p class="my-1 text-xs font-light text-gray-500">
+							<p class="my-1 text-xs font-light text-gray-400">
 								{startDate} - {endDate}
 							</p>
 							<p class="my-2 text-sm font-light text-slate-300">
