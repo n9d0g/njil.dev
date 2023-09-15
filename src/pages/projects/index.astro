@@ -1,11 +1,72 @@
 ---
 import Layout from '@layouts/Layout.astro'
+import Icon from 'astro-icon'
+import { getCollection } from 'astro:content'
+
+const data = await getCollection('project')
+const allProjects = data.sort((a, b) =>
+	a.data.startDate < b.data.startDate ? 1 : -1
+)
 ---
 
-<Layout title="Nathan Lardizabal | Projects">
-	<h1 class="font-semibold text-2xl mb-8">projects</h1>
-	<section class="flex flex-col gap-4">
-		<a href="/projects/riseup">riseup</a>
-		<a href="/projects/fcc">fcc</a>
+<Layout title="Nathan Lardizabal | Work">
+	<h1 class="mb-8 text-2xl font-semibold">my projects</h1>
+	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
+		{
+			allProjects.map((project) => {
+				let startDate = `${project.data.startDate.getUTCMonth()}/${project.data.startDate.getUTCFullYear()}`
+				let httpsURL = 'https://'
+
+				return (
+					<article class="flex flex-col justify-between rounded border border-gray-700 px-2 py-4 transition hover:border-gray-400">
+						<div>
+							<div class="flex flex-col gap-1">
+								<h2 class="text-base text-slate-100">{project.data.title}</h2>
+								<a
+									class="my-1 text-sm font-light text-gray-300 transition hover:opacity-80"
+									href={project.data.url}
+									target="_blank"
+								>
+									{project.data.url.replace(httpsURL, '')}
+								</a>
+							</div>
+							<p class="my-1 text-xs font-light text-gray-500">
+								{startDate} - present
+							</p>
+							<p class="my-2 text-sm font-light text-slate-300">
+								{project.data.description}
+							</p>
+						</div>
+						<div class="flex flex-col">
+							<div class="mt-4 flex gap-2">
+								{project.data.tech.map((tech) => (
+									<Icon
+										name={tech}
+										class="h-7 w-auto rounded-lg grayscale transition hover:grayscale-0"
+									/>
+								))}
+							</div>
+							<div class="mt-4 flex flex-col items-end gap-1">
+								<a
+									href={project.data.url}
+									class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
+									target="_blank"
+								>
+									view site <Icon name="mdi:chevron-right" class="h-4 w-auto" />
+								</a>
+								<a
+									href={project.data.repo}
+									class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
+									target="_blank"
+								>
+									view github source{' '}
+									<Icon name="mdi:chevron-right" class="h-4 w-auto" />
+								</a>
+							</div>
+						</div>
+					</article>
+				)
+			})
+		}
 	</section>
 </Layout>

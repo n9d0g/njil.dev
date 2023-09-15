@@ -87,11 +87,11 @@
     </div> 
   {:else if resType === "episode"} 
     <div class="flex gap-2 items-center">
-      <p class="text-sm italic">listening to a podcast rn <span class="not-italic">🎧</span></p>
+      <p class="text-xs">listening to a podcast rn <span class="not-italic">🎧</span></p>
     </div>
   {:else} 
     <div class="flex gap-2 items-center">
-      <p class="text-sm italic">not listening to spotify rn <span class="not-italic">😴</span></p>
+      <p class="text-xs">not listening to spotify atm <span class="not-italic">😴</span></p>
     </div>
   {/if}
 {/await}

@@ -1,5 +1,5 @@
 ---
-company: 'Leons Furniture Limited'
+company: 'Leons Furniture Ltd.'
 position: 'Software Developer'
 location: 'Toronto, ON'
 slug: 'leons'

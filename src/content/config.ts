@@ -26,7 +26,23 @@ const jobCollection = defineCollection({
 	}),
 })
 
+const projectCollection = defineCollection({
+	type: 'content',
+	schema: z.object({
+		title: z.string(),
+		url: z.string(),
+		location: z.string(),
+		startDate: z.date(),
+		endDate: z.date(),
+		description: z.string(),
+		tech: z.array(z.string()),
+		repo: z.string(),
+		points: z.array(z.string()),
+	}),
+})
+
 export const collections = {
 	blog: blogCollection,
 	job: jobCollection,
+	project: projectCollection,
 }
