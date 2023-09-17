@@ -1,0 +1,27 @@
+---
+interface Props {
+	currentPath: string
+	label: string
+	href: string
+}
+
+const { currentPath, label, href } = Astro.props
+
+const handleActive = () => {
+	if (label === 'home' && currentPath === '') return true
+	else {
+		if (currentPath.includes(label)) return true
+
+		return false
+	}
+}
+---
+
+<a
+	class={handleActive()
+		? 'font-semibold text-slate-50'
+		: 'transition text-slate-400 hover:text-slate-100'}
+	href={href}
+>
+	{label}
+</a>

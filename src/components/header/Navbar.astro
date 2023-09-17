@@ -1,45 +1,36 @@
 ---
+import NavbarItem from './NavbarItem.astro'
 const pathname = new URL(Astro.request.url).pathname
 const currentPath = pathname.slice(1)
+
+const navItems = [
+	{
+		href: '/',
+		label: 'home',
+	},
+	{
+		href: '/work',
+		label: 'work',
+	},
+	{
+		href: '/projects',
+		label: 'projects',
+	},
+	{
+		href: '/blog',
+		label: 'blog',
+	},
+	{
+		href: 'mailto:nathanjlardizabal@gmail.com',
+		label: 'contact',
+	},
+]
 ---
 
-<nav class="flex justify-center gap-4 py-4 font-light mb-16 md:justify-start">
-	<a
-		class={currentPath === ''
-			? 'font-semibold text-slate-50'
-			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/"
-	>
-		home
-	</a>
-	<a
-		class={currentPath.includes('work')
-			? 'font-semibold text-slate-50'
-			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/work"
-	>
-		work
-	</a>
-	<a
-		class={currentPath.includes('projects')
-			? 'font-semibold text-slate-50'
-			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/projects"
-	>
-		projects
-	</a>
-	<a
-		class={currentPath.includes('blog')
-			? 'font-semibold text-slate-50'
-			: 'transition text-slate-400 hover:text-slate-100'}
-		href="/blog"
-	>
-		blog
-	</a>
-	<a
-		class="transition hover:text-slate-100 text-slate-400"
-		href="mailto:nathanjlardizabal@gmail.com"
-	>
-		contact</a
-	>
+<nav class="mb-16 flex justify-center gap-4 py-4 font-light md:justify-start">
+	{
+		navItems.map((item) => (
+			<NavbarItem {currentPath} href={item.href} label={item.label} />
+		))
+	}
 </nav>
