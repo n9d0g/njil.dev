@@ -1,8 +1,8 @@
 ---
 import NavbarItem from './NavbarItem.astro'
+
 const pathname = new URL(Astro.request.url).pathname
 const currentPath = pathname.slice(1)
-
 const navItems = [
 	{
 		href: '/',
@@ -27,7 +27,9 @@ const navItems = [
 ]
 ---
 
-<nav class="mb-16 flex justify-center gap-4 py-4 font-light md:justify-start">
+<nav
+	class="container mx-auto flex w-full max-w-2xl justify-start gap-4 py-10 font-light"
+>
 	{
 		navItems.map((item) => (
 			<NavbarItem {currentPath} href={item.href} label={item.label} />
