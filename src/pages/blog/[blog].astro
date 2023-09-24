@@ -18,10 +18,13 @@ const { Content } = await entry.render()
 
 <BlogLayout title={`Nathan Lardizabal | ${entry.data}`} blogData={entry.data}>
 	<article class="prose dark:prose-invert">
-		<h1 class="font-semibold text-2xl mb-2 lowercase">{entry.data.title}</h1>
-		<p class="text-sm italic text-gray-400 font-light">
+		<h1 class="mb-2 text-2xl font-semibold lowercase">{entry.data.title}</h1>
+		<p class="text-sm font-light italic text-gray-400">
 			by {entry.data.author} | {entry.data.published.toLocaleDateString()}
 		</p>
+		<ul>
+			{entry.data.tags.map((tag, index) => <li>{tag}</li>)}
+		</ul>
 		<div class="my-8 font-light">
 			<Content />
 		</div>
