@@ -1,5 +1,6 @@
 ---
 import BlogLayout from '@layouts/BlogLayout.astro'
+import Chip from '@components/general/Chip.astro'
 import { getEntry } from 'astro:content'
 
 const { blog } = Astro.params
@@ -13,18 +14,23 @@ if (entry === undefined) {
 	return Astro.redirect('/404')
 }
 
+const title = entry.data.title
+const author = entry.data.author
+const blogDate = entry.data.published.toLocaleDateString()
+const tags = entry.data.tags
+
 const { Content } = await entry.render()
 ---
 
 <BlogLayout title={`Nathan Lardizabal | ${entry.data}`} blogData={entry.data}>
 	<article class="prose dark:prose-invert">
-		<h1 class="mb-2 text-2xl font-semibold lowercase">{entry.data.title}</h1>
-		<p class="text-sm font-light italic text-gray-400">
-			by {entry.data.author} | {entry.data.published.toLocaleDateString()}
+		<h1 class="mb-2 text-2xl font-semibold lowercase">{title}</h1>
+		<div class="flex gap-2">
+			{tags.map((tag) => <Chip {tag} />)}
+		</div>
+		<p class="my-2 text-sm font-light italic text-gray-400">
+			by {author} | {blogDate}
 		</p>
-		<ul>
-			{entry.data.tags.map((tag, index) => <li>{tag}</li>)}
-		</ul>
 		<div class="my-8 font-light">
 			<Content />
 		</div>

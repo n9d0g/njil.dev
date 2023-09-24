@@ -27,7 +27,7 @@ believe it or not, i tried to write code snippets using `<pre>` or `<code>` tags
 
 in this portfolio site, i’m using markdown files to also gather “frontmatter” which contains info like tags, author, date, slug, start date, end date — all in the top part of the markdown enclosed with the — separator:
 
-```
+```md
 ---
 title: 'My First Markdown Blog'
 author: 'Nathan Lardizabal'
@@ -65,6 +65,6 @@ which automatically formats your markdown to look nice when you wrap your `<Cont
 
 while i do wish i had more control over the specific styling of the markdown markup (lol down up), i’m more than content with how this template formats my markdown.
 
-i have still yet to cross markdown files other than READMEs in a professional workplace, but i believe the sky is the limit with markdown files.
+i have still yet to cross markdown files other than READMEs in a professional setting, but i believe the sky is the limit with markdown files.
 
 hopefully i shed some light on how beneficial markdown files are to you as well! if not, then thanks for reading anyway :)

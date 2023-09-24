@@ -21,13 +21,6 @@ const allBlogs = await getCollection('blog')
 					>
 						{blog.data.title}
 					</a>
-					<ul class="my-2 flex gap-2">
-						{blog.data.tags.map((tag) => (
-							<li class="rounded-full bg-slate-900 px-1 text-[11px] text-slate-500">
-								{tag}
-							</li>
-						))}
-					</ul>
 					<p class="my-1 text-xs lowercase text-gray-500">
 						{blog.data.published.toDateString()}
 					</p>

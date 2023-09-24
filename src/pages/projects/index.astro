@@ -1,6 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import Icon from 'astro-icon'
+import ProjectCard from '@components/general/ProjectCard.astro'
 import { getCollection } from 'astro:content'
 
 const data = await getCollection('project')
@@ -19,56 +19,16 @@ const allProjects = data.sort((a, b) =>
 		{
 			allProjects.map((project) => {
 				let startDate = `${project.data.startDate.getUTCMonth()}/${project.data.startDate.getUTCFullYear()}`
-				let httpsURL = 'https://'
 
 				return (
-					<article class="flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400">
-						<div>
-							<div class="flex flex-col">
-								<h2 class="text-base text-slate-100">{project.data.title}</h2>
-								<a
-									class="my-1 text-sm font-light text-gray-300 transition hover:opacity-80"
-									href={project.data.url}
-									target="_blank"
-								>
-									{project.data.url.replace(httpsURL, '')}
-								</a>
-							</div>
-							<p class="mb-1 text-xs font-light text-gray-400">
-								{startDate} - present
-							</p>
-							<p class="my-2 text-sm font-light text-slate-300">
-								{project.data.description}
-							</p>
-						</div>
-						<div class="flex flex-col">
-							<div class="mt-4 flex gap-2">
-								{project.data.tech.map((tech) => (
-									<Icon
-										name={tech}
-										class="h-7 w-auto rounded-lg grayscale transition hover:grayscale-0"
-									/>
-								))}
-							</div>
-							<div class="mt-4 flex flex-col items-end gap-1">
-								<a
-									href={project.data.url}
-									class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
-									target="_blank"
-								>
-									view site <Icon name="mdi:chevron-right" class="h-4 w-auto" />
-								</a>
-								<a
-									href={project.data.repo}
-									class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
-									target="_blank"
-								>
-									view github source{' '}
-									<Icon name="mdi:chevron-right" class="h-4 w-auto" />
-								</a>
-							</div>
-						</div>
-					</article>
+					<ProjectCard
+						title={project.data.title}
+						url={project.data.url}
+						description={project.data.description}
+						tech={project.data.tech}
+						repo={project.data.repo}
+						{startDate}
+					/>
 				)
 			})
 		}
