@@ -12,13 +12,7 @@ const { contributions } = await response.json()
 				return (
 					<tr>
 						{row.map((day) => {
-							let bg
-							if (day?.level === 0) bg = 'bg-gh0'
-							else if (day?.level === 1) bg = 'bg-gh1'
-							else if (day?.level === 2) bg = 'bg-gh2'
-							else if (day?.level === 3) bg = 'bg-gh3'
-							else if (day?.level === 4) bg = 'bg-gh4'
-
+							let bg = `bg-gh${day?.level}`
 							return <td class={`${bg} border-4 border-slate-950 p-2`} />
 						})}
 					</tr>
