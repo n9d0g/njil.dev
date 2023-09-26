@@ -15,7 +15,6 @@ export async function GET() {
 
 	for (const row of rows) {
 		const days = row.querySelectorAll('td:not(.ContributionCalendar-label)')
-		console.log(days)
 
 		// TODO: fix type
 		const currentRow: any = []
