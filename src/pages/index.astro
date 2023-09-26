@@ -1,38 +1,13 @@
 ---
 import Layout from '@layouts/Layout.astro'
+import GitHubContributions from '@components/home/GitHubContributions.astro'
+import Hero from '@components/home/Hero.astro'
 ---
 
 <Layout title="Nathan Lardizabal | Frontend Developer">
 	<!-- hero -->
 	<section class="flex flex-col">
-		<h1 class="font-semibold text-2xl mb-8">hey, i'm nate ✌️</h1>
-		<p class="text-slate-300 font-light leading-loose">
-			I'm a frontend developer, optimist, and innovator. I currently work as a
-			developer at
-			<a
-				href="https://www.quotemedia.com/"
-				class="text-blue-300 transition hover:text-blue-100"
-				target="_blank">QuoteMedia</a
-			>, where I create marketing websites in
-			<a
-				href="https://vuejs.org/"
-				target="_blank"
-				class="text-blue-300 hover:text-blue-100 transition"
-			>
-				Vue 3</a
-			>,
-			<a
-				href="https://nuxt.com/"
-				target="_blank"
-				class="text-blue-300 transition hover:text-blue-100">Nuxt 3</a
-			>, and
-			<a
-				href="https://tailwindcss.com/"
-				target="_blank"
-				class="text-blue-300 transition hover:text-blue-100"
-			>
-				TailwindCSS</a
-			>.
-		</p>
+		<Hero />
+		<GitHubContributions />
 	</section>
 </Layout>
