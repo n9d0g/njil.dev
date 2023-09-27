@@ -12,7 +12,13 @@ const { contributions } = await response.json()
 				return (
 					<tr>
 						{row.map((day) => {
-							let bg = `bg-gh${day?.level}`
+							let bg
+							if (day?.level === 1) bg = 'bg-gh1'
+							else if (day?.level === 2) bg = 'bg-gh2'
+							else if (day?.level === 3) bg = 'bg-gh3'
+							else if (day?.level === 4) bg = 'bg-gh4'
+							else bg = 'bg-gh0'
+
 							return <td class={`${bg} border-4 border-slate-950 p-2`} />
 						})}
 					</tr>
@@ -24,8 +30,8 @@ const { contributions } = await response.json()
 		<a
 			href="/projects"
 			class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
-			>check out my projects
-
+		>
+			check out my projects
 			<Icon name="mdi:chevron-right" class="h-4 w-auto" />
 		</a>
 	</div>
