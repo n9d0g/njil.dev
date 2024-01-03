@@ -1,3 +1,7 @@
+---
+import Icon from 'astro-icon'
+---
+
 <div>
 	<h1 class="mb-8 text-2xl font-semibold">hey, i'm Nathan Lardizabal ✌️</h1>
 	<p class="font-light leading-loose text-slate-300">
@@ -29,5 +33,14 @@
 			TailwindCSS</a
 		>.
 	</p>
-	<hr class="my-4 border-slate-700" />
+
+	<div class="my-4 flex justify-end">
+		<a
+			href="/work"
+			class="flex items-center text-xs text-gray-500 transition hover:text-gray-50"
+		>
+			check out my work experience
+			<Icon name="mdi:chevron-right" class="h-4 w-auto translate-y-[1px]" />
+		</a>
+	</div>
 </div>

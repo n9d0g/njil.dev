@@ -17,9 +17,9 @@ const {
 	class="flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400"
 >
 	<div>
-		<a href={`/work/${slug}`} class="text-base text-slate-100 hover:opacity-80">
+		<h2 class="text-base text-slate-100">
 			{position}
-		</a>
+		</h2>
 		<h3 class="my-1 text-xs font-light text-gray-300">
 			{company} | {location}
 		</h3>
@@ -41,7 +41,7 @@ const {
 				))
 			}
 		</div>
-		<div class="flex justify-end">
+		<!-- <div class="flex justify-end">
 			<a
 				href={`/work/${slug}`}
 				target="_blank"
@@ -49,6 +49,6 @@ const {
 			>
 				see more <Icon name="mdi:chevron-right" class="h-4 w-auto" />
 			</a>
-		</div>
+		</div> -->
 	</div>
 </article>
