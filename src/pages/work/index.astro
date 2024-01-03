@@ -1,0 +1,40 @@
+---
+import Layout from '@layouts/Layout.astro'
+import WorkCard from '@components/general/WorkCard.astro'
+import { getCollection } from 'astro:content'
+
+const data = await getCollection('job')
+const allJobs = data.sort((a, b) =>
+	a.data.startDate < b.data.startDate ? 1 : -1
+)
+---
+
+<Layout title="Nathan Lardizabal | Work">
+	<h1 class="mb-8 text-2xl font-semibold">my work</h1>
+	<p class="text-sm font-light text-slate-300">
+		the companies who made the right choice 😤
+	</p>
+	<hr class="my-4 border-slate-700" />
+	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
+		{
+			allJobs.map((job) => {
+				let startDate = `${job.data.startDate.getUTCMonth()}/${job.data.startDate.getUTCFullYear()}`
+				let endDate = `${job.data.endDate.getUTCMonth()}/${job.data.endDate.getUTCFullYear()}`
+				if (job.id === 'quotemedia.md') endDate = 'present'
+
+				return (
+					<WorkCard
+						slug={job.slug}
+						position={job.data.position}
+						company={job.data.company}
+						location={job.data.location}
+						description={job.data.description}
+						tech={job.data.tech}
+						{startDate}
+						{endDate}
+					/>
+				)
+			})
+		}
+	</section>
+</Layout>

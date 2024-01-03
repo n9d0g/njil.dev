@@ -1,9 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Layout from '@layouts/Layout.astro'
+import Hero from '@components/home/Hero.astro'
+// import GitHubContributions from '@components/home/GitHubContributions.astro'
 ---
 
-<Layout title="njil">
-	<main class="min-h-screen flex items-center justify-center container mx-auto">
-		<h1 class="font-bold text-4xl text-white">🚧 new njil.dev 2.0 site WIP 🚧</h1>
-	</main>
+<Layout title="Nathan Lardizabal | Frontend Developer">
+	<section class="flex flex-col">
+		<Hero />
+		<!-- <GitHubContributions /> -->
+	</section>
 </Layout>

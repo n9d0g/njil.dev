@@ -1,0 +1,20 @@
+---
+import { Icon } from 'astro-icon'
+import NowPlaying from './NowPlaying.svelte'
+
+const clientId = import.meta.env.SPOTIFY_CLIENT_ID
+const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET
+const refreshToken = import.meta.env.SPOTIFY_REFRESH_TOKEN
+---
+
+<div class="font-light text-slate-400">
+	<div class="flex h-10 items-center justify-center">
+		<Icon name="logos:spotify-icon" class="mr-2 h-7 w-7" />
+		<NowPlaying
+			clientId={clientId}
+			clientSecret={clientSecret}
+			refreshToken={refreshToken}
+			client:load
+		/>
+	</div>
+</div>

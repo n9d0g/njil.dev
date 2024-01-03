@@ -1,0 +1,31 @@
+---
+import Layout from '@layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const allBlogs = await getCollection('blog')
+---
+
+<Layout title="Nathan Lardizabal | Blog">
+	<h1 class="mb-8 text-2xl font-semibold">my blog</h1>
+	<p class="text-sm font-light text-slate-300">
+		smol things to share - code related or not 🥸
+	</p>
+	<hr class="my-4 border-slate-700" />
+	<section class="flex flex-col gap-4">
+		{
+			allBlogs.map((blog) => (
+				<article>
+					<a
+						href={`/blog/${blog.slug}`}
+						class="w-fit font-light lowercase transition hover:opacity-80"
+					>
+						{blog.data.title}
+					</a>
+					<p class="my-1 text-xs lowercase text-gray-500">
+						{blog.data.published.toDateString()}
+					</p>
+				</article>
+			))
+		}
+	</section>
+</Layout>

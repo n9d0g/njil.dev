@@ -1,0 +1,26 @@
+---
+import type { GetStaticPaths } from 'astro'
+import Layout from '@layouts/Layout.astro'
+
+export const prerender = true
+
+export const getStaticPaths = (() => {
+	return [
+		{
+			params: { job: 'quotemedia' },
+		},
+		{
+			params: { job: 'leons' },
+		},
+		{
+			params: { job: 'manulife' },
+		},
+	]
+}) satisfies GetStaticPaths
+
+const { job } = Astro.params
+---
+
+<Layout title=`Nathan Lardizabal | ${job}`>
+	<h1 class="mb-8 text-2xl font-semibold">{job}</h1>
+</Layout>
