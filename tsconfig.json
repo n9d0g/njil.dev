@@ -6,7 +6,7 @@
 			"@components/*": ["src/components/*"],
 			"@assets/*": ["src/assets/*"],
 			"@layouts/*": ["src/layouts/*"],
-			"@api/*": ["src/pages/api/*"]
-		}
-	}
+			"@api/*": ["src/pages/api/*"],
+		},
+	},
 }
