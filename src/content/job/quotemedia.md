@@ -1,5 +1,5 @@
 ---
-company: 'QuoteMedia Inc.'
+company: 'QuoteMedia Ltd.'
 position: 'Intermediate Frontend Developer'
 location: 'Vancouver, BC'
 slug: 'quotemedia'
