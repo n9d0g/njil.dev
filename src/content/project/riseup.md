@@ -1,7 +1,7 @@
 ---
 title: 'Rise Up League'
 url: 'https://riseupleague.com'
-repo: 'https://github.com/n9d0g/riseupleague'
+repo: 'https://github.com/riseupleague/riseupleague'
 location: 'Mississauga, ON'
 slug: 'riseup'
 startDate: 2023-10-01
