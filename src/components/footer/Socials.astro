@@ -12,11 +12,11 @@ const socials = [
 	},
 	{
 		icon: 'mdi:document',
-		href: 'https://rxresu.me/nathanjlardizabal/nathan-lardizabal-resume-2024',
+		href: '/resume.pdf',
 	},
 	{
 		icon: 'mdi:email',
-		href: 'mailto:nathanjlardizabal@gmail.com',
+		href: 'mailto:nate@njil.dev',
 	},
 	{
 		icon: 'mdi:spotify',
@@ -32,7 +32,7 @@ const socials = [
 <section class="flex justify-center gap-4">
 	{
 		socials.map((social) => (
-			<a href={social.href} class="h-6 w-6">
+			<a href={social.href} target="_blank" class="h-6 w-6">
 				<Icon
 					name={social.icon}
 					class="text-gray-600 transition hover:text-gray-50"
