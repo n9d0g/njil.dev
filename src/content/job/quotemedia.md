@@ -1,11 +1,11 @@
 ---
 company: 'QuoteMedia Ltd.'
-position: 'Intermediate Frontend Developer'
+position: 'Senior Frontend Developer'
 location: 'Vancouver, BC'
 slug: 'quotemedia'
 startDate: 2022-09-01
 endDate: 2024-02-14
-description: 'Developed, created, and maintained marketing websites built with Vue 3, Nuxt 3, and TailwindCSS. All marketing sites deployed with Cloudflare Pages.'
+description: 'Developed, created, and maintained marketing websites built with Vue 3, Nuxt 3, and Tailwind. All marketing sites deployed with Cloudflare Pages.'
 tech:
   [
     'vscode-icons:file-type-vue',

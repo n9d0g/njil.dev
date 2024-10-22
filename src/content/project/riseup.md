@@ -6,7 +6,7 @@ location: 'Mississauga, ON'
 slug: 'riseup'
 startDate: 2023-10-01
 endDate: 2024-02-14
-description: 'Monorepo for the Rise Up League. Site built with TypeScript, React, Next.js (App Router), shadcn-ui component library, and TailwindCSS. Utilizing MongoDB and Mongoose ORM for the backend, registration done through Stripe. Deployed with Vercel.'
+description: 'Monorepo for the Rise Up League. Site built with TypeScript, React, Next.js (App Router), shadcn-ui component library, and Tailwind. Utilizing MongoDB and Mongoose ORM for the backend, registration done through Stripe. Deployed with Vercel.'
 tech:
   [
     'logos:typescript-icon',
