@@ -1,9 +1,9 @@
 {
 	"name": "njil.dev",
 	"type": "module",
-	"version": "2.0.10",
+	"version": "2.0.11",
 	"scripts": {
-		"dev": "astro dev --host",
+		"dev": "astro dev --host --open",
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",

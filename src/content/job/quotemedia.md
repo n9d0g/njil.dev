@@ -1,6 +1,6 @@
 ---
 company: 'QuoteMedia Ltd.'
-position: 'Intermediate Frontend Developer'
+position: 'Senior Frontend Developer'
 location: 'Vancouver, BC'
 slug: 'quotemedia'
 startDate: 2022-09-01
