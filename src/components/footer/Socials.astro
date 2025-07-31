@@ -5,26 +5,32 @@ const socials = [
 	{
 		icon: 'mdi:github',
 		href: 'https://github.com/n9d0g/',
+		label: 'github',
 	},
 	{
 		icon: 'mdi:linkedin',
 		href: 'https://www.linkedin.com/in/njlardizabal/',
+		label: 'linkedin',
 	},
 	{
 		icon: 'mdi:document',
 		href: '/resume.pdf',
+		label: 'resume',
 	},
 	{
 		icon: 'mdi:email',
 		href: 'mailto:nate@njil.dev',
+		label: 'email',
 	},
 	{
 		icon: 'mdi:soundcloud',
 		href: 'https://soundcloud.com/n9d0g',
+		label: 'soundcloud',
 	},
 	{
 		icon: 'mdi:instagram',
 		href: 'https://www.instagram.com/n9d0g',
+		label: 'instagram',
 	},
 ]
 ---
@@ -32,7 +38,12 @@ const socials = [
 <section class="flex justify-center gap-4">
 	{
 		socials.map((social) => (
-			<a href={social.href} target="_blank" class="h-6 w-6">
+			<a
+				href={social.href}
+				target="_blank"
+				class="size-6"
+				aria-label={social.label}
+			>
 				<Icon
 					name={social.icon}
 					class="text-gray-600 transition hover:text-gray-50"
