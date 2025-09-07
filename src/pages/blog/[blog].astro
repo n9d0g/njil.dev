@@ -4,15 +4,11 @@ import Chip from '@components/general/Chip.astro'
 import { getEntry } from 'astro:content'
 
 const { blog } = Astro.params
-if (blog === undefined) {
-	throw new Error('Blog is required')
-}
+if (blog === undefined) throw new Error('Blog is required')
 
 const entry = await getEntry('blog', blog)
 
-if (entry === undefined) {
-	return Astro.redirect('/404')
-}
+if (entry === undefined) return Astro.redirect('/404')
 
 const title = entry.data.title
 const author = entry.data.author
