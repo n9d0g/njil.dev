@@ -1,166 +1,30 @@
 ---
+export const prerender = false
+
 import Layout from '@layouts/Layout.astro'
 import { z } from 'zod'
 import * as nodemailer from 'nodemailer'
+import { ContactSchema } from '../../validation/form'
+import { contact } from '../../actions'
 
 const siteKey = import.meta.env.GOOGLE_RECAPTCHA_SITE_KEY
-
-// Define the form schema
-const ContactSchema = z.object({
-	name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-	email: z.string().email('Invalid email address'),
-	message: z
-		.string()
-		.min(10, 'Message must be at least 10 characters')
-		.max(1000, 'Message is too long'),
-	recaptchaToken: z.string().min(1, 'reCAPTCHA verification required'),
-})
 
 // Handle form submission
 let message = ''
 let errors: Record<string, string> = {}
 let formData = { name: '', email: '', message: '' }
-
-if (Astro.request.method === 'POST') {
-	try {
-		const data = await Astro.request.formData()
-		const rawData = {
-			name: data.get('name') || '',
-			email: data.get('email') || '',
-			message: data.get('message') || '',
-			recaptchaToken: data.get('recaptchaToken') || '',
-		}
-
-		// Validate the data
-		const validatedData = ContactSchema.parse(rawData)
-
-		// Verify reCAPTCHA token
-		const recaptchaResponse = await fetch(
-			'https://www.google.com/recaptcha/api/siteverify',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				body: new URLSearchParams({
-					secret: import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY,
-					response: validatedData.recaptchaToken,
-				}),
-			}
-		)
-
-		const recaptchaResult = await recaptchaResponse.json()
-
-		if (!recaptchaResult.success) {
-			throw new Error('reCAPTCHA verification failed')
-		}
-
-		// If validation and reCAPTCHA pass, send email
-		const transporter = nodemailer.createTransport({
-			service: 'gmail',
-			auth: {
-				user: import.meta.env.EMAIL_USER,
-				pass: import.meta.env.EMAIL_PASS,
-			},
-		})
-
-		const mailOptions = {
-			from: import.meta.env.EMAIL_USER,
-			to: import.meta.env.EMAIL_USER,
-			subject: `New Contact Form Message from ${validatedData.name}`,
-			text: `
-        Name: ${validatedData.name}
-        Email: ${validatedData.email}
-        Message: ${validatedData.message}
-      `,
-			html: `
-        <h3>New Contact Form Message</h3>
-        <p><strong>Name:</strong> ${validatedData.name}</p>
-        <p><strong>Email:</strong> ${validatedData.email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${validatedData.message}</p>
-      `,
-		}
-
-		await transporter.sendMail(mailOptions)
-
-		message = 'Thank you for your message! It has been sent successfully.'
-		errors = {}
-		formData = { name: '', email: '', message: '' }
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			// Handle validation errors
-			errors = {}
-			error.errors.forEach((err) => {
-				if (err.path[0]) {
-					errors[err.path[0] as string] = err.message
-				}
-			})
-			// Keep form data for user to fix errors
-			formData = {
-				name: Astro.request.formData()?.get('name') || '',
-				email: Astro.request.formData()?.get('email') || '',
-				message: Astro.request.formData()?.get('message') || '',
-			}
-		} else {
-			console.error('Unexpected error:', error)
-			message = 'An unexpected error occurred. Please try again.'
-		}
-	}
-}
+let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`
 ---
 
-<script src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
-></script>
-
-<script>
-	// Handle form submission with reCAPTCHA
-	document.addEventListener('DOMContentLoaded', function () {
-		const form = document.querySelector('form') as HTMLFormElement
-		const submitButton = form?.querySelector(
-			'button[type="submit"]'
-		) as HTMLButtonElement
-
-		form?.addEventListener('submit', async function (e) {
-			e.preventDefault()
-
-			if (submitButton) {
-				submitButton.disabled = true
-				submitButton.textContent = 'sending...'
-			}
-
-			try {
-				// Execute reCAPTCHA
-				const token = await (window as any).grecaptcha.execute('${siteKey}', {
-					action: 'contact_form',
-				})
-
-				// Add reCAPTCHA token to form
-				const recaptchaInput = document.createElement('input')
-				recaptchaInput.type = 'hidden'
-				recaptchaInput.name = 'recaptchaToken'
-				recaptchaInput.value = token
-				form.appendChild(recaptchaInput)
-
-				// Submit the form normally (this will trigger server-side processing)
-				form.submit()
-			} catch (error) {
-				console.error('Error:', error)
-				alert('An error occurred. Please try again.')
-				if (submitButton) {
-					submitButton.disabled = false
-					submitButton.textContent = 'send'
-				}
-			}
-		})
-	})
-</script>
+<script src={recaptchaURL}></script>
 
 <Layout title="Nathan Lardizabal | Contact">
 	<h1 class="mb-8 text-2xl font-semibold">contact me!</h1>
+
 	<p class="text-sm font-light text-slate-300">
 		feel free to reach out to me via email or social media!
 	</p>
+
 	<hr class="my-4 border-slate-700" />
 
 	{
@@ -172,7 +36,11 @@ if (Astro.request.method === 'POST') {
 	}
 
 	<section>
-		<form method="POST" class="space-y-4 text-sm font-light">
+		<form
+			method="POST"
+			action={contact.submit}
+			class="space-y-4 text-sm font-light"
+		>
 			<div class="flex w-full gap-4">
 				<div class="flex w-1/2 flex-col gap-2">
 					<label for="name">name</label>
@@ -232,7 +100,7 @@ if (Astro.request.method === 'POST') {
 
 			<div class="flex justify-end">
 				<button
-					type="submit"
+					onclick="handleSubmit"
 					class="rounded border border-slate-700 bg-transparent px-4 py-2 transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					send

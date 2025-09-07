@@ -1,3 +1,3 @@
-# njil.dev Portfolio site
+# njil.dev
 
-Personal portfolio website for Nathan Lardizabal.
+Personal site for me, my work, and random stuff :)
