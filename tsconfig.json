@@ -1,17 +1,12 @@
 {
+	"extends": "astro/tsconfigs/base",
 	"compilerOptions": {
-		"baseUrl": ".",
-		"strictNullChecks": true,
-		"module": "esnext",
-		"target": "es2020",
-		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
 		"paths": {
 			"@components/*": ["src/components/*"],
 			"@assets/*": ["src/assets/*"],
 			"@layouts/*": ["src/layouts/*"],
-			"@api/*": ["src/pages/api/*"]
+			"@api/*": ["src/pages/api/*"],
+			"@validation/*": ["src/validation/*"]
 		}
 	}
 }

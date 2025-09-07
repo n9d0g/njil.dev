@@ -1,16 +1,13 @@
 ---
-export const prerender = false
-
 import Layout from '@layouts/Layout.astro'
 import { actions } from 'astro:actions'
 
 const siteKey = import.meta.env.GOOGLE_RECAPTCHA_SITE_KEY
 
-// Handle form submission
-let message = ''
 let errors: Record<string, string> = {}
-let formData = { name: '', email: '', message: '' }
 let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`
+
+const result = Astro.getActionResult(actions.contact)
 ---
 
 <script src={recaptchaURL}></script>
@@ -23,14 +20,6 @@ let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&re
 	</p>
 
 	<hr class="my-4 border-slate-700" />
-
-	{
-		message && (
-			<div class="mb-4 rounded border border-green-700 bg-green-900/20 p-3 text-green-300">
-				{message}
-			</div>
-		)
-	}
 
 	<section>
 		<form
@@ -49,7 +38,6 @@ let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&re
 						class={`rounded border px-2 py-2 bg-transparent ${
 							errors.name ? 'border-red-500' : 'border-slate-700'
 						}`}
-						value={formData.name}
 					/>
 					{
 						errors.name && (
@@ -67,7 +55,6 @@ let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&re
 						class={`rounded border px-2 py-2 bg-transparent ${
 							errors.email ? 'border-red-500' : 'border-slate-700'
 						}`}
-						value={formData.email}
 					/>
 					{
 						errors.email && (
@@ -86,8 +73,7 @@ let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&re
 					required
 					class={`rounded border px-2 py-2 bg-transparent ${
 						errors.message ? 'border-red-500' : 'border-slate-700'
-					}`}>{formData.message}</textarea
-				>
+					}`}></textarea>
 				{
 					errors.message && (
 						<span class="text-xs text-red-400">{errors.message}</span>
