@@ -2,10 +2,7 @@
 export const prerender = false
 
 import Layout from '@layouts/Layout.astro'
-import { z } from 'zod'
-import * as nodemailer from 'nodemailer'
-import { ContactSchema } from '../../validation/form'
-import { contact } from '../../actions'
+import { server } from '../../actions'
 
 const siteKey = import.meta.env.GOOGLE_RECAPTCHA_SITE_KEY
 
@@ -38,7 +35,7 @@ let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&re
 	<section>
 		<form
 			method="POST"
-			action={contact.submit}
+			action={server.contact}
 			class="space-y-4 text-sm font-light"
 		>
 			<div class="flex w-full gap-4">
