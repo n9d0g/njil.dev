@@ -2,12 +2,14 @@
 import Layout from '@layouts/Layout.astro'
 import { actions } from 'astro:actions'
 
-const siteKey = import.meta.env.GOOGLE_RECAPTCHA_SITE_KEY
+const siteKey = import.meta.env.PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
 
-let errors: Record<string, string> = {}
 let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`
 
 const result = Astro.getActionResult(actions.contact)
+if (result && !result.error) {
+	return Astro.redirect('/contact/success')
+}
 ---
 
 <script src={recaptchaURL}></script>
@@ -36,15 +38,8 @@ const result = Astro.getActionResult(actions.contact)
 						id="name"
 						name="name"
 						required
-						class={`rounded border px-2 py-2 bg-transparent ${
-							errors.name ? 'border-red-500' : 'border-slate-700'
-						}`}
+						class="rounded border border-slate-700 bg-transparent px-2 py-2"
 					/>
-					{
-						errors.name && (
-							<span class="text-xs text-red-400">{errors.name}</span>
-						)
-					}
 				</div>
 				<div class="flex w-1/2 flex-col gap-2">
 					<label for="email">email</label>
@@ -53,15 +48,8 @@ const result = Astro.getActionResult(actions.contact)
 						id="email"
 						name="email"
 						required
-						class={`rounded border px-2 py-2 bg-transparent ${
-							errors.email ? 'border-red-500' : 'border-slate-700'
-						}`}
+						class="rounded border border-slate-700 bg-transparent px-2 py-2"
 					/>
-					{
-						errors.email && (
-							<span class="text-xs text-red-400">{errors.email}</span>
-						)
-					}
 				</div>
 			</div>
 
@@ -72,15 +60,11 @@ const result = Astro.getActionResult(actions.contact)
 					name="message"
 					rows="6"
 					required
-					class={`rounded border px-2 py-2 bg-transparent ${
-						errors.message ? 'border-red-500' : 'border-slate-700'
-					}`}></textarea>
-				{
-					errors.message && (
-						<span class="text-xs text-red-400">{errors.message}</span>
-					)
-				}
+					class="rounded border border-slate-700 bg-transparent px-2 py-2"
+				></textarea>
 			</div>
+
+			<input type="hidden" name="token" id="recaptcha-token" />
 
 			<div class="flex justify-end">
 				<button
@@ -91,33 +75,45 @@ const result = Astro.getActionResult(actions.contact)
 				</button>
 			</div>
 		</form>
+
+		<div>
+			<!-- error messaging -->
+			<p class="font-light text-slate-300">
+				{
+					result && result.error && (
+						<span class="text-red-400">
+							{result.error.message}. Please try again.
+						</span>
+					)
+				}
+			</p>
+			<!-- success messaging -->
+			<p class="font-light text-slate-300">
+				{
+					result && result.data && (
+						<span>
+							Thank you for contacting me! I'll get back to you as soon as I
+							can.
+						</span>
+					)
+				}
+			</p>
+		</div>
 	</section>
 </Layout>
 
 <script is:inline>
 	const form = document.querySelector('form')
+	const tokenInput = document.getElementById('recaptcha-token')
+	const recaptchaSiteKey = import.meta.env.PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
 
 	form?.addEventListener('submit', async (e) => {
 		e.preventDefault()
 
-		try {
-			const token = await grecaptcha
-				.execute('6LdjtqorAAAAALZryVliTdsFjYpnoUcKWmgWXMCH', {
-					action: 'submit',
-				})
-				.then((token) => {
-					return token
-				})
-
-			const fd = new FormData(form)
-			fd.append('token', token)
-
-			const res = await fetch(form.action, {
-				method: 'POST',
-				body: fd,
-			})
-		} catch (error) {
-			console.error(error)
-		}
+		const token = await grecaptcha.execute(recaptchaSiteKey, {
+			action: 'submit',
+		})
+		tokenInput.value = token
+		form.submit()
 	})
 </script>
