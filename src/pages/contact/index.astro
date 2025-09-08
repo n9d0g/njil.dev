@@ -105,14 +105,16 @@ if (result && !result.error) {
 <script is:inline>
 	const form = document.querySelector('form')
 	const tokenInput = document.getElementById('recaptcha-token')
-	const recaptchaSiteKey = import.meta.env.PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
 
 	form?.addEventListener('submit', async (e) => {
 		e.preventDefault()
 
-		const token = await grecaptcha.execute(recaptchaSiteKey, {
-			action: 'submit',
-		})
+		const token = await grecaptcha.execute(
+			'6LdVuaorAAAAAPgx6nkCo0WFQzsZjXq8pl4xK4Ib',
+			{
+				action: 'submit',
+			}
+		)
 		tokenInput.value = token
 		form.submit()
 	})
