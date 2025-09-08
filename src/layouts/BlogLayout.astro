@@ -1,9 +1,8 @@
 ---
 import Analytics from '@vercel/analytics/astro'
-import { ClientRouter } from 'astro:transitions'
 import Footer from '@components/Footer.astro'
 import Header from '@components/Header.astro'
-import type { BlogData } from '@types/layout.ts'
+import type { BlogData } from '@types/layout'
 
 interface Props {
 	title: string
@@ -30,7 +29,6 @@ const { title, blogData } = Astro.props
 		<title class="uppercase">Nathan Lardizabal | {blogData.title}</title>
 
 		<Analytics />
-		<ClientRouter />
 	</head>
 	<body
 		class="flex min-h-[100dvh] flex-col justify-between bg-slate-950 pt-8 text-slate-100"
