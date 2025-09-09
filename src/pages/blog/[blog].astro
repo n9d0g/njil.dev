@@ -18,7 +18,10 @@ const tags = entry.data.tags
 const { Content } = await entry.render()
 ---
 
-<BlogLayout title={`Nathan Lardizabal | ${entry.data}`} blogData={entry.data}>
+<BlogLayout
+	title={`Nathan Lardizabal | ${entry.data.title}`}
+	blogData={entry.data}
+>
 	<article class="prose dark:prose-invert">
 		<h1 class="mb-2 text-2xl font-semibold lowercase">{title}</h1>
 		<div class="flex gap-2">
