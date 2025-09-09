@@ -1,26 +1,23 @@
 ---
 interface Props {
-	currentPath: string
 	label: string
 	href: string
 }
 
-const { currentPath, label, href } = Astro.props
+const { label, href } = Astro.props
 
-const handleActive = () => {
-	if (label === 'home' && currentPath === '') return true
-	else {
-		if (currentPath.includes(label)) return true
-
-		return false
-	}
-}
+const pathname = Astro.url.pathname
+const normalize = (p: string) => p.replace(/\/+$/, '') || '/'
+const a = normalize(href)
+const b = normalize(pathname)
+const active = a === '/' ? b === '/' : b === a || b.startsWith(a + '/')
 ---
 
 <a
-	class={handleActive()
-		? 'font-semibold text-slate-50'
-		: 'transition text-slate-400 hover:text-slate-100'}
+	class:list={{
+		'font-semibold text-slate-50': active,
+		'text-slate-400 transition hover:text-slate-100': !active,
+	}}
 	href={href}
 >
 	{label}

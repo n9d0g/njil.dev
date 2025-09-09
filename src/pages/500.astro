@@ -1,13 +1,20 @@
 ---
 import Layout from '@layouts/Layout.astro'
+
+interface Props {
+	error: unknown
+}
+
+const { error } = Astro.props
+console.error(error)
 ---
 
 <Layout title="Nathan Lardizabal | Frontend Developer">
 	<!-- hero -->
 	<section class="flex flex-col items-center justify-center">
-		<h1 class="mb-8 text-2xl font-semibold">404 Error</h1>
+		<h1 class="mb-8 text-2xl font-semibold">500 Error</h1>
 		<p class="font-light text-slate-300">
-			The page you are looking for does not exist.
+			An error occurred while processing your request. Please try again later.
 		</p>
 	</section>
 </Layout>

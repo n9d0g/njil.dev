@@ -1,11 +1,12 @@
 ---
+import Analytics from '@vercel/analytics/astro'
 import Footer from '@components/Footer.astro'
 import Header from '@components/Header.astro'
-import { ViewTransitions } from 'astro:transitions'
+import type { BlogData } from '@types/layout'
 
 interface Props {
 	title: string
-	blogData: object
+	blogData: BlogData
 }
 
 const { title, blogData } = Astro.props
@@ -14,18 +15,6 @@ const { title, blogData } = Astro.props
 <!doctype html>
 <html lang="en" class="bg-slate-950">
 	<head>
-		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVLQSN0MBB"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || []
-			function gtag() {
-				dataLayer.push(arguments)
-			}
-			gtag('js', new Date())
-
-			gtag('config', 'G-JVLQSN0MBB')
-		</script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -38,7 +27,8 @@ const { title, blogData } = Astro.props
 		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title class="uppercase">Nathan Lardizabal | {blogData.title}</title>
-		<ViewTransitions />
+
+		<Analytics />
 	</head>
 	<body
 		class="flex min-h-[100dvh] flex-col justify-between bg-slate-950 pt-8 text-slate-100"

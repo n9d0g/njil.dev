@@ -13,8 +13,6 @@ i've never had to use them in my day job -- but it seems like so many people use
 
 creating this portfolio site was the first time i experienced the full capacity of markdown files.
 
-the biggest use case i’ve seen for markdown is the ease of formatting code for code snippets like this:
-
 this is super useful for me when trying to write documentation for UI libraries, how to implement them, props, etc etc. I also recently found out that you’re able to show specific languages through a code snippet by adding the language to the first line:
 
 ````

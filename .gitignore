@@ -3,6 +3,7 @@ dist/
 
 # generated types
 .astro/
+.vercel/
 
 # dependencies
 node_modules/
@@ -17,6 +18,9 @@ pnpm-debug.log*
 .env
 .env.local
 .env.production
+
+# ssl certificates
+certificate
 
 # macOS-specific files
 .DS_Store
