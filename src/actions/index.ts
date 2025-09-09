@@ -1,29 +1,20 @@
 import { defineAction, ActionError } from 'astro:actions'
 import { z } from 'astro:schema'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 export const server = {
 	contact: defineAction({
 		accept: 'form',
 		input: z.instanceof(FormData),
 		handler: async (data: FormData) => {
-			console.log('contact action')
-
 			const recaptchaSecretKey = import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY
-			const emailUser = import.meta.env.EMAIL_USER
-			const emailPassword = import.meta.env.EMAIL_PASS
 			const name = (data.get('name') as string) ?? ''
 			const email = (data.get('email') as string) ?? ''
 			const message = (data.get('message') as string) ?? ''
+			const resend = new Resend(import.meta.env.RESEND_API_KEY)
+			const resendEmail = import.meta.env.RESEND_EMAIL
 
 			try {
-				if (!emailUser || !emailPassword) {
-					throw new ActionError({
-						message: 'Missing email environment variables.',
-						code: 'INTERNAL_SERVER_ERROR',
-					})
-				}
-
 				// recaptcha
 				const token = data.get('token')
 				const response = await fetch(
@@ -38,27 +29,28 @@ export const server = {
 					})
 				}
 
-				// nodemailer
-				const transporter = nodemailer.createTransport({
-					service: 'gmail',
-					auth: { user: emailUser, pass: emailPassword },
-				})
+				// resend
+				const { data: resendData, error: resendError } =
+					await resend.emails.send({
+						from: `njil.dev <${resendEmail}>`,
+						to: ['nate@njil.dev'],
+						subject: 'Contact Form Submission (njil.dev)',
+						html: `
+						<section>
+							<p>Name: ${name}</p>
+							<p>Email: ${email}</p>
+							<p>Message: ${message}</p>
+						</section>
+					`,
+					})
 
-				const mailOptions = {
-					from: emailUser,
-					to: emailUser,
-					bcc: 'nathanjlardizabal@gmail.com',
-					subject: 'Contact Form Submission (njil.dev)',
-					html: `
-					<section>
-						<p>Name: ${name}</p>
-						<p>Email: ${email}</p>
-						<p>Message: ${message}</p>
-					</section>
-				`,
+				if (resendError) {
+					console.error(resendError)
+					throw new ActionError({
+						message: 'Failed to send email',
+						code: 'INTERNAL_SERVER_ERROR',
+					})
 				}
-
-				await transporter.sendMail(mailOptions)
 
 				console.log('Email sent successfully')
 				return {
