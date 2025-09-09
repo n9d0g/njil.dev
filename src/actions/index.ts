@@ -7,6 +7,8 @@ export const server = {
 		accept: 'form',
 		input: z.instanceof(FormData),
 		handler: async (data: FormData) => {
+			console.log('contact action')
+
 			const recaptchaSecretKey = import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY
 			const emailUser = import.meta.env.EMAIL_USER
 			const emailPassword = import.meta.env.EMAIL_PASS
