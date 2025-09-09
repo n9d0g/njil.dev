@@ -7,5 +7,5 @@ import vercel from '@astrojs/vercel'
 export default defineConfig({
 	integrations: [tailwind(), partytown()],
 	output: 'server',
-	adapter: vercel({ webAnalytics: true, speedInsights: true }),
+	adapter: vercel({ webAnalytics: true }),
 })
