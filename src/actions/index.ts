@@ -8,6 +8,7 @@ export const server = {
 		input: z.instanceof(FormData),
 		handler: async (data: FormData) => {
 			try {
+				console.log('contact action')
 				const recaptchaSecretKey = import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY
 				const name = (data.get('name') as string) ?? ''
 				const email = (data.get('email') as string) ?? ''
@@ -57,7 +58,11 @@ export const server = {
 				}
 			} catch (error) {
 				console.error(error)
-				throw error
+
+				throw new ActionError({
+					message: 'Something went wrong',
+					code: 'INTERNAL_SERVER_ERROR',
+				})
 			}
 		},
 	}),
