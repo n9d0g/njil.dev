@@ -7,14 +7,14 @@ export const server = {
 		accept: 'form',
 		input: z.instanceof(FormData),
 		handler: async (data: FormData) => {
-			const recaptchaSecretKey = import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY
-			const name = (data.get('name') as string) ?? ''
-			const email = (data.get('email') as string) ?? ''
-			const message = (data.get('message') as string) ?? ''
-			const resend = new Resend(import.meta.env.RESEND_API_KEY)
-			const resendEmail = import.meta.env.RESEND_EMAIL
-
 			try {
+				const recaptchaSecretKey = import.meta.env.GOOGLE_RECAPTCHA_SECRET_KEY
+				const name = (data.get('name') as string) ?? ''
+				const email = (data.get('email') as string) ?? ''
+				const message = (data.get('message') as string) ?? ''
+				const resend = new Resend(import.meta.env.RESEND_API_KEY)
+				const resendEmail = import.meta.env.RESEND_EMAIL
+
 				// recaptcha
 				const token = data.get('token')
 				const response = await fetch(
@@ -30,19 +30,18 @@ export const server = {
 				}
 
 				// resend
-				const { data: resendData, error: resendError } =
-					await resend.emails.send({
-						from: `njil.dev <${resendEmail}>`,
-						to: ['nate@njil.dev'],
-						subject: 'Contact Form Submission (njil.dev)',
-						html: `
+				const { error: resendError } = await resend.emails.send({
+					from: `njil.dev <${resendEmail}>`,
+					to: ['nate@njil.dev'],
+					subject: 'Contact Form Submission (njil.dev)',
+					html: `
 						<section>
 							<p>Name: ${name}</p>
 							<p>Email: ${email}</p>
 							<p>Message: ${message}</p>
 						</section>
 					`,
-					})
+				})
 
 				if (resendError) {
 					console.error(resendError)
