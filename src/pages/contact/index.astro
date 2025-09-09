@@ -2,17 +2,16 @@
 import Layout from '@layouts/Layout.astro'
 import { actions } from 'astro:actions'
 
-const siteKey = import.meta.env.PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
-
-let recaptchaURL = `https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`
-
 const result = Astro.getActionResult(actions.contact)
 if (result && !result.error) {
 	return Astro.redirect('/contact/success')
 }
 ---
 
-<script src={recaptchaURL}></script>
+<script
+	is:inline
+	src="https://www.google.com/recaptcha/api.js?trustedtypes=true&render=6LdVuaorAAAAAPgx6nkCo0WFQzsZjXq8pl4xK4Ib"
+></script>
 
 <Layout title="Nathan Lardizabal | Contact">
 	<h1 class="mb-8 text-2xl font-semibold">contact me!</h1>
