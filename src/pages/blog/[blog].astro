@@ -2,6 +2,38 @@
 import BlogLayout from '@layouts/BlogLayout.astro'
 import Chip from '@components/general/Chip.astro'
 import { getEntry } from 'astro:content'
+import type { SanityDocument } from '@sanity/client'
+import { sanityClient } from 'sanity:client'
+import { PortableText } from 'astro-portabletext'
+import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+
+const BLOG_QUERY = `*[_type == "blog" && slug.current == $slug][0]`
+const sanityBlog = await sanityClient.fetch<SanityDocument>(BLOG_QUERY, {
+	slug: Astro.params.blog,
+})
+
+export const getStaticPaths = async () => {
+	const SLUGS_QUERY = `*[_type == "blog" && defined(slug.current)]{
+			"params": {"slug": slug.current}
+		}`
+
+	return await sanityClient.fetch(SLUGS_QUERY, Astro.params)
+}
+
+const { projectId, dataset } = sanityClient.config()
+
+const urlFor = (source: SanityImageSource) => {
+	projectId && dataset
+		? imageUrlBuilder({ projectId, dataset }).image(source)
+		: null
+}
+
+console.log(sanityBlog)
+
+// const blogImageUrl = sanityBlog.image
+// 	? urlFor(sanityBlog.image)?.width(550).height(310).url()
+// 	: null
 
 const { blog } = Astro.params
 if (blog === undefined) throw new Error('Blog is required')
@@ -27,7 +59,7 @@ const { Content } = await entry.render()
 		<div class="flex gap-2">
 			{tags.map((tag) => <Chip {tag} />)}
 		</div>
-		<p class="my-2 text-sm font-light italic text-gray-400">
+		<p class="my-2 text-sm font-light text-gray-400 italic">
 			by {author} | {blogDate}
 		</p>
 		<div class="my-8 font-light">

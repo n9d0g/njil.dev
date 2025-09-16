@@ -1,6 +1,16 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import { getCollection } from 'astro:content'
+import type { SanityDocument } from '@sanity/client'
+import { sanityClient } from 'sanity:client'
+
+const BLOG_QUERY = `*[
+		_type == "blog"
+		&& defined(slug.current)
+	]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt}`
+const blogs = await sanityClient.fetch<SanityDocument[]>(BLOG_QUERY)
+
+console.log(blogs)
 
 const allBlogs = await getCollection('blog')
 ---
@@ -21,9 +31,17 @@ const allBlogs = await getCollection('blog')
 					>
 						{blog.data.title}
 					</a>
-					<p class="my-1 text-xs lowercase text-gray-500">
+					<p class="my-1 text-xs text-gray-500 lowercase">
 						{blog.data.published.toDateString()}
 					</p>
+				</article>
+			))
+		}
+		{
+			blogs.map((blog) => (
+				<article>
+					<a href={`/blog/${blog.slug.current}`}>{blog.title}</a>
+					<p class="my-1 text-xs text-gray-500 lowercase">{blog.publishedAt}</p>
 				</article>
 			))
 		}

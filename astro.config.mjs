@@ -3,8 +3,17 @@ import partytown from '@astrojs/partytown'
 import vercel from '@astrojs/vercel'
 import tailwindcss from '@tailwindcss/vite'
 
+import sanity from '@sanity/astro'
+
 export default defineConfig({
-	integrations: [partytown()],
+	integrations: [
+		partytown(),
+		sanity({
+			projectId: 'nbid6gbs',
+			dataset: 'production',
+			useCdn: false,
+		}),
+	],
 	output: 'server',
 	adapter: vercel({ webAnalytics: true }),
 	site: 'https://www.njil.dev',
