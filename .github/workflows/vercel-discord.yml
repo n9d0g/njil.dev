@@ -30,6 +30,7 @@ jobs:
 
           echo "Checking deployment status for commit: $COMMIT_SHA"
           echo "Project: $PROJECT_NAME"
+          echo "Branch: $BRANCH"
 
           # Wait for deployment to start (initial delay)
           echo "Waiting for deployment to start..."
@@ -47,8 +48,8 @@ jobs:
             DEPLOYMENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10")
             
-            # Find the deployment with matching commit SHA
-            DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha) | select(.meta.githubCommitRef == $BRANCH)')
+            # Find the deployment with matching commit SHA and branch
+            DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$COMMIT_SHA" --arg branch "$BRANCH" '.deployments[] | select(.meta.githubCommitSha == $sha) | select(.meta.githubCommitRef == $branch)')
             
             if [ "$DEPLOYMENT" != "" ]; then
               # Extract deployment status
