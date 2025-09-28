@@ -1,4 +1,4 @@
-name: Notify Discord on Deploy
+name: send discord message on deploy
 
 on:
   push:
