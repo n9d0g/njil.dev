@@ -126,8 +126,8 @@ jobs:
       - name: Notify Discord
         run: |
           # Debug: Check if webhook secret exists
-          if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
-            echo "❌ DISCORD_WEBHOOK secret is not set!"
+          if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
+            echo "❌ DISCORD_WEBHOOK_URL secret is not set!"
             exit 1
           fi
 
