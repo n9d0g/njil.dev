@@ -1,0 +1,116 @@
+name: Notify Discord on Deploy
+
+on:
+  push:
+    branches: ["dev", "main"]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for Vercel deployment
+        run: |
+          # Set up variables
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          BRANCH=${GITHUB_REF#refs/heads/}
+
+          # Determine project name based on branch
+          if [ "$BRANCH" == "main" ]; then
+            PROJECT_NAME="njil-dev"
+            DEPLOY_URL="https://njil.dev"
+            SITE_NAME="njil.dev"
+          else
+            PROJECT_NAME="njil-dev"
+            DEPLOY_URL="https://dev.njil.dev"
+            SITE_NAME="dev.njil.dev"
+          fi
+
+          echo "Checking deployment status for commit: $COMMIT_SHA"
+          echo "Project: $PROJECT_NAME"
+
+          # Wait for deployment to start (initial delay)
+          echo "Waiting for deployment to start..."
+          sleep 10
+
+          # Poll Vercel API for deployment status
+          MAX_ATTEMPTS=60  # 10 minutes max (60 * 10 seconds)
+          ATTEMPT=0
+
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: Checking deployment status..."
+            
+            # Get deployments for this project
+            DEPLOYMENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10")
+            
+            # Find the deployment with matching commit SHA
+            DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha) | select(.meta.githubCommitRef == $BRANCH)')
+            
+            if [ "$DEPLOYMENT" != "" ]; then
+              # Extract deployment status
+              STATUS=$(echo "$DEPLOYMENT" | jq -r '.state')
+              DEPLOYMENT_URL=$(echo "$DEPLOYMENT" | jq -r '.url')
+              
+              echo "Found deployment with status: $STATUS"
+              echo "Deployment URL: $DEPLOYMENT_URL"
+              
+              case "$STATUS" in
+                "READY")
+                  echo "✅ Deployment completed successfully!"
+                  break
+                  ;;
+                "ERROR"|"CANCELED")
+                  echo "❌ Deployment failed with status: $STATUS"
+                  exit 1
+                  ;;
+                "BUILDING"|"QUEUED")
+                  echo "⏳ Deployment still in progress... (status: $STATUS)"
+                  ;;
+                *)
+                  echo "⚠️ Unknown status: $STATUS"
+                  ;;
+              esac
+            else
+              echo "Deployment not found yet, waiting..."
+            fi
+            
+            # Wait 10 seconds before next attempt
+            sleep 10
+          done
+
+          if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+            echo "❌ Timeout: Deployment did not complete within 10 minutes"
+            exit 1
+          fi
+
+      - name: Notify Discord
+        run: |
+          # Get the commit info
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          BRANCH=${GITHUB_REF#refs/heads/}
+          DEPLOY_TIME=$(TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S %Z')
+
+          # Clean up commit message (remove newlines and limit length)
+          COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | cut -c1-100)
+
+          # Determine the deployment URL and site name based on branch
+          if [ "$BRANCH" == "main" ]; then
+            DEPLOY_URL="https://njil.dev"
+            SITE_NAME="njil.dev"
+          else
+            DEPLOY_URL="https://dev.njil.dev"
+            SITE_NAME="dev.njil.dev"
+          fi
+
+          # Create a clean notification message
+          MSG="🚀 **$SITE_NAME** deployed successfully!\n\n\`\`\`Branch: $BRANCH\nCommit: $COMMIT_SHA\nDetails: $COMMIT_MSG\nTime: $DEPLOY_TIME\n\`\`\`\n\n🔗 **Live URL:** $DEPLOY_URL"
+
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"$MSG\"}" \
+            ${{ secrets.DISCORD_WEBHOOK }}
