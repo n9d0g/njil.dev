@@ -49,11 +49,6 @@ jobs:
             DEPLOYMENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10")
             
-            # Debug: Show what we got from the API
-            echo "API Response (first 500 chars):"
-            echo "$DEPLOYMENTS" | head -c 500
-            echo ""
-            
             # Try to find deployment by different methods
             echo "Looking for deployment with commit SHA: $COMMIT_SHA"
             echo "Looking for deployment with full commit SHA: $FULL_COMMIT_SHA"
@@ -130,6 +125,14 @@ jobs:
 
       - name: Notify Discord
         run: |
+          # Debug: Check if webhook secret exists
+          if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
+            echo "❌ DISCORD_WEBHOOK secret is not set!"
+            exit 1
+          fi
+
+          echo "Discord webhook URL found, proceeding with notification..."
+
           # Get the commit info
           COMMIT_SHA=$(git rev-parse --short HEAD)
           COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -151,7 +154,10 @@ jobs:
           # Create a clean notification message
           MSG="🚀 **$SITE_NAME** deployed successfully!\n\n\`\`\`Branch: $BRANCH\nCommit: $COMMIT_SHA\nDetails: $COMMIT_MSG\nTime: $DEPLOY_TIME\n\`\`\`\n\n🔗 **Live URL:** $DEPLOY_URL"
 
+          echo "Sending Discord notification..."
+          echo "Message: $MSG"
+
           curl -H "Content-Type: application/json" \
             -X POST \
             -d "{\"content\": \"$MSG\"}" \
-            ${{ secrets.DISCORD_WEBHOOK }}
+            "${{ secrets.DISCORD_WEBHOOK }}"
