@@ -160,4 +160,4 @@ jobs:
           curl -H "Content-Type: application/json" \
             -X POST \
             -d "{\"content\": \"$MSG\"}" \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
