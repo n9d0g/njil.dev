@@ -15,6 +15,7 @@ jobs:
         run: |
           # Set up variables
           COMMIT_SHA=$(git rev-parse --short HEAD)
+          FULL_COMMIT_SHA=$(git rev-parse HEAD)
           BRANCH=${GITHUB_REF#refs/heads/}
 
           # Determine project name based on branch
@@ -28,7 +29,7 @@ jobs:
             SITE_NAME="dev.njil.dev"
           fi
 
-          echo "Checking deployment status for commit: $COMMIT_SHA"
+          echo "Checking deployment status for commit: $COMMIT_SHA (full: $FULL_COMMIT_SHA)"
           echo "Project: $PROJECT_NAME"
           echo "Branch: $BRANCH"
 
@@ -48,16 +49,55 @@ jobs:
             DEPLOYMENTS=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&limit=10")
             
-            # Find the deployment with matching commit SHA and branch
+            # Debug: Show what we got from the API
+            echo "API Response (first 500 chars):"
+            echo "$DEPLOYMENTS" | head -c 500
+            echo ""
+            
+            # Try to find deployment by different methods
+            echo "Looking for deployment with commit SHA: $COMMIT_SHA"
+            echo "Looking for deployment with full commit SHA: $FULL_COMMIT_SHA"
+            echo "Looking for deployment with branch: $BRANCH"
+            
+            # Method 1: Try with short commit SHA
             DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$COMMIT_SHA" --arg branch "$BRANCH" '.deployments[] | select(.meta.githubCommitSha == $sha) | select(.meta.githubCommitRef == $branch)')
             
-            if [ "$DEPLOYMENT" != "" ]; then
+            # Method 2: Try with full commit SHA if short doesn't work
+            if [ "$DEPLOYMENT" == "" ]; then
+              echo "Trying with full commit SHA..."
+              DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$FULL_COMMIT_SHA" --arg branch "$BRANCH" '.deployments[] | select(.meta.githubCommitSha == $sha) | select(.meta.githubCommitRef == $branch)')
+            fi
+            
+            # Method 3: Try without branch filter
+            if [ "$DEPLOYMENT" == "" ]; then
+              echo "Trying without branch filter..."
+              DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha)')
+            fi
+            
+            # Method 4: Try with full commit SHA and no branch filter
+            if [ "$DEPLOYMENT" == "" ]; then
+              echo "Trying with full commit SHA and no branch filter..."
+              DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r --arg sha "$FULL_COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha)')
+            fi
+            
+            # Method 5: Just get the most recent deployment
+            if [ "$DEPLOYMENT" == "" ]; then
+              echo "Trying to get most recent deployment..."
+              DEPLOYMENT=$(echo "$DEPLOYMENTS" | jq -r '.deployments[0]')
+            fi
+            
+            if [ "$DEPLOYMENT" != "" ] && [ "$DEPLOYMENT" != "null" ]; then
               # Extract deployment status
               STATUS=$(echo "$DEPLOYMENT" | jq -r '.state')
               DEPLOYMENT_URL=$(echo "$DEPLOYMENT" | jq -r '.url')
+              DEPLOYMENT_COMMIT=$(echo "$DEPLOYMENT" | jq -r '.meta.githubCommitSha // "unknown"')
+              DEPLOYMENT_BRANCH=$(echo "$DEPLOYMENT" | jq -r '.meta.githubCommitRef // "unknown"')
               
-              echo "Found deployment with status: $STATUS"
-              echo "Deployment URL: $DEPLOYMENT_URL"
+              echo "Found deployment:"
+              echo "  Status: $STATUS"
+              echo "  URL: $DEPLOYMENT_URL"
+              echo "  Commit: $DEPLOYMENT_COMMIT"
+              echo "  Branch: $DEPLOYMENT_BRANCH"
               
               case "$STATUS" in
                 "READY")
