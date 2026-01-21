@@ -1,0 +1,27 @@
+---
+interface Props {
+	node: {
+		code: string
+		language?: string
+		filename?: string
+	}
+}
+
+const { node } = Astro.props
+const { code, language, filename } = node
+---
+
+<div class="not-prose my-4">
+	{
+		filename && (
+			<div class="rounded-t-lg bg-slate-700 px-4 py-2 text-xs text-slate-300">
+				{filename}
+			</div>
+		)
+	}
+	<pre
+		class:list={[
+			'overflow-x-auto bg-slate-800 p-4 text-sm text-slate-100',
+			filename ? 'rounded-b-lg' : 'rounded-lg',
+		]}><code class={language ? `language-${language}` : ''}>{code}</code></pre>
+</div>

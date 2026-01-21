@@ -1,0 +1,58 @@
+---
+interface GalleryImage {
+	asset: { url: string }
+	alt?: string
+}
+
+interface Props {
+	images: GalleryImage[]
+}
+
+const { images } = Astro.props
+
+// Determine grid classes based on image count for bento effect
+const getGridClass = (index: number, total: number) => {
+	if (total === 1) return 'col-span-2 row-span-2'
+	if (total === 2) return 'col-span-1 row-span-2'
+	if (total === 3) {
+		if (index === 0) return 'col-span-2 row-span-2'
+		return 'col-span-1 row-span-1'
+	}
+	if (total === 4) {
+		if (index === 0) return 'col-span-2 row-span-1'
+		if (index === 1) return 'col-span-1 row-span-2'
+		return 'col-span-1 row-span-1'
+	}
+	// For 5+ images, create varied pattern
+	if (index === 0) return 'col-span-2 row-span-2'
+	if (index % 3 === 1) return 'col-span-1 row-span-2'
+	return 'col-span-1 row-span-1'
+}
+---
+
+<div class="not-prose my-8">
+	<div class="grid auto-rows-[150px] grid-cols-2 gap-3 md:grid-cols-3">
+		{
+			images.map((image, index) => (
+				<div
+					class:list={[
+						'group relative overflow-hidden rounded-lg',
+						getGridClass(index, images.length),
+					]}
+				>
+					<img
+						src={image.asset.url}
+						alt={image.alt || ''}
+						class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+						loading="lazy"
+					/>
+					{image.alt && (
+						<div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-3 opacity-0 transition group-hover:opacity-100">
+							<p class="text-sm text-white">{image.alt}</p>
+						</div>
+					)}
+				</div>
+			))
+		}
+	</div>
+</div>
