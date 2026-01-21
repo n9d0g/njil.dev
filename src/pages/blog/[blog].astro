@@ -1,37 +1,92 @@
 ---
 import BlogLayout from '@layouts/BlogLayout.astro'
 import Chip from '@components/general/Chip.astro'
-import { getEntry } from 'astro:content'
+import CodeBlock from '@components/blog/CodeBlock.astro'
+import BentoGallery from '@components/blog/BentoGallery.astro'
+import { sanityClient } from 'sanity:client'
+import { PortableText } from 'astro-portabletext'
+import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { PortableTextBlock } from '@portabletext/types'
+
+interface SanityTag {
+	name: string
+	slug: { current: string }
+}
+
+interface SanityImage {
+	asset: { url: string }
+	alt?: string
+}
+
+interface SanityBlog {
+	title: string
+	author: string
+	publishedAt: string
+	tags?: SanityTag[]
+	images?: SanityImage[]
+	body?: PortableTextBlock[]
+}
+
+export const getStaticPaths = async () => {
+	const SLUGS_QUERY = `*[_type == "blog" && defined(slug.current)]{
+			"params": {"blog": slug.current}
+		}`
+	return await sanityClient.fetch(SLUGS_QUERY)
+}
 
 const { blog } = Astro.params
-if (blog === undefined) throw new Error('Blog is required')
 
-const entry = await getEntry('blog', blog)
+const BLOG_QUERY = `*[_type == "blog" && slug.current == $slug][0]{
+	title,
+	author,
+	publishedAt,
+	tags[]->{ name, slug },
+	images[]{ asset->{ url }, alt },
+	body[]{ ..., _type == "code" => { language, code, filename } }
+}`
+const sanityBlog = await sanityClient.fetch<SanityBlog>(BLOG_QUERY, {
+	slug: blog,
+})
 
-if (entry === undefined) return Astro.redirect('/404')
+if (!sanityBlog) return Astro.redirect('/404')
 
-const title = entry.data.title
-const author = entry.data.author
-const blogDate = entry.data.published.toLocaleDateString()
-const tags = entry.data.tags
+const { projectId, dataset } = sanityClient.config()
 
-const { Content } = await entry.render()
+const urlFor = (source: SanityImageSource) =>
+	projectId && dataset
+		? imageUrlBuilder({ projectId, dataset }).image(source)
+		: null
+
+const title = sanityBlog.title
+const author = sanityBlog.author
+const blogDate = new Date(sanityBlog.publishedAt).toLocaleDateString()
+const tags = sanityBlog.tags || []
 ---
 
-<BlogLayout
-	title={`Nathan Lardizabal | ${entry.data.title}`}
-	blogData={entry.data}
->
+<BlogLayout title={`Nathan Lardizabal | ${title}`} blogData={sanityBlog}>
 	<article class="prose dark:prose-invert">
 		<h1 class="mb-2 text-2xl font-semibold lowercase">{title}</h1>
 		<div class="flex gap-2">
-			{tags.map((tag) => <Chip {tag} />)}
+			{tags.map((tag) => <Chip tag={tag.name} />)}
 		</div>
-		<p class="my-2 text-sm font-light italic text-gray-400">
+		<p class="my-2 text-sm font-light text-gray-400 italic">
 			by {author} | {blogDate}
 		</p>
 		<div class="my-8 font-light">
-			<Content />
+			<PortableText
+				value={sanityBlog.body}
+				components={{
+					type: {
+						code: CodeBlock,
+					},
+				}}
+			/>
 		</div>
+		{
+			sanityBlog.images && sanityBlog.images.length > 0 && (
+				<BentoGallery images={sanityBlog.images} />
+			)
+		}
 	</article>
 </BlogLayout>

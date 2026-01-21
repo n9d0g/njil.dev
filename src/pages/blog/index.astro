@@ -1,8 +1,26 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import Chip from '@components/general/Chip.astro'
+import { sanityClient } from 'sanity:client'
 
-const allBlogs = await getCollection('blog')
+interface SanityTag {
+	name: string
+	slug: { current: string }
+}
+
+interface SanityBlogListItem {
+	_id: string
+	title: string
+	slug: { current: string }
+	publishedAt: string
+	tags?: SanityTag[]
+}
+
+const BLOG_QUERY = `*[
+		_type == "blog"
+		&& defined(slug.current)
+	]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt, tags[]->{ name, slug }}`
+const blogs = await sanityClient.fetch<SanityBlogListItem[]>(BLOG_QUERY)
 ---
 
 <Layout title="Nathan Lardizabal | Blog">
@@ -13,17 +31,24 @@ const allBlogs = await getCollection('blog')
 	<hr class="my-4 border-slate-700" />
 	<section class="flex flex-col gap-4">
 		{
-			allBlogs.map((blog) => (
+			blogs.map((blog) => (
 				<article>
 					<a
-						href={`/blog/${blog.slug}`}
+						href={`/blog/${blog.slug.current}`}
 						class="w-fit font-light lowercase transition hover:opacity-80"
 					>
-						{blog.data.title}
+						{blog.title}
 					</a>
-					<p class="my-1 text-xs lowercase text-gray-500">
-						{blog.data.published.toDateString()}
+					<p class="my-1 text-xs text-gray-500 lowercase">
+						{new Date(blog.publishedAt).toDateString()}
 					</p>
+					{blog.tags && blog.tags.length > 0 && (
+						<div class="flex flex-wrap gap-2">
+							{blog.tags.map((tag) => (
+								<Chip tag={tag.name} />
+							))}
+						</div>
+					)}
 				</article>
 			))
 		}
