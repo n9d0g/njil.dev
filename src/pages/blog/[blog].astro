@@ -2,6 +2,7 @@
 import BlogLayout from '@layouts/BlogLayout.astro'
 import Chip from '@components/general/Chip.astro'
 import CodeBlock from '@components/blog/CodeBlock.astro'
+import InlineImage from '@components/blog/InlineImage.astro'
 import BentoGallery from '@components/blog/BentoGallery.astro'
 import { sanityClient } from 'sanity:client'
 import { PortableText } from 'astro-portabletext'
@@ -43,7 +44,11 @@ const BLOG_QUERY = `*[_type == "blog" && slug.current == $slug][0]{
 	publishedAt,
 	tags[]->{ name, slug },
 	images[]{ asset->{ url }, alt },
-	body[]{ ..., _type == "code" => { language, code, filename } }
+	body[]{
+		...,
+		_type == "image" => { asset->{ url }, alt, caption },
+		_type == "code" => { language, code, filename }
+	}
 }`
 const sanityBlog = await sanityClient.fetch<SanityBlog>(BLOG_QUERY, {
 	slug: blog,
@@ -79,6 +84,7 @@ const tags = sanityBlog.tags || []
 				components={{
 					type: {
 						code: CodeBlock,
+						image: InlineImage,
 					},
 				}}
 			/>
