@@ -1,0 +1,36 @@
+---
+interface Props {
+	node: {
+		asset: {
+			_ref?: string
+			url?: string
+		}
+		alt?: string
+		caption?: string
+	}
+}
+
+const { node } = Astro.props
+const { asset, alt, caption } = node
+
+// Handle both direct URL and reference formats
+const imageUrl = asset.url || ''
+---
+
+{
+	imageUrl && (
+		<figure class="not-prose my-8">
+			<img
+				src={imageUrl}
+				alt={alt || ''}
+				class="w-full rounded-lg"
+				loading="lazy"
+			/>
+			{caption && (
+				<figcaption class="mt-2 text-center text-sm text-gray-400 italic">
+					{caption}
+				</figcaption>
+			)}
+		</figure>
+	)
+}
