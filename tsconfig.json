@@ -15,7 +15,8 @@
 			"@api/*": ["src/pages/api/*"],
 			"@validation/*": ["src/validation/*"],
 			"@types/*": ["src/types/*"],
-			"@styles/*": ["src/styles/*"]
+			"@styles/*": ["src/styles/*"],
+			"@emails/*": ["src/emails/*"]
 		}
 	}
 }

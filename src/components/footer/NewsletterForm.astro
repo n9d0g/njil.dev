@@ -1,0 +1,76 @@
+---
+// Newsletter subscription form - handles client-side submission
+---
+
+<script>
+	const form = document.getElementById('newsletter-form') as HTMLFormElement
+	const messageEl = document.getElementById(
+		'form-message'
+	) as HTMLParagraphElement
+	const submitBtn = form.querySelector(
+		'button[type="submit"]'
+	) as HTMLButtonElement
+
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault()
+
+		const email = (
+			form.querySelector('input[name="email"]') as HTMLInputElement
+		).value
+
+		// Disable button during submission
+		submitBtn.disabled = true
+		submitBtn.textContent = 'subscribing...'
+
+		try {
+			const response = await fetch('/api/subscribe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email }),
+			})
+
+			const data = await response.json()
+
+			if (response.ok) {
+				messageEl.textContent = data.message || 'thanks for subscribing! 🎉'
+				messageEl.className = 'text-xs text-green-400 text-center'
+				form.reset()
+			} else {
+				messageEl.textContent =
+					data.error || 'something went wrong, please try again.'
+				messageEl.className = 'text-xs text-red-400'
+			}
+		} catch (error) {
+			messageEl.textContent = 'something went wrong, please try again.'
+			messageEl.className = 'text-xs text-red-400 text-center'
+		} finally {
+			submitBtn.disabled = false
+			submitBtn.textContent = 'subscribe'
+		}
+	})
+</script>
+
+<form id="newsletter-form" class="flex max-w-dvw flex-col gap-2">
+	<label for="email" class="mb-2 text-center text-sm text-slate-400">
+		subscribe to my blog for updates!
+	</label>
+	<div class="flex gap-2 lg:mx-auto lg:w-[calc(100%-16rem)]">
+		<input
+			type="email"
+			id="email"
+			name="email"
+			placeholder="your@email.com"
+			required
+			class="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 transition focus:border-slate-500 focus:outline-none"
+		/>
+		<button
+			type="submit"
+			class="cursor-pointer rounded-lg bg-slate-700 px-4 py-2 text-sm text-slate-100 transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+		>
+			subscribe
+		</button>
+	</div>
+	<p id="form-message" class="hidden text-center text-xs"></p>
+</form>
