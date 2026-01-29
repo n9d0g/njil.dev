@@ -1,6 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import Chip from '@components/general/Chip.astro'
+import BlogCard from '@components/general/BlogCard.astro'
 import { sanityClient } from 'sanity:client'
 
 interface SanityTag {
@@ -13,13 +13,25 @@ interface SanityBlogListItem {
 	title: string
 	slug: { current: string }
 	publishedAt: string
+	description?: string
 	tags?: SanityTag[]
+	coverImage?: { asset: { url: string } }
+	images?: { asset: { url: string } }[]
 }
 
 const BLOG_QUERY = `*[
 		_type == "blog"
 		&& defined(slug.current)
-	]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt, tags[]->{ name, slug }}`
+	]|order(publishedAt desc)[0...12]{
+		_id,
+		title,
+		slug,
+		publishedAt,
+		description,
+		tags[]->{ name, slug },
+		coverImage{ asset->{ url } },
+		images[]{ asset->{ url } }[0...1]
+	}`
 const blogs = await sanityClient.fetch<SanityBlogListItem[]>(BLOG_QUERY)
 ---
 
@@ -29,28 +41,24 @@ const blogs = await sanityClient.fetch<SanityBlogListItem[]>(BLOG_QUERY)
 		smol things to share - code related or not 🥸
 	</p>
 	<hr class="my-4 border-slate-700" />
-	<section class="flex flex-col gap-4">
+	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{
-			blogs.map((blog) => (
-				<article>
-					<a
-						href={`/blog/${blog.slug.current}`}
-						class="w-fit font-light lowercase transition hover:opacity-80"
-					>
-						{blog.title}
-					</a>
-					<p class="my-1 text-xs text-gray-500 lowercase">
-						{new Date(blog.publishedAt).toDateString()}
-					</p>
-					{blog.tags && blog.tags.length > 0 && (
-						<div class="flex flex-wrap gap-2">
-							{blog.tags.map((tag) => (
-								<Chip tag={tag.name} />
-							))}
-						</div>
-					)}
-				</article>
-			))
+			blogs.map((blog) => {
+				// Use coverImage if available, otherwise fall back to first gallery image
+				const imageUrl =
+					blog.coverImage?.asset?.url || blog.images?.[0]?.asset?.url
+
+				return (
+					<BlogCard
+						slug={blog.slug.current}
+						title={blog.title}
+						description={blog.description}
+						publishedAt={blog.publishedAt}
+						tags={blog.tags}
+						coverImage={imageUrl}
+					/>
+				)
+			})
 		}
 	</section>
 </Layout>
