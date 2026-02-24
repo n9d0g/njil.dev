@@ -1,14 +1,15 @@
 {
 	"name": "njil.dev",
+	"version": "2.2.1",
 	"type": "module",
-	"version": "2.2.0",
 	"scripts": {
 		"dev": "astro dev --host",
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"format": "prettier . --write --plugin=prettier-plugin-astro",
+		"format": "oxfmt",
+		"format:check": "oxfmt --check",
 		"clean:cache": "rm -rf node_modules .astro package-lock.json",
 		"fresh": "npm run clean:cache && npm i && npm run format",
 		"fresh:start": "npm run fresh && npm run dev"
@@ -40,9 +41,7 @@
 		"@types/node": "^25.0.9",
 		"astro-icon": "^0.8.2",
 		"date-fns": "^3.6.0",
-		"prettier": "^3.8.0",
-		"prettier-plugin-astro": "^0.14.1",
-		"prettier-plugin-tailwindcss": "^0.7.2",
+		"oxfmt": "^0.35.0",
 		"typescript": "^5.9.3"
 	}
 }

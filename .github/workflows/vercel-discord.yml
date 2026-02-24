@@ -2,7 +2,7 @@ name: send discord message on deploy
 
 on:
   push:
-    branches: ["dev", "main"]
+    branches: ['dev', 'main']
 
 jobs:
   notify:
