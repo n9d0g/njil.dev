@@ -1,8 +1,8 @@
 {
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "es5",
 	"printWidth": 80,
 	"semi": false,
-	"plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"]
 }
