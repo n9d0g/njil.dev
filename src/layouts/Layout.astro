@@ -21,12 +21,17 @@ const { title } = Astro.props
 			rel="stylesheet"
 		/>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
+		<meta name="description" content="Nathan Lardizabal - Senior frontend developer based in Toronto 📍" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<Analytics />
+		<script
+			src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}`}
+			async
+			defer
+		></script>
 	</head>
 
 	<body

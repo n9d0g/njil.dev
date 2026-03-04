@@ -1,6 +1,6 @@
 {
 	"name": "njil.dev",
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev --host",
@@ -10,24 +10,28 @@
 		"astro": "astro",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
-		"clean:cache": "rm -rf node_modules .astro package-lock.json",
-		"fresh": "npm run clean:cache && npm i && npm run format",
-		"fresh:start": "npm run fresh && npm run dev"
+		"clean:cache": "rm -rf node_modules .astro pnpm-lock.yaml",
+		"fresh": "pnpm run clean:cache && pnpm i && pnpm run format",
+		"fresh:start": "pnpm run fresh && pnpm run dev"
 	},
 	"dependencies": {
 		"@astrojs/partytown": "^2.1.4",
 		"@astrojs/ts-plugin": "^1.10.6",
 		"@astrojs/vercel": "^9.0.4",
+		"@iconify-json/logos": "^1.2.10",
+		"@iconify-json/mdi": "^1.2.3",
+		"@iconify-json/simple-icons": "^1.2.72",
+		"@iconify-json/vscode-icons": "^1.2.44",
+		"@portabletext/types": "^4.0.2",
 		"@react-email/components": "^0.0.31",
 		"@sanity/astro": "^3.2.11",
 		"@sanity/client": "^7.14.0",
+		"@sanity/image-url": "^2.0.3",
 		"@tailwindcss/vite": "^4.1.18",
 		"@vercel/analytics": "^1.6.1",
 		"astro": "^5.13.6",
+		"astro-icon": "^1.1.5",
 		"astro-portabletext": "^0.11.3",
-		"astrojs": "^0.1.3",
-		"linkedom": "^0.18.12",
-		"puppeteer": "^23.3.0",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
 		"react-is": "^19.1.1",
@@ -39,7 +43,6 @@
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.19",
 		"@types/node": "^25.0.9",
-		"astro-icon": "^0.8.2",
 		"date-fns": "^3.6.0",
 		"oxfmt": "^0.35.0",
 		"typescript": "^5.9.3"
