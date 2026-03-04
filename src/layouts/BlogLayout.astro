@@ -49,6 +49,11 @@ const { title, blogData } = Astro.props
 		<title class="uppercase">Nathan Lardizabal Blog | {blogData.title}</title>
 
 		<Analytics />
+		<script
+			src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}`}
+			async
+			defer
+		></script>
 	</head>
 	<body
 		class="flex min-h-dvh flex-col justify-between bg-slate-950 pt-8 text-slate-100"

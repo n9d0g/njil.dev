@@ -1,6 +1,6 @@
 {
 	"name": "njil.dev",
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev --host",
@@ -10,9 +10,9 @@
 		"astro": "astro",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
-		"clean:cache": "rm -rf node_modules .astro package-lock.json",
-		"fresh": "npm run clean:cache && npm i && npm run format",
-		"fresh:start": "npm run fresh && npm run dev"
+		"clean:cache": "rm -rf node_modules .astro pnpm-lock.yaml",
+		"fresh": "pnpm run clean:cache && pnpm i && pnpm run format",
+		"fresh:start": "pnpm run fresh && pnpm run dev"
 	},
 	"dependencies": {
 		"@astrojs/partytown": "^2.1.4",

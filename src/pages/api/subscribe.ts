@@ -16,13 +16,42 @@ const resend = new Resend(import.meta.env.RESEND_API_KEY)
 export const POST: APIRoute = async ({ request }) => {
 	try {
 		const body = await request.json()
-		const { email } = body
+		const { email, recaptchaToken } = body
 
 		if (!email || typeof email !== 'string') {
 			return new Response(JSON.stringify({ error: 'email is required' }), {
 				status: 400,
 				headers: { 'Content-Type': 'application/json' },
 			})
+		}
+
+		// Verify reCAPTCHA token
+		if (!recaptchaToken) {
+			return new Response(
+				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
+				{ status: 400, headers: { 'Content-Type': 'application/json' } }
+			)
+		}
+
+		const recaptchaResponse = await fetch(
+			'https://www.google.com/recaptcha/api/siteverify',
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: new URLSearchParams({
+					secret: import.meta.env.RECAPTCHA_SECRET_KEY,
+					response: recaptchaToken,
+				}),
+			}
+		)
+
+		const recaptchaData = await recaptchaResponse.json()
+
+		if (!recaptchaData.success || recaptchaData.score < 0.5) {
+			return new Response(
+				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
+				{ status: 403, headers: { 'Content-Type': 'application/json' } }
+			)
 		}
 
 		// Validate email format
