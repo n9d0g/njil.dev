@@ -1,17 +1,7 @@
 import type { APIRoute } from 'astro'
-import { createClient } from '@sanity/client'
-import { Resend } from 'resend'
 import { WelcomeEmail } from '@emails/Welcome'
-
-const sanityClient = createClient({
-	projectId: import.meta.env.SANITY_PROJECT_ID || 'nbid6gbs',
-	dataset: 'production',
-	apiVersion: '2024-01-01',
-	token: import.meta.env.SANITY_API_KEY,
-	useCdn: false,
-})
-
-const resend = new Resend(import.meta.env.RESEND_API_KEY)
+import { sanityClient } from '@lib/sanity'
+import { EMAIL_FROM, resend } from '@lib/resend'
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
@@ -25,7 +15,6 @@ export const POST: APIRoute = async ({ request }) => {
 			})
 		}
 
-		// Verify reCAPTCHA token
 		if (!recaptchaToken) {
 			return new Response(
 				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
@@ -47,14 +36,17 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const recaptchaData = await recaptchaResponse.json()
 
-		if (!recaptchaData.success || recaptchaData.score < 0.5) {
+		if (
+			!recaptchaData.success ||
+			typeof recaptchaData.score !== 'number' ||
+			recaptchaData.score < 0.5
+		) {
 			return new Response(
 				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
 				{ status: 403, headers: { 'Content-Type': 'application/json' } }
 			)
 		}
 
-		// Validate email format
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 		if (!emailRegex.test(email)) {
 			return new Response(
@@ -63,10 +55,11 @@ export const POST: APIRoute = async ({ request }) => {
 			)
 		}
 
-		// Check if email already exists
+		const normalizedEmail = email.toLowerCase()
+
 		const existingSubscriber = await sanityClient.fetch(
 			`*[_type == "subscriber" && email == $email][0]`,
-			{ email: email.toLowerCase() }
+			{ email: normalizedEmail }
 		)
 
 		if (existingSubscriber) {
@@ -76,21 +69,23 @@ export const POST: APIRoute = async ({ request }) => {
 			)
 		}
 
-		// Create new subscriber document in Sanity
 		await sanityClient.create({
 			_type: 'subscriber',
-			email: email.toLowerCase(),
+			email: normalizedEmail,
 			subscribedAt: new Date().toISOString(),
 			active: true,
 		})
 
-		// Send welcome email via Resend
-		await resend.emails.send({
-			from: 'nate <hello@njil.dev>',
-			to: email.toLowerCase(),
-			subject: 'thanks for subscribing to my blog newsletter 🫶',
-			react: WelcomeEmail({ email: email.toLowerCase() }),
-		})
+		try {
+			await resend.emails.send({
+				from: EMAIL_FROM,
+				to: normalizedEmail,
+				subject: 'thanks for subscribing to my blog newsletter 🫶',
+				react: WelcomeEmail(),
+			})
+		} catch (emailError) {
+			console.error('Welcome email failed:', emailError)
+		}
 
 		return new Response(
 			JSON.stringify({ message: 'thanks for subscribing to my newsletter 🫶' }),

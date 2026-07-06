@@ -1,25 +1,16 @@
-import { z, defineCollection } from 'astro:content'
-
-const blogCollection = defineCollection({
-	type: 'content',
-	schema: z.object({
-		title: z.string(),
-		author: z.string(),
-		published: z.date(),
-		description: z.string(),
-		tags: z.array(z.string()),
-		draft: z.boolean(),
-	}),
-})
+import { defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'
+import { z } from 'astro/zod'
 
 const jobCollection = defineCollection({
-	type: 'content',
+	loader: glob({ base: './src/content/job', pattern: '**/*.md' }),
 	schema: z.object({
 		company: z.string(),
 		position: z.string(),
 		location: z.string(),
-		startDate: z.date(),
-		endDate: z.date(),
+		startDate: z.coerce.date(),
+		endDate: z.coerce.date().optional(),
+		current: z.boolean().optional(),
 		description: z.string(),
 		tech: z.array(z.string()),
 		points: z.array(z.string()),
@@ -27,13 +18,13 @@ const jobCollection = defineCollection({
 })
 
 const projectCollection = defineCollection({
-	type: 'content',
+	loader: glob({ base: './src/content/project', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		url: z.string(),
 		location: z.string(),
-		startDate: z.date(),
-		endDate: z.date(),
+		startDate: z.coerce.date(),
+		endDate: z.coerce.date().optional(),
 		description: z.string(),
 		tech: z.array(z.string()),
 		repo: z.string(),
@@ -42,7 +33,6 @@ const projectCollection = defineCollection({
 })
 
 export const collections = {
-	blog: blogCollection,
 	job: jobCollection,
 	project: projectCollection,
 }

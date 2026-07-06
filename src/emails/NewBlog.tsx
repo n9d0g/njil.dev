@@ -9,7 +9,8 @@ import {
 	Hr,
 	Link,
 } from '@react-email/components'
-import React from 'react'
+import { emailStyles } from './styles'
+import { SITE_URL } from '@lib/resend'
 
 interface NewBlogEmailProps {
 	title: string
@@ -24,21 +25,25 @@ export const NewBlogEmail = ({
 }: NewBlogEmailProps) => (
 	<Html>
 		<Head />
-		<Body style={styles.body}>
-			<Container style={styles.container}>
+		<Body style={emailStyles.body}>
+			<Container style={emailStyles.container}>
 				<Section>
-					<Text style={styles.preheader}>New post on njil.dev</Text>
-					<Text style={styles.heading}>{title}</Text>
-					<Text style={styles.paragraph}>{description}</Text>
-					<Button style={styles.button} href={blogUrl}>
+					<Text style={emailStyles.preheader}>New post on njil.dev</Text>
+					<Text style={{ ...emailStyles.heading, fontSize: '28px' }}>
+						{title}
+					</Text>
+					<Text style={{ ...emailStyles.paragraph, marginBottom: '24px' }}>
+						{description}
+					</Text>
+					<Button style={emailStyles.button} href={blogUrl}>
 						Read the post →
 					</Button>
 				</Section>
-				<Hr style={styles.hr} />
-				<Text style={styles.footer}>
+				<Hr style={emailStyles.hr} />
+				<Text style={{ ...emailStyles.footer, fontSize: '12px' }}>
 					You're receiving this because you subscribed to my blog newsletter.
 					<br />
-					<Link href="https://njil.dev" style={styles.link}>
+					<Link href={SITE_URL} style={emailStyles.link}>
 						njil.dev
 					</Link>
 				</Text>
@@ -46,55 +51,5 @@ export const NewBlogEmail = ({
 		</Body>
 	</Html>
 )
-
-const styles = {
-	body: {
-		backgroundColor: '#0f172a',
-		fontFamily:
-			"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-		padding: '40px 20px',
-		margin: 0,
-	},
-	container: {
-		maxWidth: '600px',
-		margin: '0 auto',
-	},
-	preheader: {
-		color: '#64748b',
-		fontSize: '14px',
-		marginBottom: '20px',
-	},
-	heading: {
-		color: '#f8fafc',
-		fontSize: '28px',
-		marginBottom: '16px',
-	},
-	paragraph: {
-		color: '#cbd5e1',
-		fontSize: '16px',
-		lineHeight: '1.6',
-		marginBottom: '24px',
-	},
-	button: {
-		backgroundColor: '#334155',
-		color: '#f8fafc',
-		padding: '12px 24px',
-		textDecoration: 'none',
-		borderRadius: '8px',
-		display: 'inline-block',
-	},
-	hr: {
-		borderColor: '#334155',
-		marginTop: '40px',
-		marginBottom: '20px',
-	},
-	footer: {
-		color: '#475569',
-		fontSize: '12px',
-	},
-	link: {
-		color: '#64748b',
-	},
-}
 
 export default NewBlogEmail
