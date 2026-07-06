@@ -1,35 +1,11 @@
 import type { APIRoute } from 'astro'
-import { createClient } from '@sanity/client'
-import { Resend } from 'resend'
 import { NewBlogEmail } from '@emails/NewBlog'
-
-const sanityClient = createClient({
-	projectId: import.meta.env.SANITY_PROJECT_ID || 'nbid6gbs',
-	dataset: 'production',
-	apiVersion: '2024-01-01',
-	token: import.meta.env.SANITY_API_KEY,
-	useCdn: false,
-})
-
-const resend = new Resend(import.meta.env.RESEND_API_KEY)
-
-interface SanityWebhookPayload {
-	_id: string
-	_type: string
-	title?: string
-	slug?: { current: string }
-	description?: string
-	author?: string
-}
-
-interface Subscriber {
-	email: string
-	active: boolean
-}
+import { sanityClient } from '@lib/sanity'
+import { EMAIL_FROM, resend, SITE_URL } from '@lib/resend'
+import type { SanityWebhookPayload, Subscriber } from '@app-types/sanity'
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
-		// Verify the webhook secret (optional but recommended)
 		const webhookSecret = import.meta.env.SANITY_WEBHOOK_SECRET
 		const signature = request.headers.get('sanity-webhook-signature')
 
@@ -42,7 +18,6 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const payload: SanityWebhookPayload = await request.json()
 
-		// Only process blog documents
 		if (payload._type !== 'blog') {
 			return new Response(JSON.stringify({ message: 'Not a blog document' }), {
 				status: 200,
@@ -50,12 +25,11 @@ export const POST: APIRoute = async ({ request }) => {
 			})
 		}
 
-		// Fetch all active subscribers
 		const subscribers = await sanityClient.fetch<Subscriber[]>(
 			`*[_type == "subscriber" && active == true]{ email, active }`
 		)
 
-		if (!subscribers || subscribers.length === 0) {
+		if (!subscribers?.length) {
 			return new Response(
 				JSON.stringify({ message: 'No subscribers to notify' }),
 				{
@@ -65,30 +39,38 @@ export const POST: APIRoute = async ({ request }) => {
 			)
 		}
 
-		const blogUrl = `https://njil.dev/blog/${payload.slug?.current || ''}`
+		const blogUrl = `${SITE_URL}/blog/${payload.slug?.current || ''}`
 		const blogTitle = payload.title || 'New Blog Post'
 		const blogDescription =
 			payload.description || 'Check out my latest blog post!'
 
-		// Send email to all subscribers
-		const emailPromises = subscribers.map((subscriber) =>
-			resend.emails.send({
-				from: 'Nathan <hello@njil.dev>',
-				to: subscriber.email,
-				subject: `New post: ${blogTitle}`,
-				react: NewBlogEmail({
-					title: blogTitle,
-					description: blogDescription,
-					blogUrl: blogUrl,
-				}),
-			})
+		const results = await Promise.allSettled(
+			subscribers.map((subscriber) =>
+				resend.emails.send({
+					from: EMAIL_FROM,
+					to: subscriber.email,
+					subject: `New post: ${blogTitle}`,
+					react: NewBlogEmail({
+						title: blogTitle,
+						description: blogDescription,
+						blogUrl,
+					}),
+				})
+			)
 		)
 
-		await Promise.all(emailPromises)
+		const sent = results.filter(
+			(result) => result.status === 'fulfilled'
+		).length
+		const failed = results.length - sent
+
+		if (failed > 0) {
+			console.error(`${failed} newsletter email(s) failed to send`)
+		}
 
 		return new Response(
 			JSON.stringify({
-				message: `Newsletter sent to ${subscribers.length} subscriber(s)`,
+				message: `Newsletter sent to ${sent} subscriber(s)`,
 			}),
 			{ status: 200, headers: { 'Content-Type': 'application/json' } }
 		)

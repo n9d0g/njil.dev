@@ -3,12 +3,19 @@ import Analytics from '@vercel/analytics/astro'
 import Footer from '@components/Footer.astro'
 import Header from '@components/Header.astro'
 import '@styles/globals.css'
+import type { SanityBlogData } from '@app-types/sanity'
 
 interface Props {
 	title: string
+	description?: string
+	blogData?: SanityBlogData
 }
 
-const { title } = Astro.props
+const { title, description, blogData } = Astro.props
+const metaDescription =
+	description ??
+	blogData?.description ??
+	'Nathan Lardizabal - Senior frontend developer based in Toronto 📍'
 ---
 
 <!doctype html>
@@ -21,7 +28,7 @@ const { title } = Astro.props
 			rel="stylesheet"
 		/>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Nathan Lardizabal - Senior frontend developer based in Toronto 📍" />
+		<meta name="description" content={metaDescription} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -30,14 +37,13 @@ const { title } = Astro.props
 		<script
 			src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}`}
 			async
-			defer
-		></script>
+			defer></script>
 	</head>
 
 	<body
-		class="flex min-h-[100dvh] flex-col justify-between bg-slate-950 pt-8 text-slate-100"
+		class="flex min-h-dvh flex-col justify-between bg-slate-950 pt-8 text-slate-100"
 	>
-		<div class="relative flex-grow">
+		<div class="relative grow">
 			<Header />
 			<main class="container mx-auto mt-20 max-w-2xl bg-slate-950 px-4 md:px-0">
 				<slot />

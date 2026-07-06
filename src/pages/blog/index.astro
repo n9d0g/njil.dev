@@ -2,22 +2,7 @@
 import Layout from '@layouts/Layout.astro'
 import BlogCard from '@components/general/BlogCard.astro'
 import { sanityClient } from 'sanity:client'
-
-interface SanityTag {
-	name: string
-	slug: { current: string }
-}
-
-interface SanityBlogListItem {
-	_id: string
-	title: string
-	slug: { current: string }
-	publishedAt: string
-	description?: string
-	tags?: SanityTag[]
-	coverImage?: { asset: { url: string } }
-	images?: { asset: { url: string } }[]
-}
+import type { SanityBlogListItem } from '@app-types/sanity'
 
 const BLOG_QUERY = `*[
 		_type == "blog"
@@ -44,7 +29,6 @@ const blogs = await sanityClient.fetch<SanityBlogListItem[]>(BLOG_QUERY)
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{
 			blogs.map((blog) => {
-				// Use coverImage if available, otherwise fall back to first gallery image
 				const imageUrl =
 					blog.coverImage?.asset?.url || blog.images?.[0]?.asset?.url
 

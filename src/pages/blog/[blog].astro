@@ -1,33 +1,14 @@
 ---
-import BlogLayout from '@layouts/BlogLayout.astro'
+import Layout from '@layouts/Layout.astro'
 import Chip from '@components/general/Chip.astro'
 import CodeBlock from '@components/blog/CodeBlock.astro'
 import InlineImage from '@components/blog/InlineImage.astro'
 import BentoGallery from '@components/blog/BentoGallery.astro'
 import { sanityClient } from 'sanity:client'
 import { PortableText } from 'astro-portabletext'
-import imageUrlBuilder from '@sanity/image-url'
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
-import type { PortableTextBlock } from '@portabletext/types'
+import type { SanityBlog } from '@app-types/sanity'
 
-interface SanityTag {
-	name: string
-	slug: { current: string }
-}
-
-interface SanityImage {
-	asset: { url: string }
-	alt?: string
-}
-
-interface SanityBlog {
-	title: string
-	author: string
-	publishedAt: string
-	tags?: SanityTag[]
-	images?: SanityImage[]
-	body?: PortableTextBlock[]
-}
+export const prerender = true
 
 export const getStaticPaths = async () => {
 	const SLUGS_QUERY = `*[_type == "blog" && defined(slug.current)]{
@@ -42,6 +23,7 @@ const BLOG_QUERY = `*[_type == "blog" && slug.current == $slug][0]{
 	title,
 	author,
 	publishedAt,
+	description,
 	tags[]->{ name, slug },
 	images[]{ asset->{ url }, alt },
 	body[]{
@@ -56,20 +38,16 @@ const sanityBlog = await sanityClient.fetch<SanityBlog>(BLOG_QUERY, {
 
 if (!sanityBlog) return Astro.redirect('/404')
 
-const { projectId, dataset } = sanityClient.config()
-
-const urlFor = (source: SanityImageSource) =>
-	projectId && dataset
-		? imageUrlBuilder({ projectId, dataset }).image(source)
-		: null
-
-const title = sanityBlog.title
-const author = sanityBlog.author
-const blogDate = new Date(sanityBlog.publishedAt).toLocaleDateString()
-const tags = sanityBlog.tags || []
+const { title, author, tags = [] } = sanityBlog
+const blogDate = new Date(sanityBlog.publishedAt).toLocaleDateString('en-US', {
+	month: 'short',
+	day: 'numeric',
+	year: 'numeric',
+})
+const pageTitle = `Nathan Lardizabal | ${title}`
 ---
 
-<BlogLayout title={`Nathan Lardizabal | ${title}`} blogData={sanityBlog}>
+<Layout title={pageTitle} description={sanityBlog.description} blogData={sanityBlog}>
 	<article class="prose dark:prose-invert">
 		<h1 class="mb-2 text-2xl font-semibold lowercase">{title}</h1>
 		<div class="flex gap-2">
@@ -95,4 +73,4 @@ const tags = sanityBlog.tags || []
 			)
 		}
 	</article>
-</BlogLayout>
+</Layout>

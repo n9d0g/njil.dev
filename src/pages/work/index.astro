@@ -7,6 +7,9 @@ const data = await getCollection('job')
 const allJobs = data.sort((a, b) =>
 	a.data.startDate < b.data.startDate ? 1 : -1
 )
+
+const formatMonthYear = (date: Date) =>
+	`${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
 ---
 
 <Layout title="Nathan Lardizabal | Work">
@@ -18,13 +21,15 @@ const allJobs = data.sort((a, b) =>
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{
 			allJobs.map((job) => {
-				let startDate = `${job.data.startDate.getUTCMonth()}/${job.data.startDate.getUTCFullYear()}`
-				let endDate = `${job.data.endDate.getUTCMonth()}/${job.data.endDate.getUTCFullYear()}`
-				if (job.id === 'quotemedia.md') endDate = 'present'
+				const startDate = formatMonthYear(job.data.startDate)
+				const endDate = job.data.current
+					? 'present'
+					: job.data.endDate
+						? formatMonthYear(job.data.endDate)
+						: 'present'
 
 				return (
 					<WorkCard
-						slug={job.slug}
 						position={job.data.position}
 						company={job.data.company}
 						location={job.data.location}

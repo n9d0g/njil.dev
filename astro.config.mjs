@@ -1,17 +1,18 @@
 import { defineConfig } from 'astro/config'
-import partytown from '@astrojs/partytown'
 import vercel from '@astrojs/vercel'
+import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
 import icon from 'astro-icon'
-
 import sanity from '@sanity/astro'
+
+const sanityProjectId = process.env.SANITY_PROJECT_ID || 'nbid6gbs'
 
 export default defineConfig({
 	integrations: [
-		partytown(),
+		react(),
 		icon(),
 		sanity({
-			projectId: 'nbid6gbs',
+			projectId: sanityProjectId,
 			dataset: 'production',
 			useCdn: false,
 		}),

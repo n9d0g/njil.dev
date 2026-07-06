@@ -4,7 +4,7 @@ position: 'Senior Frontend Developer'
 location: 'Vancouver, BC'
 slug: 'quotemedia'
 startDate: 2022-09-01
-endDate: 2024-02-14
+current: true
 description: 'Developed, created, and maintained marketing websites built with Vue 3, Nuxt 3, and Tailwind. All marketing sites deployed with Cloudflare Pages.'
 tech:
   [

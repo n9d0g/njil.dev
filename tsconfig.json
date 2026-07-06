@@ -10,13 +10,12 @@
 		"types": ["@sanity/astro/module"],
 		"paths": {
 			"@components/*": ["src/components/*"],
-			"@assets/*": ["src/assets/*"],
 			"@layouts/*": ["src/layouts/*"],
 			"@api/*": ["src/pages/api/*"],
-			"@validation/*": ["src/validation/*"],
-			"@types/*": ["src/types/*"],
+			"@app-types/*": ["src/types/*"],
 			"@styles/*": ["src/styles/*"],
-			"@emails/*": ["src/emails/*"]
+			"@emails/*": ["src/emails/*"],
+			"@lib/*": ["src/lib/*"]
 		}
 	}
 }

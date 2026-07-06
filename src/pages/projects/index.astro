@@ -7,6 +7,9 @@ const data = await getCollection('project')
 const allProjects = data.sort((a, b) =>
 	a.data.startDate < b.data.startDate ? 1 : -1
 )
+
+const formatMonthYear = (date: Date) =>
+	`${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
 ---
 
 <Layout title="Nathan Lardizabal | Projects">
@@ -17,20 +20,16 @@ const allProjects = data.sort((a, b) =>
 	<hr class="my-4 border-slate-700" />
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
 		{
-			allProjects.map((project) => {
-				let startDate = `${project.data.startDate.getUTCMonth()}/${project.data.startDate.getUTCFullYear()}`
-
-				return (
-					<ProjectCard
-						title={project.data.title}
-						url={project.data.url}
-						description={project.data.description}
-						tech={project.data.tech}
-						repo={project.data.repo}
-						{startDate}
-					/>
-				)
-			})
+			allProjects.map((project) => (
+				<ProjectCard
+					title={project.data.title}
+					url={project.data.url}
+					description={project.data.description}
+					tech={project.data.tech}
+					repo={project.data.repo}
+					startDate={formatMonthYear(project.data.startDate)}
+				/>
+			))
 		}
 	</section>
 </Layout>

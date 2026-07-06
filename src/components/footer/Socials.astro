@@ -6,31 +6,37 @@ const socials = [
 		icon: 'mdi:github',
 		href: 'https://github.com/n9d0g',
 		label: 'github',
+		external: true,
 	},
 	{
 		icon: 'mdi:linkedin',
 		href: 'https://www.linkedin.com/in/n9d0g',
 		label: 'linkedin',
+		external: true,
 	},
 	{
 		icon: 'mdi:document',
 		href: '/resume.pdf',
 		label: 'resume',
+		external: false,
 	},
 	{
 		icon: 'mdi:email',
 		href: 'mailto:nate@njil.dev',
 		label: 'email',
+		external: false,
 	},
 	{
 		icon: 'mdi:soundcloud',
 		href: 'https://soundcloud.com/n9d0g',
 		label: 'soundcloud',
+		external: true,
 	},
 	{
 		icon: 'mdi:instagram',
 		href: 'https://www.instagram.com/n9d0g',
 		label: 'instagram',
+		external: true,
 	},
 ]
 ---
@@ -40,7 +46,8 @@ const socials = [
 		socials.map((social) => (
 			<a
 				href={social.href}
-				target="_blank"
+				target={social.external ? '_blank' : undefined}
+				rel={social.external ? 'noopener noreferrer' : undefined}
 				class="size-6"
 				aria-label={social.label}
 			>

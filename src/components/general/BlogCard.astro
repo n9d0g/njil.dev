@@ -1,10 +1,6 @@
 ---
 import Chip from './Chip.astro'
-
-interface SanityTag {
-	name: string
-	slug: { current: string }
-}
+import type { SanityTag } from '@app-types/sanity'
 
 interface Props {
 	slug: string
