@@ -1,7 +1,6 @@
 {
 	"extends": "astro/tsconfigs/base",
 	"compilerOptions": {
-		"baseUrl": ".",
 		"plugins": [
 			{
 				"name": "@astrojs/ts-plugin"
@@ -9,13 +8,13 @@
 		],
 		"types": ["@sanity/astro/module"],
 		"paths": {
-			"@components/*": ["src/components/*"],
-			"@layouts/*": ["src/layouts/*"],
-			"@api/*": ["src/pages/api/*"],
-			"@app-types/*": ["src/types/*"],
-			"@styles/*": ["src/styles/*"],
-			"@emails/*": ["src/emails/*"],
-			"@lib/*": ["src/lib/*"]
+			"@components/*": ["./src/components/*"],
+			"@layouts/*": ["./src/layouts/*"],
+			"@api/*": ["./src/pages/api/*"],
+			"@app-types/*": ["./src/types/*"],
+			"@styles/*": ["./src/styles/*"],
+			"@emails/*": ["./src/emails/*"],
+			"@lib/*": ["./src/lib/*"]
 		}
 	}
 }

@@ -18,7 +18,7 @@ export default defineConfig({
 		}),
 	],
 	output: 'server',
-	adapter: vercel({ webAnalytics: true }),
+	adapter: vercel(),
 	site: 'https://www.njil.dev',
 	server: {
 		port: 3001,
