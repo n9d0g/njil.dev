@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1](https://github.com/n9d0g/njil.dev/compare/v2.4.0...v2.4.1) (2026-10-02)
+
+
+### Build
+
+* :green_heart: build cms fix ([b3c9793](https://github.com/n9d0g/njil.dev/commit/b3c97930c992cf112db6f2d22ef532f16071482d))
+* :green_heart: build cms fix ([6456b77](https://github.com/n9d0g/njil.dev/commit/6456b7700efea650289a75feb367cc9b4d3eb454))
+
 ## [2.4.0](https://github.com/n9d0g/njil.dev/compare/v2.3.1...v2.4.0) (2026-10-02)
 
 
