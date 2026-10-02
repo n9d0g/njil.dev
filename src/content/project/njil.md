@@ -6,13 +6,13 @@ location: 'Mississauga, ON'
 slug: 'njil'
 startDate: 2022-10-01
 endDate: 2024-02-14
-description: "Simple portfolio website you're currently viewing! Site built with TypeScript, Astro and Tailwind. Deployed with Vercel."
+description: "Simple portfolio website you're currently viewing! Site built with TypeScript, Astro and Tailwind. Deployed with Cloudflare Workers."
 tech:
   [
     'logos:typescript-icon',
     'vscode-icons:file-type-astro',
     'vscode-icons:file-type-tailwind',
-    'simple-icons:vercel',
+    'simple-icons:cloudflare',
   ]
 points: ['point 1', 'point 2', 'point 3']
 ---

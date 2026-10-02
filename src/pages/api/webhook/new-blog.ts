@@ -1,12 +1,13 @@
 import type { APIRoute } from 'astro'
 import { NewBlogEmail } from '@emails/NewBlog'
-import { sanityClient } from '@lib/sanity'
-import { EMAIL_FROM, resend, SITE_URL } from '@lib/resend'
+import { SANITY_WEBHOOK_SECRET } from 'astro:env/server'
+import { getSanityClient } from '@lib/sanity'
+import { EMAIL_FROM, getResend, SITE_URL } from '@lib/resend'
 import type { SanityWebhookPayload, Subscriber } from '@app-types/sanity'
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
-		const webhookSecret = import.meta.env.SANITY_WEBHOOK_SECRET
+		const webhookSecret = SANITY_WEBHOOK_SECRET
 		const signature = request.headers.get('sanity-webhook-signature')
 
 		if (webhookSecret && signature !== webhookSecret) {
@@ -24,6 +25,8 @@ export const POST: APIRoute = async ({ request }) => {
 				headers: { 'Content-Type': 'application/json' },
 			})
 		}
+
+		const sanityClient = getSanityClient()
 
 		const subscribers = await sanityClient.fetch<Subscriber[]>(
 			`*[_type == "subscriber" && active == true]{ email, active }`
@@ -46,7 +49,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const results = await Promise.allSettled(
 			subscribers.map((subscriber) =>
-				resend.emails.send({
+				getResend().emails.send({
 					from: EMAIL_FROM,
 					to: subscriber.email,
 					subject: `New post: ${blogTitle}`,

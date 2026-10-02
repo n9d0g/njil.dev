@@ -1,7 +1,8 @@
+import { RECAPTCHA_SECRET_KEY } from 'astro:env/server'
 import type { APIRoute } from 'astro'
 import { WelcomeEmail } from '@emails/Welcome'
-import { sanityClient } from '@lib/sanity'
-import { EMAIL_FROM, resend } from '@lib/resend'
+import { getSanityClient } from '@lib/sanity'
+import { EMAIL_FROM, getResend } from '@lib/resend'
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
@@ -28,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
-					secret: import.meta.env.RECAPTCHA_SECRET_KEY,
+					secret: RECAPTCHA_SECRET_KEY,
 					response: recaptchaToken,
 				}),
 			}
@@ -57,6 +58,8 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const normalizedEmail = email.toLowerCase()
 
+		const sanityClient = getSanityClient()
+
 		const existingSubscriber = await sanityClient.fetch(
 			`*[_type == "subscriber" && email == $email][0]`,
 			{ email: normalizedEmail }
@@ -77,7 +80,7 @@ export const POST: APIRoute = async ({ request }) => {
 		})
 
 		try {
-			await resend.emails.send({
+			await getResend().emails.send({
 				from: EMAIL_FROM,
 				to: normalizedEmail,
 				subject: 'thanks for subscribing to my blog newsletter 🫶',
