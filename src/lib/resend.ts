@@ -1,6 +1,14 @@
+import { RESEND_API_KEY } from 'astro:env/server'
 import { Resend } from 'resend'
 
-export const resend = new Resend(import.meta.env.RESEND_API_KEY)
+let resendClient: Resend | undefined
+
+export function getResend() {
+	if (!resendClient) {
+		resendClient = new Resend(RESEND_API_KEY)
+	}
+	return resendClient
+}
 
 export const EMAIL_FROM = 'Nathan <hello@njil.dev>'
 

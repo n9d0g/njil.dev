@@ -1,0 +1,70 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: ['dev', 'main']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.PUBLIC_RECAPTCHA_SITE_KEY }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_API_KEY: ${{ secrets.SANITY_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          SANITY_WEBHOOK_SECRET: ${{ secrets.SANITY_WEBHOOK_SECRET }}
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: ${{ github.ref == 'refs/heads/main' && 'deploy' || 'deploy --env dev' }}
+
+      - name: Notify Discord
+        run: |
+          if [ -z "${{ secrets.DISCORD_WEBHOOK_URL }}" ]; then
+            echo "DISCORD_WEBHOOK_URL secret is not set, skipping notification"
+            exit 0
+          fi
+
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | cut -c1-100)
+          BRANCH=${GITHUB_REF#refs/heads/}
+          DEPLOY_TIME=$(TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S %Z')
+
+          if [ "$BRANCH" == "main" ]; then
+            DEPLOY_URL="https://njil.dev"
+            SITE_NAME="njil.dev"
+          else
+            DEPLOY_URL="https://dev.njil.dev"
+            SITE_NAME="dev.njil.dev"
+          fi
+
+          MSG="🚀 **$SITE_NAME** deployed successfully!\n\n\`\`\`Branch: $BRANCH\nCommit: $COMMIT_SHA\nDetails: $COMMIT_MSG\nTime: $DEPLOY_TIME\n\`\`\`\n\n🔗 **Live URL:** $DEPLOY_URL"
+
+          curl -fsS -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"$MSG\"}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
