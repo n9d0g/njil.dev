@@ -1,13 +1,17 @@
 ---
 import Chip from './Chip.astro'
-import type { SanityTag } from '@app-types/sanity'
+import type { BlogListQueryResult } from '@app-types/sanity.types'
+
+type BlogTag = NonNullable<
+	NonNullable<BlogListQueryResult[number]>['tags']
+>[number]
 
 interface Props {
 	slug: string
 	title: string
 	description?: string
 	publishedAt: string
-	tags?: SanityTag[]
+	tags?: BlogTag[]
 	coverImage?: string
 }
 

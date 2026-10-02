@@ -16,5 +16,6 @@
 			"@emails/*": ["./src/emails/*"],
 			"@lib/*": ["./src/lib/*"]
 		}
-	}
+	},
+	"exclude": ["dist", "cms"]
 }

@@ -12,7 +12,14 @@
 		"format:check": "oxfmt --check",
 		"clean:cache": "rm -rf node_modules .astro pnpm-lock.yaml",
 		"fresh": "pnpm run clean:cache && pnpm i && pnpm run format",
-		"fresh:start": "pnpm run fresh && pnpm run dev"
+		"fresh:start": "pnpm run fresh && pnpm run dev",
+		"cms": "pnpm --filter cms dev",
+		"cms:build": "pnpm --filter cms build",
+		"cms:deploy": "pnpm --filter cms deploy",
+		"typegen": "pnpm --filter cms typegen"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["esbuild", "workerd"]
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^14.3.3",
@@ -32,6 +39,7 @@
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
 		"react-email": "^6.9.2",
+		"groq": "^3.88.1",
 		"resend": "^6.20.0",
 		"tailwindcss": "^4.3.3"
 	},

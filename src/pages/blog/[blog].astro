@@ -6,35 +6,26 @@ import InlineImage from '@components/blog/InlineImage.astro'
 import BentoGallery from '@components/blog/BentoGallery.astro'
 import { sanityClient } from 'sanity:client'
 import { PortableText } from 'astro-portabletext'
-import type { SanityBlog } from '@app-types/sanity'
+import {
+	blogBySlugQuery,
+	blogSlugsQuery,
+} from '@lib/queries'
+import type { BlogBySlugQueryResult } from '@app-types/sanity.types'
 
 export const prerender = true
 
 export const getStaticPaths = async () => {
-	const SLUGS_QUERY = `*[_type == "blog" && defined(slug.current)]{
-			"params": {"blog": slug.current}
-		}`
-	return await sanityClient.fetch(SLUGS_QUERY)
+	return await sanityClient.fetch(blogSlugsQuery)
 }
 
 const { blog } = Astro.params
 
-const BLOG_QUERY = `*[_type == "blog" && slug.current == $slug][0]{
-	title,
-	author,
-	publishedAt,
-	description,
-	tags[]->{ name, slug },
-	images[]{ asset->{ url }, alt },
-	body[]{
-		...,
-		_type == "image" => { asset->{ url }, alt, caption },
-		_type == "code" => { language, code, filename }
+const sanityBlog = await sanityClient.fetch<BlogBySlugQueryResult>(
+	blogBySlugQuery,
+	{
+		slug: blog,
 	}
-}`
-const sanityBlog = await sanityClient.fetch<SanityBlog>(BLOG_QUERY, {
-	slug: blog,
-})
+)
 
 if (!sanityBlog) return Astro.redirect('/404')
 

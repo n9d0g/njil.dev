@@ -3,12 +3,12 @@ import { PUBLIC_RECAPTCHA_SITE_KEY } from 'astro:env/client'
 import Footer from '@components/Footer.astro'
 import Header from '@components/Header.astro'
 import '@styles/globals.css'
-import type { SanityBlogData } from '@app-types/sanity'
+import type { BlogBySlugQueryResult } from '@app-types/sanity.types'
 
 interface Props {
 	title: string
 	description?: string
-	blogData?: SanityBlogData
+	blogData?: BlogBySlugQueryResult
 }
 
 const { title, description, blogData } = Astro.props
