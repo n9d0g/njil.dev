@@ -29,3 +29,7 @@ certificate
 
 # macOS-specific files
 .DS_Store
+
+# Sanity CMS package
+cms/.sanity/
+cms/dist/

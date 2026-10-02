@@ -3,7 +3,9 @@ import { NewBlogEmail } from '@emails/NewBlog'
 import { SANITY_WEBHOOK_SECRET } from 'astro:env/server'
 import { getSanityClient } from '@lib/sanity'
 import { EMAIL_FROM, getResend, SITE_URL } from '@lib/resend'
-import type { SanityWebhookPayload, Subscriber } from '@app-types/sanity'
+import { activeSubscribersQuery } from '@lib/queries'
+import type { SanityWebhookPayload } from '@app-types/sanity'
+import type { ActiveSubscribersQueryResult } from '@app-types/sanity.types'
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
@@ -28,9 +30,10 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const sanityClient = getSanityClient()
 
-		const subscribers = await sanityClient.fetch<Subscriber[]>(
-			`*[_type == "subscriber" && active == true]{ email, active }`
-		)
+		const subscribers =
+			await sanityClient.fetch<ActiveSubscribersQueryResult>(
+				activeSubscribersQuery
+			)
 
 		if (!subscribers?.length) {
 			return new Response(

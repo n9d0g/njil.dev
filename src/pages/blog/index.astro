@@ -2,22 +2,10 @@
 import Layout from '@layouts/Layout.astro'
 import BlogCard from '@components/general/BlogCard.astro'
 import { sanityClient } from 'sanity:client'
-import type { SanityBlogListItem } from '@app-types/sanity'
+import { blogListQuery } from '@lib/queries'
+import type { BlogListQueryResult } from '@app-types/sanity.types'
 
-const BLOG_QUERY = `*[
-		_type == "blog"
-		&& defined(slug.current)
-	]|order(publishedAt desc)[0...12]{
-		_id,
-		title,
-		slug,
-		publishedAt,
-		description,
-		tags[]->{ name, slug },
-		coverImage{ asset->{ url } },
-		images[]{ asset->{ url } }[0...1]
-	}`
-const blogs = await sanityClient.fetch<SanityBlogListItem[]>(BLOG_QUERY)
+const blogs = await sanityClient.fetch<BlogListQueryResult>(blogListQuery)
 ---
 
 <Layout title="Nathan Lardizabal | Blog">

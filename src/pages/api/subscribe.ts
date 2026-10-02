@@ -1,6 +1,7 @@
 import { RECAPTCHA_SECRET_KEY } from 'astro:env/server'
 import type { APIRoute } from 'astro'
 import { WelcomeEmail } from '@emails/Welcome'
+import { subscriberByEmailQuery } from '@lib/queries'
 import { getSanityClient } from '@lib/sanity'
 import { EMAIL_FROM, getResend } from '@lib/resend'
 
@@ -61,7 +62,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const sanityClient = getSanityClient()
 
 		const existingSubscriber = await sanityClient.fetch(
-			`*[_type == "subscriber" && email == $email][0]`,
+			subscriberByEmailQuery,
 			{ email: normalizedEmail }
 		)
 

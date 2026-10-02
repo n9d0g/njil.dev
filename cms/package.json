@@ -1,0 +1,42 @@
+{
+	"name": "cms",
+	"private": true,
+	"version": "1.2.0",
+	"main": "package.json",
+	"license": "UNLICENSED",
+	"scripts": {
+		"dev": "sanity dev",
+		"start": "sanity start",
+		"build": "sanity build",
+		"deploy": "sanity deploy",
+		"deploy-graphql": "sanity graphql deploy",
+		"typegen": "sanity schema extract && sanity typegen generate"
+	},
+	"keywords": [
+		"sanity"
+	],
+	"engines": {
+		"node": ">=22.12"
+	},
+	"dependencies": {
+		"@sanity/code-input": "^7.3.5",
+		"@sanity/vision": "^6.9.2",
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8",
+		"sanity": "^6.9.2",
+		"styled-components": "^6.5.2"
+	},
+	"devDependencies": {
+		"@sanity/eslint-config-studio": "^6.0.0",
+		"@types/react": "^19.2.18",
+		"eslint": "^9.39.5",
+		"prettier": "^3.9.6",
+		"typescript": "^6.0.3"
+	},
+	"prettier": {
+		"semi": false,
+		"printWidth": 100,
+		"bracketSpacing": false,
+		"singleQuote": true
+	}
+}
