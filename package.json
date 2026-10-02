@@ -15,7 +15,7 @@
 		"fresh:start": "pnpm run fresh && pnpm run dev",
 		"cms": "pnpm --filter cms dev",
 		"cms:build": "pnpm --filter cms build",
-		"cms:deploy": "pnpm --filter cms deploy",
+		"cms:deploy": "pnpm --filter cms run deploy",
 		"typegen": "pnpm --filter cms typegen"
 	},
 	"pnpm": {
