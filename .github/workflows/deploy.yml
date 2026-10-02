@@ -28,12 +28,8 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.PUBLIC_RECAPTCHA_SITE_KEY }}
-          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-          SANITY_API_KEY: ${{ secrets.SANITY_API_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
-          SANITY_WEBHOOK_SECRET: ${{ secrets.SANITY_WEBHOOK_SECRET }}
+          PUBLIC_RECAPTCHA_SITE_KEY: ${{ vars.PUBLIC_RECAPTCHA_SITE_KEY }}
+          SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
