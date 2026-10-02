@@ -28,6 +28,7 @@ jobs:
       - name: Build
         run: pnpm build
         env:
+          CLOUDFLARE_ENV: ${{ github.ref_name == 'dev' && 'dev' || '' }}
           PUBLIC_RECAPTCHA_SITE_KEY: ${{ vars.PUBLIC_RECAPTCHA_SITE_KEY }}
           SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
 
@@ -36,7 +37,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: ${{ github.ref == 'refs/heads/main' && 'deploy' || 'deploy --env dev' }}
+          command: deploy
 
       - name: Notify Discord
         run: |
