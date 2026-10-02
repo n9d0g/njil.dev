@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "njil-dev",
+	"name": "njil-prod",
 	"compatibility_date": "2025-10-02",
 	"compatibility_flags": ["nodejs_compat"],
 	"routes": [
@@ -9,7 +9,7 @@
 	],
 	"env": {
 		"dev": {
-			"name": "njil-dev-dev",
+			"name": "njil-qa",
 			"routes": [{ "pattern": "dev.njil.dev", "custom_domain": true }],
 		},
 	},
