@@ -1,6 +1,7 @@
 {
 	"name": "njil.dev",
 	"version": "2.3.1",
+	"version": "2.3.1",
 	"type": "module",
 	"scripts": {
 		"dev": "astro dev --host",
@@ -20,8 +21,8 @@
 		"@astrojs/ts-plugin": "^1.10.10",
 		"@iconify-json/logos": "^1.2.11",
 		"@iconify-json/mdi": "^1.2.3",
-		"@iconify-json/simple-icons": "^1.2.89",
-		"@iconify-json/vscode-icons": "^1.2.64",
+		"@iconify-json/simple-icons": "^1.2.93",
+		"@iconify-json/vscode-icons": "^1.2.72",
 		"@portabletext/types": "^4.0.2",
 		"@react-email/components": "^1.0.12",
 		"@sanity/astro": "^3.4.2",
@@ -30,10 +31,11 @@
 		"astro": "^7.3.5",
 		"astro-icon": "^1.1.5",
 		"astro-portabletext": "^0.13.0",
-		"react": "^19.2.7",
-		"react-dom": "^19.2.7",
-		"resend": "^6.17.1",
-		"tailwindcss": "^4.3.2"
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8",
+		"react-email": "^6.9.2",
+		"resend": "^6.20.0",
+		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.20",

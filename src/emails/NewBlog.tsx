@@ -8,7 +8,7 @@ import {
 	Button,
 	Hr,
 	Link,
-} from '@react-email/components'
+} from 'react-email'
 import { emailStyles } from './styles'
 import { SITE_URL } from '@lib/resend'
 
