@@ -17,7 +17,7 @@
 		"cms:build": "vp run --filter cms build",
 		"cms:deploy": "vp run --filter cms deploy",
 		"typegen": "vp run --filter cms typegen",
-		"prepare": "vp config",
+		"prepare": "vp config && astro sync",
 		"lint": "vp lint",
 		"check": "vp check",
 		"check:fix": "vp check --fix"
