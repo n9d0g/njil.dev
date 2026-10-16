@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.2](https://github.com/n9d0g/njil.dev/compare/v2.4.1...v2.4.2) (2026-10-16)
+
+
+### Performance
+
+* :zap: vite+ migration ([73c48a7](https://github.com/n9d0g/njil.dev/commit/73c48a7902aa9b5acab5a464bac0a1f237aa571e))
+
+
+### Build
+
+* :green_heart: fix ci build ([5d0f900](https://github.com/n9d0g/njil.dev/commit/5d0f9000d3dd6282df7909d5220be5ea1391bb24))
+
 ## [2.4.1](https://github.com/n9d0g/njil.dev/compare/v2.4.0...v2.4.1) (2026-10-02)
 
 
