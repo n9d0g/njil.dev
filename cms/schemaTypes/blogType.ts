@@ -52,7 +52,8 @@ export const blogType = defineType({
 		defineField({
 			name: 'images',
 			title: 'Gallery Images',
-			description: 'Images to display in a bento grid at the bottom of the post',
+			description:
+				'Images to display in a bento grid at the bottom of the post',
 			type: 'array',
 			of: [
 				{

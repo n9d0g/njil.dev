@@ -30,10 +30,12 @@ export const POST: APIRoute = async ({ request }) => {
 
 		const sanityClient = getSanityClient()
 
-		const subscribers =
-			await sanityClient.fetch<ActiveSubscribersQueryResult>(
-				activeSubscribersQuery
-			)
+		const result = await sanityClient.fetch<ActiveSubscribersQueryResult>(
+			activeSubscribersQuery
+		)
+		const subscribers = result?.flatMap(({ email }) =>
+			email ? [{ email }] : []
+		)
 
 		if (!subscribers?.length) {
 			return new Response(

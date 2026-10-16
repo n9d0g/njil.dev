@@ -14,11 +14,13 @@ export const blogListQuery = defineQuery(`*[
 	images[]{ asset->{ url } }[0...1]
 }`)
 
-export const blogSlugsQuery = defineQuery(`*[_type == "blog" && defined(slug.current)]{
+export const blogSlugsQuery =
+	defineQuery(`*[_type == "blog" && defined(slug.current)]{
 	"params": {"blog": slug.current}
 }`)
 
-export const blogBySlugQuery = defineQuery(`*[_type == "blog" && slug.current == $slug][0]{
+export const blogBySlugQuery =
+	defineQuery(`*[_type == "blog" && slug.current == $slug][0]{
 	title,
 	author,
 	publishedAt,

@@ -8,21 +8,19 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"format": "oxfmt",
-		"format:check": "oxfmt --check",
+		"format": "vp fmt",
+		"format:check": "vp fmt --check",
 		"clean:cache": "rm -rf node_modules .astro pnpm-lock.yaml",
-		"fresh": "pnpm run clean:cache && pnpm i && pnpm run format",
-		"fresh:start": "pnpm run fresh && pnpm run dev",
-		"cms": "pnpm --filter cms dev",
-		"cms:build": "pnpm --filter cms build",
-		"cms:deploy": "pnpm --filter cms run deploy",
-		"typegen": "pnpm --filter cms typegen"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild",
-			"workerd"
-		]
+		"fresh": "vp run clean:cache && vp install && vp run format",
+		"fresh:start": "vp run fresh && vp run dev",
+		"cms": "vp run --filter cms dev",
+		"cms:build": "vp run --filter cms build",
+		"cms:deploy": "vp run --filter cms deploy",
+		"typegen": "vp run --filter cms typegen",
+		"prepare": "vp config && astro sync",
+		"lint": "vp lint",
+		"check": "vp check",
+		"check:fix": "vp check --fix"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^14.3.3",
@@ -39,18 +37,19 @@
 		"astro": "^7.3.5",
 		"astro-icon": "^1.1.5",
 		"astro-portabletext": "^0.13.0",
+		"groq": "^3.88.1",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
 		"react-email": "^6.9.2",
-		"groq": "^3.88.1",
 		"resend": "^6.20.0",
 		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.20",
 		"@types/node": "^26.2.0",
-		"oxfmt": "^0.63.0",
 		"typescript": "^6.0.3",
+		"vite-plus": "catalog:",
 		"wrangler": "^4.147.0"
-	}
+	},
+	"packageManager": "pnpm@12.14.0"
 }
