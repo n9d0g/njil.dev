@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.4.4](https://github.com/n9d0g/njil.dev/compare/v2.4.3...v2.4.4) (2026-10-26)
+
+
+### Bug Fixes
+
+* :bug: local astro dev 500s; typegen overwrites schema.json ([c64e0d2](https://github.com/n9d0g/njil.dev/commit/c64e0d21db018e79af39aa10365e67e2524d9f99))
+* :bug: local astro dev 500s; typegen overwrites schema.json ([d8d54d6](https://github.com/n9d0g/njil.dev/commit/d8d54d6e4f9074d8bc95863bb55c6b4ba4c6c850))
+
+
+### Refactors
+
+* :recycle: Announcements link via blogPostPath ([49eff3e](https://github.com/n9d0g/njil.dev/commit/49eff3ed2ee60745167747f8ed72e96d6f5c3e6b))
+* :recycle: Blog module; render Blog posts per request ([314d8b8](https://github.com/n9d0g/njil.dev/commit/314d8b87cd8c06204bea12de162677ea8ca3b247))
+* :recycle: Blog module; render Blog posts per request ([76e8e79](https://github.com/n9d0g/njil.dev/commit/76e8e794ad911b89ae4abb06b2404be1cac03008)), closes [#75](https://github.com/n9d0g/njil.dev/issues/75)
+* :recycle: Career module for Jobs and Projects ([8b5469f](https://github.com/n9d0g/njil.dev/commit/8b5469f608df848d31ead66f18fd6e77202b0f3b))
+* :recycle: Career module for Jobs and Projects ([259a083](https://github.com/n9d0g/njil.dev/commit/259a0838595b24e3eeec09998dc62bd91a362c17))
+
 ## [2.4.3](https://github.com/n9d0g/njil.dev/compare/v2.4.2...v2.4.3) (2026-10-26)
 
 
