@@ -14,6 +14,8 @@ const toResponse = (outcome: AnnounceOutcome) => {
 			return json(200, {
 				message: `Newsletter sent to ${outcome.sent} subscriber(s)`,
 			})
+		case 'already-announced':
+			return json(200, { message: 'Blog post was already announced' })
 		case 'no-subscribers':
 			return json(200, { message: 'No subscribers to notify' })
 		case 'ignored':

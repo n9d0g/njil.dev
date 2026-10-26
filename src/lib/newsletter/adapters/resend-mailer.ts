@@ -8,14 +8,19 @@ export function createResendMailer(apiKey: string): Mailer {
 	const resend = new Resend(apiKey)
 
 	return {
-		async send(messages) {
+		async send(messages, { idempotencyKey } = {}) {
 			let sent = 0
 			let failed = 0
 
 			for (let i = 0; i < messages.length; i += BATCH_SIZE) {
 				const chunk = messages.slice(i, i + BATCH_SIZE)
 				try {
-					const { error } = await resend.batch.send(chunk)
+					const { error } = await resend.batch.send(
+						chunk,
+						idempotencyKey
+							? { idempotencyKey: `${idempotencyKey}-${i / BATCH_SIZE}` }
+							: undefined
+					)
 					if (error) throw error
 					sent += chunk.length
 				} catch (error) {

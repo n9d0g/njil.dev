@@ -16,6 +16,7 @@ interface NewBlogEmailProps {
 	description: string
 	blogUrl: string
 	siteUrl: string
+	unsubscribeUrl: string
 }
 
 export const NewBlogEmail = ({
@@ -23,6 +24,7 @@ export const NewBlogEmail = ({
 	description,
 	blogUrl,
 	siteUrl,
+	unsubscribeUrl,
 }: NewBlogEmailProps) => (
 	<Html>
 		<Head />
@@ -46,6 +48,10 @@ export const NewBlogEmail = ({
 					<br />
 					<Link href={siteUrl} style={emailStyles.link}>
 						njil.dev
+					</Link>
+					{' · '}
+					<Link href={unsubscribeUrl} style={emailStyles.link}>
+						unsubscribe
 					</Link>
 				</Text>
 			</Container>
