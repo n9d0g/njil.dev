@@ -4,13 +4,13 @@ import {
 	RESEND_API_KEY,
 	SANITY_WEBHOOK_SECRET,
 } from 'astro:env/server'
+import { createRecaptcha } from '@lib/human-check/adapters/recaptcha'
+import { createResendMailer } from '@lib/mail/adapters/resend'
 import { getSanityClient } from '@lib/sanity'
 import { createNewsletter } from './index'
-import { createRecaptcha } from './adapters/recaptcha'
-import { createResendMailer } from './adapters/resend-mailer'
 import { createSanityStore } from './adapters/sanity-store'
 
-// Wires the Newsletter to its production adapters. Tests use ./adapters/memory.
+// Wires the Newsletter to its production adapters. Tests use the memory adapters.
 export function getNewsletter() {
 	return createNewsletter({
 		store: createSanityStore(getSanityClient()),

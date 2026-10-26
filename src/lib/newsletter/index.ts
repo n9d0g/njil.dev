@@ -1,8 +1,10 @@
 import { isValidSignature } from '@sanity/webhook'
-import { createElement, type ReactElement } from 'react'
+import { createElement } from 'react'
 import { NewBlogEmail } from '@emails/NewBlog'
 import { WelcomeEmail } from '@emails/Welcome'
 import { blogPostPath } from '@lib/blog'
+import type { HumanCheck } from '@lib/human-check'
+import type { Mailer } from '@lib/mail'
 
 export interface Subscriber {
 	email: string
@@ -16,25 +18,6 @@ export interface NewsletterStore {
 	listActive(): Promise<Subscriber[]>
 	hasAnnounced(postId: string): Promise<boolean>
 	markAnnounced(postId: string): Promise<void>
-}
-
-export interface Message {
-	from: string
-	to: string
-	subject: string
-	react: ReactElement
-	headers?: Record<string, string>
-}
-
-export interface Mailer {
-	send(
-		messages: Message[],
-		options?: { idempotencyKey?: string }
-	): Promise<{ sent: number; failed: number }>
-}
-
-export interface HumanCheck {
-	verify(token: string): Promise<boolean>
 }
 
 export interface NewsletterConfig {
