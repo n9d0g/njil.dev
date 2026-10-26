@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.3](https://github.com/n9d0g/njil.dev/compare/v2.4.2...v2.4.3) (2026-10-26)
+
+
+### Refactors
+
+* :recycle: deepen the Newsletter module ([ba2f492](https://github.com/n9d0g/njil.dev/commit/ba2f492de3f02000bcf7d6d150cb669647f3e331))
+* :recycle: deepen the Newsletter module ([3e7be78](https://github.com/n9d0g/njil.dev/commit/3e7be787af6e6244d738c2b381ab1df2bfbb33fb)), closes [#65](https://github.com/n9d0g/njil.dev/issues/65)
+
 ## [2.4.2](https://github.com/n9d0g/njil.dev/compare/v2.4.1...v2.4.2) (2026-10-16)
 
 
