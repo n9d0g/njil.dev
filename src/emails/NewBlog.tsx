@@ -10,18 +10,19 @@ import {
 	Link,
 } from 'react-email'
 import { emailStyles } from './styles'
-import { SITE_URL } from '@lib/resend'
 
 interface NewBlogEmailProps {
 	title: string
 	description: string
 	blogUrl: string
+	siteUrl: string
 }
 
 export const NewBlogEmail = ({
 	title,
 	description,
 	blogUrl,
+	siteUrl,
 }: NewBlogEmailProps) => (
 	<Html>
 		<Head />
@@ -43,7 +44,7 @@ export const NewBlogEmail = ({
 				<Text style={{ ...emailStyles.footer, fontSize: '12px' }}>
 					You're receiving this because you subscribed to my blog newsletter.
 					<br />
-					<Link href={SITE_URL} style={emailStyles.link}>
+					<Link href={siteUrl} style={emailStyles.link}>
 						njil.dev
 					</Link>
 				</Text>

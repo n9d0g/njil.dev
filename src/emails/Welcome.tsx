@@ -9,9 +9,12 @@ import {
 	Hr,
 } from 'react-email'
 import { emailStyles } from './styles'
-import { SITE_URL } from '@lib/resend'
 
-export const WelcomeEmail = () => (
+interface WelcomeEmailProps {
+	blogUrl: string
+}
+
+export const WelcomeEmail = ({ blogUrl }: WelcomeEmailProps) => (
 	<Html>
 		<Head />
 		<Body style={emailStyles.body}>
@@ -31,7 +34,7 @@ export const WelcomeEmail = () => (
 					</Text>
 					<Button
 						style={{ ...emailStyles.button, marginTop: '8px' }}
-						href={`${SITE_URL}/blog`}
+						href={blogUrl}
 					>
 						Read the blog →
 					</Button>

@@ -1,6 +1,13 @@
 import { defineConfig } from 'vite-plus'
 
 export default defineConfig({
+	resolve: {
+		// lets tests resolve the @lib/*, @emails/* … aliases from tsconfig.json
+		tsconfigPaths: true,
+	},
+	test: {
+		include: ['src/**/*.test.ts'],
+	},
 	staged: {
 		'*': 'vp check --fix',
 	},
