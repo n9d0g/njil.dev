@@ -1,16 +1,12 @@
 ---
 import { Icon } from 'astro-icon/components'
+import type { Project } from '@lib/career'
 
 interface Props {
-	title: string
-	url: string
-	startDate: string
-	description: string
-	tech: string[]
-	repo: string
+	project: Project
 }
 
-const { title, url, startDate, description, tech, repo } = Astro.props
+const { title, url, period, description, tech, repo } = Astro.props.project
 ---
 
 <article
@@ -29,7 +25,7 @@ const { title, url, startDate, description, tech, repo } = Astro.props
 			</a>
 		</div>
 		<p class="mb-1 text-xs font-light text-gray-400">
-			{startDate} - present
+			{period}
 		</p>
 		<p class="my-2 text-sm font-light text-slate-300">
 			{description}

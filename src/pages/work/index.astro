@@ -1,15 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import WorkCard from '@components/general/WorkCard.astro'
-import { getCollection } from 'astro:content'
+import { career } from '@lib/career/live'
 
-const data = await getCollection('job')
-const allJobs = data.sort((a, b) =>
-	a.data.startDate < b.data.startDate ? 1 : -1
-)
-
-const formatMonthYear = (date: Date) =>
-	`${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
+const jobs = await career.getJobs()
 ---
 
 <Layout title="Nathan Lardizabal | Work">
@@ -19,27 +13,6 @@ const formatMonthYear = (date: Date) =>
 	</p>
 	<hr class="my-4 border-slate-700" />
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
-		{
-			allJobs.map((job) => {
-				const startDate = formatMonthYear(job.data.startDate)
-				const endDate = job.data.current
-					? 'present'
-					: job.data.endDate
-						? formatMonthYear(job.data.endDate)
-						: 'present'
-
-				return (
-					<WorkCard
-						position={job.data.position}
-						company={job.data.company}
-						location={job.data.location}
-						description={job.data.description}
-						tech={job.data.tech}
-						{startDate}
-						{endDate}
-					/>
-				)
-			})
-		}
+		{jobs.map((job) => <WorkCard {job} />)}
 	</section>
 </Layout>
