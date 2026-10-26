@@ -1,0 +1,56 @@
+---
+import Layout from '@layouts/Layout.astro'
+
+// GET never unsubscribes: mail scanners open links on their own
+const email = Astro.url.searchParams.get('email')
+const token = Astro.url.searchParams.get('token')
+const status = Astro.url.searchParams.get('status')
+
+const messages: Record<string, string> = {
+	unsubscribed: "you're unsubscribed. sorry to see you go 🥲",
+	'invalid-token':
+		"that unsubscribe link isn't valid. try the one in my latest email.",
+	'not-found': "that email isn't on my newsletter.",
+	error: 'something went wrong, please try again.',
+}
+
+const action = `/api/unsubscribe?${new URLSearchParams({
+	email: email ?? '',
+	token: token ?? '',
+})}`
+---
+
+<Layout title="Nathan Lardizabal | Unsubscribe">
+	<section class="flex flex-col items-center justify-center gap-4">
+		<h1 class="mb-4 text-2xl font-semibold">unsubscribe</h1>
+		{
+			status ? (
+				<p class="font-light text-slate-300">
+					{messages[status] ?? messages.error}
+				</p>
+			) : email && token ? (
+				<form
+					method="post"
+					action={action}
+					class="flex flex-col items-center gap-4"
+				>
+					<p class="font-light text-slate-300">
+						stop getting blog emails at{' '}
+						<span class="text-slate-100">{email}</span>?
+					</p>
+					<input type="hidden" name="from" value="page" />
+					<button
+						type="submit"
+						class="cursor-pointer rounded-lg bg-slate-700 px-4 py-2 text-sm text-slate-100 transition hover:bg-slate-600"
+					>
+						unsubscribe
+					</button>
+				</form>
+			) : (
+				<p class="font-light text-slate-300">
+					use the unsubscribe link from one of my emails.
+				</p>
+			)
+		}
+	</section>
+</Layout>

@@ -20,6 +20,11 @@ export default defineConfig({
 	output: 'server',
 	adapter: cloudflare(),
 	session: false,
+	security: {
+		// One-click unsubscribe POSTs come from mail providers, cross-site.
+		// Every state-changing endpoint authenticates itself (ADR-0002).
+		checkOrigin: false,
+	},
 	site: 'https://www.njil.dev',
 	server: {
 		port: 3001,
@@ -34,7 +39,10 @@ export default defineConfig({
 			SANITY_WEBHOOK_SECRET: envField.string({
 				context: 'server',
 				access: 'secret',
-				optional: true,
+			}),
+			NEWSLETTER_SECRET: envField.string({
+				context: 'server',
+				access: 'secret',
 			}),
 			RESEND_API_KEY: envField.string({
 				context: 'server',
