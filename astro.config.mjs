@@ -34,7 +34,6 @@ export default defineConfig({
 			SANITY_WEBHOOK_SECRET: envField.string({
 				context: 'server',
 				access: 'secret',
-				optional: true,
 			}),
 			RESEND_API_KEY: envField.string({
 				context: 'server',

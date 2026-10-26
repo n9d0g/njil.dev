@@ -1,3 +1,4 @@
+import { encodeSignatureHeader } from '@sanity/webhook'
 import { describe, expect, test } from 'vite-plus/test'
 import { createNewsletter, type Subscriber } from './index'
 import {
@@ -18,6 +19,7 @@ function setup({
 	subscribers = [] as Subscriber[],
 	isHuman = true,
 	failFor = [] as string[],
+	webhookSecret = SECRET,
 } = {}) {
 	const store = createMemoryStore(subscribers)
 	const mailer = createRecordingMailer({ failFor })
@@ -25,7 +27,7 @@ function setup({
 		store,
 		mailer,
 		humanCheck: createStubHumanCheck(isHuman),
-		webhookSecret: SECRET,
+		webhookSecret,
 		siteUrl: 'https://www.njil.dev',
 		from: 'Nathan <hello@njil.dev>',
 	})
@@ -98,6 +100,15 @@ describe('subscribe', () => {
 	})
 })
 
+// Signs a body the way Sanity's GROQ webhooks do
+const sign = (body: string, secret = SECRET) =>
+	encodeSignatureHeader(body, Date.now(), secret)
+
+const announceSigned = async (
+	newsletter: ReturnType<typeof setup>['newsletter'],
+	body = blogPost()
+) => newsletter.announce(body, await sign(body))
+
 describe('announce', () => {
 	test('sends an Announcement to every active Subscriber', async () => {
 		const { newsletter, mailer } = setup({
@@ -108,7 +119,7 @@ describe('announce', () => {
 			],
 		})
 
-		const outcome = await newsletter.announce(blogPost(), SECRET)
+		const outcome = await announceSigned(newsletter)
 
 		expect(outcome).toEqual({ kind: 'announced', sent: 2, failed: 0 })
 		expect(mailer.sent.map((m) => m.to)).toEqual([
@@ -126,7 +137,7 @@ describe('announce', () => {
 			subscribers: [subscriber('a@example.com')],
 		})
 
-		await newsletter.announce(blogPost({ title: undefined }), SECRET)
+		await announceSigned(newsletter, blogPost({ title: undefined }))
 
 		expect(mailer.sent[0].subject).toBe('New post: New Blog Post')
 	})
@@ -137,17 +148,44 @@ describe('announce', () => {
 			failFor: ['b@example.com'],
 		})
 
-		const outcome = await newsletter.announce(blogPost(), SECRET)
+		const outcome = await announceSigned(newsletter)
 
 		expect(outcome).toEqual({ kind: 'announced', sent: 1, failed: 1 })
 	})
 
-	test('rejects a request with the wrong signature', async () => {
+	describe('rejects requests not signed by Sanity with our secret', () => {
+		const cases: [string, (body: string) => Promise<string | null>][] = [
+			['no signature header', async () => null],
+			['the bare secret as the header', async () => SECRET],
+			['a signature made with another secret', (body) => sign(body, 'other')],
+			[
+				'a signature for a different body',
+				() => sign(blogPost({ title: 'Spam' })),
+			],
+			['a malformed header', async () => 't=abc,v1='],
+		]
+
+		test.each(cases)('%s', async (_, signatureFor) => {
+			const { newsletter, mailer } = setup({
+				subscribers: [subscriber('a@example.com')],
+			})
+			const body = blogPost()
+
+			const outcome = await newsletter.announce(body, await signatureFor(body))
+
+			expect(outcome).toEqual({ kind: 'unauthorized' })
+			expect(mailer.sent).toHaveLength(0)
+		})
+	})
+
+	test('rejects every request when no webhook secret is configured', async () => {
 		const { newsletter, mailer } = setup({
 			subscribers: [subscriber('a@example.com')],
+			webhookSecret: '',
 		})
+		const body = blogPost()
 
-		const outcome = await newsletter.announce(blogPost(), 'wrong')
+		const outcome = await newsletter.announce(body, await sign(body))
 
 		expect(outcome).toEqual({ kind: 'unauthorized' })
 		expect(mailer.sent).toHaveLength(0)
@@ -158,10 +196,7 @@ describe('announce', () => {
 			subscribers: [subscriber('a@example.com')],
 		})
 
-		const outcome = await newsletter.announce(
-			blogPost({ _type: 'tag' }),
-			SECRET
-		)
+		const outcome = await announceSigned(newsletter, blogPost({ _type: 'tag' }))
 
 		expect(outcome).toEqual({ kind: 'ignored' })
 		expect(mailer.sent).toHaveLength(0)
@@ -172,9 +207,9 @@ describe('announce', () => {
 			subscribers: [subscriber('a@example.com')],
 		})
 
-		const outcome = await newsletter.announce(
-			blogPost({ slug: undefined }),
-			SECRET
+		const outcome = await announceSigned(
+			newsletter,
+			blogPost({ slug: undefined })
 		)
 
 		expect(outcome).toEqual({ kind: 'invalid-payload' })
@@ -186,7 +221,7 @@ describe('announce', () => {
 			subscribers: [subscriber('gone@example.com', false)],
 		})
 
-		const outcome = await newsletter.announce(blogPost(), SECRET)
+		const outcome = await announceSigned(newsletter)
 
 		expect(outcome).toEqual({ kind: 'no-subscribers' })
 	})

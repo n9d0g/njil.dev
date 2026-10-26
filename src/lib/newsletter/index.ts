@@ -1,3 +1,4 @@
+import { isValidSignature } from '@sanity/webhook'
 import { createElement, type ReactElement } from 'react'
 import { NewBlogEmail } from '@emails/NewBlog'
 import { WelcomeEmail } from '@emails/Welcome'
@@ -34,7 +35,7 @@ export interface NewsletterConfig {
 	store: SubscriberStore
 	mailer: Mailer
 	humanCheck: HumanCheck
-	webhookSecret?: string
+	webhookSecret: string
 	siteUrl: string
 	from: string
 }
@@ -106,7 +107,11 @@ export function createNewsletter({
 		rawBody: string,
 		signatureHeader: string | null
 	): Promise<AnnounceOutcome> {
-		if (webhookSecret && signatureHeader !== webhookSecret) {
+		if (
+			!webhookSecret ||
+			!signatureHeader ||
+			!(await isValidSignature(rawBody, signatureHeader, webhookSecret))
+		) {
 			return { kind: 'unauthorized' }
 		}
 
