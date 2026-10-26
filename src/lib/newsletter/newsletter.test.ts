@@ -1,11 +1,10 @@
 import { encodeSignatureHeader } from '@sanity/webhook'
 import { describe, expect, test } from 'vite-plus/test'
-import { createNewsletter, type Message, type Subscriber } from './index'
-import {
-	createMemoryStore,
-	createRecordingMailer,
-	createStubHumanCheck,
-} from './adapters/memory'
+import { createStubHumanCheck } from '@lib/human-check/adapters/memory'
+import type { Message } from '@lib/mail'
+import { createRecordingMailer } from '@lib/mail/adapters/memory'
+import { createNewsletter, type Subscriber } from './index'
+import { createMemoryStore } from './adapters/memory'
 
 const SECRET = 'webhook-secret'
 
