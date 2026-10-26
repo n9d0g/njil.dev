@@ -10,7 +10,6 @@ const jobCollection = defineCollection({
 		location: z.string(),
 		startDate: z.coerce.date(),
 		endDate: z.coerce.date().optional(),
-		current: z.boolean().optional(),
 		description: z.string(),
 		tech: z.array(z.string()),
 		points: z.array(z.string()),
