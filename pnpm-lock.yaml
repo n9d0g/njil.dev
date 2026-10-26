@@ -205,6 +205,9 @@ importers:
       '@sanity/client':
         specifier: ^7.26.2
         version: 7.26.2
+      '@sanity/webhook':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(@voidzero-dev/vite-plus-core@1.3.0(@types/node@26.2.0)(@volar/typescript@2.4.28(typescript@6.0.3))(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))
@@ -3401,6 +3404,10 @@ packages:
         optional: true
       svelte:
         optional: true
+
+  '@sanity/webhook@4.0.4':
+    resolution: {integrity: sha512-c8LmzR5Wx93zJ10ohhp0XlmPrTNSFyvPcLbNY/sN45Wj5VOngz4FbBMbX9j64sSQLt+676U6OhiVfjs1yw3YCw==}
+    engines: {node: '>=20.0.0'}
 
   '@sanity/workbench-cli@2.8.1':
     resolution: {integrity: sha512-+Y49EY2vFEXRaoxELUShWs0S0MI48AvlYA9nwCGtDWBr0d4DqfQVc5LaKT1oULtj3htjU8RUJGhc58Dvq8MHzw==}
@@ -12140,6 +12147,8 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - typescript
+
+  '@sanity/webhook@4.0.4': {}
 
   '@sanity/workbench-cli@2.8.1(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@10.2.2))(@babel/runtime@7.29.7)(@voidzero-dev/vite-plus-core@1.3.0(@types/node@26.2.0)(@volar/typescript@2.4.28(typescript@6.0.3))(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))(rolldown@1.2.12))(@types/node@26.2.0)(@types/react@19.3.0)(@volar/typescript@2.4.28(typescript@6.0.3))(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0)(typescript@6.0.3)(vitest@5.0.5)(yaml@2.9.0)':
     dependencies:

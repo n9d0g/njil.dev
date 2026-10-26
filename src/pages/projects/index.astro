@@ -1,15 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import ProjectCard from '@components/general/ProjectCard.astro'
-import { getCollection } from 'astro:content'
+import { career } from '@lib/career/live'
 
-const data = await getCollection('project')
-const allProjects = data.sort((a, b) =>
-	a.data.startDate < b.data.startDate ? 1 : -1
-)
-
-const formatMonthYear = (date: Date) =>
-	`${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
+const projects = await career.getProjects()
 ---
 
 <Layout title="Nathan Lardizabal | Projects">
@@ -19,17 +13,6 @@ const formatMonthYear = (date: Date) =>
 	</p>
 	<hr class="my-4 border-slate-700" />
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
-		{
-			allProjects.map((project) => (
-				<ProjectCard
-					title={project.data.title}
-					url={project.data.url}
-					description={project.data.description}
-					tech={project.data.tech}
-					repo={project.data.repo}
-					startDate={formatMonthYear(project.data.startDate)}
-				/>
-			))
-		}
+		{projects.map((project) => <ProjectCard {project} />)}
 	</section>
 </Layout>

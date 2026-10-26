@@ -1,18 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components'
+import type { Job } from '@lib/career'
 
 interface Props {
-	position: string
-	company: string
-	location: string
-	startDate: string
-	endDate: string
-	description: string
-	tech: string[]
+	job: Job
 }
 
-const { position, company, location, startDate, endDate, description, tech } =
-	Astro.props
+const { position, company, location, period, description, tech } =
+	Astro.props.job
 ---
 
 <article
@@ -26,7 +21,7 @@ const { position, company, location, startDate, endDate, description, tech } =
 			{company} | {location}
 		</h3>
 		<p class="my-1 text-xs font-light text-gray-400">
-			{startDate} - {endDate}
+			{period}
 		</p>
 		<p class="my-2 text-sm font-light text-slate-300">
 			{description}

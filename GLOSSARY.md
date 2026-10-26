@@ -4,6 +4,16 @@ Nathan's personal site: work history, projects, and a blog with an email newslet
 
 ## Language
 
+### Career
+
+**Job**:
+A position Nathan has held at a company, shown on `/work`.
+_Avoid_: Work, experience, role
+
+**Project**:
+Something Nathan built outside of a Job, shown on `/projects`.
+_Avoid_: Portfolio item, side project
+
 ### Blog
 
 **Blog post**:
