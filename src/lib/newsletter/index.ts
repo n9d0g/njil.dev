@@ -2,6 +2,7 @@ import { isValidSignature } from '@sanity/webhook'
 import { createElement, type ReactElement } from 'react'
 import { NewBlogEmail } from '@emails/NewBlog'
 import { WelcomeEmail } from '@emails/Welcome'
+import { blogPostPath } from '@lib/blog'
 
 export interface Subscriber {
 	email: string
@@ -192,7 +193,7 @@ export function createNewsletter({
 					react: createElement(NewBlogEmail, {
 						title,
 						description: post.description || 'Check out my latest blog post!',
-						blogUrl: `${siteUrl}/blog/${post.slug!.current}`,
+						blogUrl: `${siteUrl}${blogPostPath(post.slug!.current!)}`,
 						siteUrl,
 						unsubscribeUrl: links.pageUrl,
 					}),

@@ -4,52 +4,27 @@ import Chip from '@components/general/Chip.astro'
 import CodeBlock from '@components/blog/CodeBlock.astro'
 import InlineImage from '@components/blog/InlineImage.astro'
 import BentoGallery from '@components/blog/BentoGallery.astro'
-import { sanityClient } from 'sanity:client'
 import { PortableText } from 'astro-portabletext'
-import {
-	blogBySlugQuery,
-	blogSlugsQuery,
-} from '@lib/queries'
-import type { BlogBySlugQueryResult } from '@app-types/sanity.types'
+import { blog } from '@lib/blog/live'
 
-export const prerender = true
+// Rendered per request so a newly published Blog post is live without a deploy
+const post = await blog.getBlogPost(Astro.params.blog ?? '')
 
-export const getStaticPaths = async () => {
-	return await sanityClient.fetch(blogSlugsQuery)
-}
-
-const { blog } = Astro.params
-
-const sanityBlog = await sanityClient.fetch<BlogBySlugQueryResult>(
-	blogBySlugQuery,
-	{
-		slug: blog,
-	}
-)
-
-if (!sanityBlog) return Astro.redirect('/404')
-
-const { title, author, tags = [] } = sanityBlog
-const blogDate = new Date(sanityBlog.publishedAt).toLocaleDateString('en-US', {
-	month: 'short',
-	day: 'numeric',
-	year: 'numeric',
-})
-const pageTitle = `Nathan Lardizabal | ${title}`
+if (!post) return Astro.rewrite('/404')
 ---
 
-<Layout title={pageTitle} description={sanityBlog.description} blogData={sanityBlog}>
+<Layout title={`Nathan Lardizabal | ${post.title}`} description={post.description}>
 	<article class="prose dark:prose-invert">
-		<h1 class="mb-2 text-2xl font-semibold lowercase">{title}</h1>
+		<h1 class="mb-2 text-2xl font-semibold lowercase">{post.title}</h1>
 		<div class="flex gap-2">
-			{tags.map((tag) => <Chip tag={tag.name} />)}
+			{post.tags.map((tag) => <Chip {tag} />)}
 		</div>
 		<p class="my-2 text-sm font-light text-gray-400 italic">
-			by {author} | {blogDate}
+			by {post.author} | {post.displayDate}
 		</p>
 		<div class="my-8 font-light">
 			<PortableText
-				value={sanityBlog.body}
+				value={post.body}
 				components={{
 					type: {
 						code: CodeBlock,
@@ -58,10 +33,6 @@ const pageTitle = `Nathan Lardizabal | ${title}`
 				}}
 			/>
 		</div>
-		{
-			sanityBlog.images && sanityBlog.images.length > 0 && (
-				<BentoGallery images={sanityBlog.images} />
-			)
-		}
+		{post.gallery.length > 0 && <BentoGallery images={post.gallery} />}
 	</article>
 </Layout>

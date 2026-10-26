@@ -155,7 +155,7 @@ describe('announce', () => {
 		])
 		expect(mailer.sent[0].subject).toBe('New post: Deep modules')
 		expect(mailer.sent[0].react.props).toMatchObject({
-			blogUrl: 'https://www.njil.dev/blog/deep-modules',
+			blogUrl: 'https://www.njil.dev/blog/deep-modules/',
 		})
 	})
 

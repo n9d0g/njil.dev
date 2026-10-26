@@ -1,11 +1,8 @@
 ---
-interface GalleryImage {
-	asset: { url: string }
-	alt?: string
-}
+import type { BlogPost } from '@lib/blog'
 
 interface Props {
-	images: GalleryImage[]
+	images: BlogPost['gallery']
 }
 
 const { images } = Astro.props
@@ -41,7 +38,7 @@ const getGridClass = (index: number, total: number) => {
 					]}
 				>
 					<img
-						src={image.asset.url}
+						src={image.url}
 						alt={image.alt || ''}
 						class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
 						loading="lazy"

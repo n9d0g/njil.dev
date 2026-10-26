@@ -5,16 +5,19 @@ import tailwindcss from '@tailwindcss/vite'
 import icon from 'astro-icon'
 import sanity from '@sanity/astro'
 
-const sanityProjectId = process.env.SANITY_PROJECT_ID || 'nbid6gbs'
+const DEFAULT_SANITY_PROJECT_ID = 'nbid6gbs'
+const sanityProjectId =
+	process.env.SANITY_PROJECT_ID || DEFAULT_SANITY_PROJECT_ID
 
 export default defineConfig({
 	integrations: [
 		react(),
 		icon(),
+		// Public, token-free reads (the Blog) go through Sanity's CDN
 		sanity({
 			projectId: sanityProjectId,
 			dataset: 'production',
-			useCdn: false,
+			useCdn: true,
 		}),
 	],
 	output: 'server',
@@ -55,7 +58,7 @@ export default defineConfig({
 			SANITY_PROJECT_ID: envField.string({
 				context: 'server',
 				access: 'public',
-				default: 'nbid6gbs',
+				default: DEFAULT_SANITY_PROJECT_ID,
 				optional: true,
 			}),
 			PUBLIC_RECAPTCHA_SITE_KEY: envField.string({
