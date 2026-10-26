@@ -13,7 +13,7 @@
 		"build": "sanity build",
 		"deploy": "sanity deploy",
 		"deploy-graphql": "sanity graphql deploy",
-		"typegen": "sanity schema extract && sanity typegen generate"
+		"typegen": "sanity schema extract --force && sanity typegen generate"
 	},
 	"dependencies": {
 		"@sanity/code-input": "^7.3.5",
