@@ -20,7 +20,8 @@
 		"prepare": "vp config && astro sync",
 		"lint": "vp lint",
 		"check": "vp check",
-		"check:fix": "vp check --fix"
+		"check:fix": "vp check --fix",
+		"test": "vp test run"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^14.3.3",
@@ -47,6 +48,7 @@
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.20",
 		"@types/node": "^26.2.0",
+		"@types/react": "^19.3.0",
 		"typescript": "^6.0.3",
 		"vite-plus": "catalog:",
 		"wrangler": "^4.147.0"
