@@ -7,14 +7,19 @@ import {
 	Text,
 	Button,
 	Hr,
+	Link,
 } from 'react-email'
 import { emailStyles } from './styles'
 
 interface WelcomeEmailProps {
 	blogUrl: string
+	unsubscribeUrl: string
 }
 
-export const WelcomeEmail = ({ blogUrl }: WelcomeEmailProps) => (
+export const WelcomeEmail = ({
+	blogUrl,
+	unsubscribeUrl,
+}: WelcomeEmailProps) => (
 	<Html>
 		<Head />
 		<Body style={emailStyles.body}>
@@ -44,6 +49,12 @@ export const WelcomeEmail = ({ blogUrl }: WelcomeEmailProps) => (
 					Cheers,
 					<br />
 					Nate
+				</Text>
+				<Text style={{ ...emailStyles.footer, fontSize: '12px' }}>
+					Changed your mind?{' '}
+					<Link href={unsubscribeUrl} style={emailStyles.link}>
+						Unsubscribe
+					</Link>
 				</Text>
 			</Container>
 		</Body>

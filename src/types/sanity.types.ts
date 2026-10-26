@@ -108,6 +108,7 @@ export type Blog = {
   } | {
     _key: string;
   } & Code>;
+  announcedAt?: string;
 };
 
 export type SanityImageCrop = {
@@ -233,6 +234,19 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes = Subscriber | Tag | Slug | TagReference | SanityImageAssetReference | Blog | SanityImageCrop | SanityImageHotspot | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 
+// Source: ../src/lib/newsletter/adapters/sanity-store.ts
+// Variable: activeSubscribersQuery
+// Query: *[_type == "subscriber" && active == true]{ email, active }
+export type ActiveSubscribersQueryResult = Array<{
+  email: string | null;
+  active: true;
+}>;
+
+// Source: ../src/lib/newsletter/adapters/sanity-store.ts
+// Variable: blogAnnouncedQuery
+// Query: defined(*[_type == "blog" && _id == $id][0].announcedAt)
+export type BlogAnnouncedQueryResult = false | true;
+
 // Source: ../src/lib/queries.ts
 // Variable: blogListQuery
 // Query: *[	_type == "blog"	&& defined(slug.current)]|order(publishedAt desc)[0...12]{	_id,	title,	slug,	publishedAt,	description,	tags[]->{ name, slug },	coverImage{ asset->{ url } },	images[]{ asset->{ url } }[0...1]}
@@ -319,36 +333,14 @@ export type BlogBySlugQueryResult = {
   }> | null;
 } | null;
 
-// Source: ../src/lib/queries.ts
-// Variable: subscriberByEmailQuery
-// Query: *[_type == "subscriber" && email == $email][0]
-export type SubscriberByEmailQueryResult = {
-  _id: string;
-  _type: "subscriber";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  email?: string;
-  subscribedAt?: string;
-  active?: boolean;
-} | null;
-
-// Source: ../src/lib/queries.ts
-// Variable: activeSubscribersQuery
-// Query: *[_type == "subscriber" && active == true]{ email, active }
-export type ActiveSubscribersQueryResult = Array<{
-  email: string | null;
-  active: true;
-}>;
-
 // Query TypeMap
 declare global {
   interface SanityQueries {
+    "*[_type == \"subscriber\" && active == true]{ email, active }": ActiveSubscribersQueryResult;
+    "defined(*[_type == \"blog\" && _id == $id][0].announcedAt)": BlogAnnouncedQueryResult;
     "*[\n\t_type == \"blog\"\n\t&& defined(slug.current)\n]|order(publishedAt desc)[0...12]{\n\t_id,\n\ttitle,\n\tslug,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\tcoverImage{ asset->{ url } },\n\timages[]{ asset->{ url } }[0...1]\n}": BlogListQueryResult;
     "*[_type == \"blog\" && defined(slug.current)]{\n\t\"params\": {\"blog\": slug.current}\n}": BlogSlugsQueryResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n\ttitle,\n\tauthor,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\timages[]{ asset->{ url }, alt },\n\tbody[]{\n\t\t...,\n\t\t_type == \"image\" => { asset->{ url }, alt, caption },\n\t\t_type == \"code\" => { language, code, filename }\n\t}\n}": BlogBySlugQueryResult;
-    "*[_type == \"subscriber\" && email == $email][0]": SubscriberByEmailQueryResult;
-    "*[_type == \"subscriber\" && active == true]{ email, active }": ActiveSubscribersQueryResult;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

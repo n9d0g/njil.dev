@@ -4,10 +4,14 @@ import type {
 	ActiveSubscribersQueryResult,
 	Subscriber as SubscriberDocument,
 } from '@app-types/sanity.types'
-import type { SubscriberStore } from '../index'
+import type { NewsletterStore } from '../index'
 
 export const activeSubscribersQuery = defineQuery(
 	`*[_type == "subscriber" && active == true]{ email, active }`
+)
+
+export const blogAnnouncedQuery = defineQuery(
+	`defined(*[_type == "blog" && _id == $id][0].announcedAt)`
 )
 
 // Ids are derived from the email so concurrent saves can't duplicate a
@@ -23,7 +27,7 @@ export async function subscriberId(email: string) {
 	return `subscriber.${hex}`
 }
 
-export function createSanityStore(client: SanityClient): SubscriberStore {
+export function createSanityStore(client: SanityClient): NewsletterStore {
 	return {
 		async find(email) {
 			const doc = await client.getDocument<SubscriberDocument>(
@@ -52,6 +56,17 @@ export function createSanityStore(client: SanityClient): SubscriberStore {
 			return docs.flatMap(({ email }) =>
 				email ? [{ email, active: true, subscribedAt: '' }] : []
 			)
+		},
+
+		async hasAnnounced(postId) {
+			return client.fetch<boolean>(blogAnnouncedQuery, { id: postId })
+		},
+
+		async markAnnounced(postId) {
+			await client
+				.patch(postId)
+				.set({ announcedAt: new Date().toISOString() })
+				.commit()
 		},
 	}
 }

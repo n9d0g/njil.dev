@@ -1,6 +1,6 @@
 import { encodeSignatureHeader } from '@sanity/webhook'
 import { describe, expect, test } from 'vite-plus/test'
-import { createNewsletter, type Subscriber } from './index'
+import { createNewsletter, type Message, type Subscriber } from './index'
 import {
 	createMemoryStore,
 	createRecordingMailer,
@@ -15,6 +15,16 @@ const subscriber = (email: string, active = true): Subscriber => ({
 	subscribedAt: '2026-01-01T00:00:00.000Z',
 })
 
+// Reads the one-click unsubscribe link a Subscriber received
+const unsubscribeLink = (message: Message) => {
+	const url = new URL(message.headers!['List-Unsubscribe'].slice(1, -1))
+	return {
+		url,
+		email: url.searchParams.get('email')!,
+		token: url.searchParams.get('token')!,
+	}
+}
+
 function setup({
 	subscribers = [] as Subscriber[],
 	isHuman = true,
@@ -28,6 +38,7 @@ function setup({
 		mailer,
 		humanCheck: createStubHumanCheck(isHuman),
 		webhookSecret,
+		unsubscribeSecret: 'unsubscribe-secret',
 		siteUrl: 'https://www.njil.dev',
 		from: 'Nathan <hello@njil.dev>',
 	})
@@ -232,6 +243,55 @@ describe('announce', () => {
 		expect(mailer.sent).toHaveLength(0)
 	})
 
+	test('gives every Announcement a one-click unsubscribe link for its Subscriber', async () => {
+		const { newsletter, mailer } = setup({
+			subscribers: [subscriber('a@example.com'), subscriber('b@example.com')],
+		})
+
+		await announceSigned(newsletter)
+
+		for (const message of mailer.sent) {
+			const link = unsubscribeLink(message)
+			expect(link.url.origin + link.url.pathname).toBe(
+				'https://www.njil.dev/api/unsubscribe'
+			)
+			expect(link.email).toBe(message.to)
+			expect(message.headers!['List-Unsubscribe-Post']).toBe(
+				'List-Unsubscribe=One-Click'
+			)
+			expect(message.react.props).toMatchObject({
+				unsubscribeUrl: expect.stringMatching(
+					/^https:\/\/www\.njil\.dev\/newsletter\/unsubscribe\?/
+				),
+			})
+		}
+		expect(unsubscribeLink(mailer.sent[0]).token).not.toBe(
+			unsubscribeLink(mailer.sent[1]).token
+		)
+	})
+
+	test('announces each Blog post at most once', async () => {
+		const { newsletter, mailer } = setup({
+			subscribers: [subscriber('a@example.com')],
+		})
+
+		await announceSigned(newsletter)
+		const again = await announceSigned(newsletter)
+
+		expect(again).toEqual({ kind: 'already-announced' })
+		expect(mailer.sent).toHaveLength(1)
+	})
+
+	test('sends with an idempotency key for the Blog post', async () => {
+		const { newsletter, mailer } = setup({
+			subscribers: [subscriber('a@example.com')],
+		})
+
+		await announceSigned(newsletter)
+
+		expect(mailer.idempotencyKeys).toEqual(['announcement-post-1'])
+	})
+
 	test('reports when there is nobody to announce to', async () => {
 		const { newsletter } = setup({
 			subscribers: [subscriber('gone@example.com', false)],
@@ -240,5 +300,68 @@ describe('announce', () => {
 		const outcome = await announceSigned(newsletter)
 
 		expect(outcome).toEqual({ kind: 'no-subscribers' })
+	})
+})
+
+describe('unsubscribe', () => {
+	test('deactivates the Subscriber from the link in their Welcome email', async () => {
+		const { newsletter, store, mailer } = setup()
+		await newsletter.subscribe('nate@example.com', 'token')
+		const { email, token } = unsubscribeLink(mailer.sent[0])
+
+		const outcome = await newsletter.unsubscribe(email, token)
+
+		expect(outcome).toEqual({ kind: 'unsubscribed' })
+		expect(store.subscribers.get('nate@example.com')?.active).toBe(false)
+	})
+
+	test('rejects a tampered token', async () => {
+		const { newsletter, store, mailer } = setup()
+		await newsletter.subscribe('nate@example.com', 'token')
+		const { email, token } = unsubscribeLink(mailer.sent[0])
+
+		const outcome = await newsletter.unsubscribe(
+			email,
+			token.replace(/.$/, 'x')
+		)
+
+		expect(outcome).toEqual({ kind: 'invalid-token' })
+		expect(store.subscribers.get('nate@example.com')?.active).toBe(true)
+	})
+
+	test("rejects one Subscriber's token used for another", async () => {
+		const { newsletter, store, mailer } = setup()
+		await newsletter.subscribe('a@example.com', 'token')
+		await newsletter.subscribe('b@example.com', 'token')
+		const { token } = unsubscribeLink(mailer.sent[0])
+
+		const outcome = await newsletter.unsubscribe('b@example.com', token)
+
+		expect(outcome).toEqual({ kind: 'invalid-token' })
+		expect(store.subscribers.get('b@example.com')?.active).toBe(true)
+	})
+
+	test('reports a Subscriber that no longer exists', async () => {
+		const { newsletter, store, mailer } = setup()
+		await newsletter.subscribe('nate@example.com', 'token')
+		const { email, token } = unsubscribeLink(mailer.sent[0])
+		store.subscribers.clear()
+
+		const outcome = await newsletter.unsubscribe(email, token)
+
+		expect(outcome).toEqual({ kind: 'not-found' })
+	})
+
+	test('stops Announcements to that Subscriber', async () => {
+		const { newsletter, mailer } = setup()
+		await newsletter.subscribe('a@example.com', 'token')
+		await newsletter.subscribe('b@example.com', 'token')
+		const { email, token } = unsubscribeLink(mailer.sent[0])
+		await newsletter.unsubscribe(email, token)
+		mailer.sent.length = 0
+
+		await announceSigned(newsletter)
+
+		expect(mailer.sent.map((m) => m.to)).toEqual(['b@example.com'])
 	})
 })

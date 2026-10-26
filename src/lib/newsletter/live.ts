@@ -1,4 +1,5 @@
 import {
+	NEWSLETTER_SECRET,
 	RECAPTCHA_SECRET_KEY,
 	RESEND_API_KEY,
 	SANITY_WEBHOOK_SECRET,
@@ -16,6 +17,7 @@ export function getNewsletter() {
 		mailer: createResendMailer(RESEND_API_KEY),
 		humanCheck: createRecaptcha(RECAPTCHA_SECRET_KEY, 'subscribe'),
 		webhookSecret: SANITY_WEBHOOK_SECRET,
+		unsubscribeSecret: NEWSLETTER_SECRET,
 		siteUrl: import.meta.env.SITE.replace(/\/$/, ''),
 		from: 'Nathan <hello@njil.dev>',
 	})

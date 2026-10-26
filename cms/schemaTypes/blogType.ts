@@ -116,6 +116,14 @@ export const blogType = defineType({
 				},
 			],
 		}),
+		defineField({
+			name: 'announcedAt',
+			title: 'Announced At',
+			description:
+				'When this post was emailed to Newsletter Subscribers. Set automatically; a post is only announced once.',
+			type: 'datetime',
+			readOnly: true,
+		}),
 	],
 	preview: {
 		select: {
