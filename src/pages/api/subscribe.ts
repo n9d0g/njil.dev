@@ -1,105 +1,35 @@
-import { RECAPTCHA_SECRET_KEY } from 'astro:env/server'
 import type { APIRoute } from 'astro'
-import { WelcomeEmail } from '@emails/Welcome'
-import { subscriberByEmailQuery } from '@lib/queries'
-import { getSanityClient } from '@lib/sanity'
-import { EMAIL_FROM, getResend } from '@lib/resend'
+import type { SubscribeOutcome } from '@lib/newsletter'
+import { getNewsletter } from '@lib/newsletter/live'
+
+const json = (status: number, body: object) =>
+	new Response(JSON.stringify(body), {
+		status,
+		headers: { 'Content-Type': 'application/json' },
+	})
+
+const responses: Record<SubscribeOutcome['kind'], [number, object]> = {
+	subscribed: [201, { message: 'thanks for subscribing to my newsletter 🫶' }],
+	'already-subscribed': [200, { message: "you're already subscribed 🫨" }],
+	'invalid-email': [400, { error: 'please enter a valid email address' }],
+	'not-human': [403, { error: 'reCAPTCHA verification failed' }],
+}
 
 export const POST: APIRoute = async ({ request }) => {
 	try {
-		const body = await request.json()
-		const { email, recaptchaToken } = body
+		const { email, recaptchaToken } = await request.json()
 
 		if (!email || typeof email !== 'string') {
-			return new Response(JSON.stringify({ error: 'email is required' }), {
-				status: 400,
-				headers: { 'Content-Type': 'application/json' },
-			})
+			return json(400, { error: 'email is required' })
 		}
-
 		if (!recaptchaToken) {
-			return new Response(
-				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
-				{ status: 400, headers: { 'Content-Type': 'application/json' } }
-			)
+			return json(400, { error: 'reCAPTCHA verification failed' })
 		}
 
-		const recaptchaResponse = await fetch(
-			'https://www.google.com/recaptcha/api/siteverify',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: new URLSearchParams({
-					secret: RECAPTCHA_SECRET_KEY,
-					response: recaptchaToken,
-				}),
-			}
-		)
-
-		const recaptchaData = await recaptchaResponse.json()
-
-		if (
-			!recaptchaData.success ||
-			typeof recaptchaData.score !== 'number' ||
-			recaptchaData.score < 0.5
-		) {
-			return new Response(
-				JSON.stringify({ error: 'reCAPTCHA verification failed' }),
-				{ status: 403, headers: { 'Content-Type': 'application/json' } }
-			)
-		}
-
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-		if (!emailRegex.test(email)) {
-			return new Response(
-				JSON.stringify({ error: 'please enter a valid email address' }),
-				{ status: 400, headers: { 'Content-Type': 'application/json' } }
-			)
-		}
-
-		const normalizedEmail = email.toLowerCase()
-
-		const sanityClient = getSanityClient()
-
-		const existingSubscriber = await sanityClient.fetch(
-			subscriberByEmailQuery,
-			{ email: normalizedEmail }
-		)
-
-		if (existingSubscriber) {
-			return new Response(
-				JSON.stringify({ message: "you're already subscribed 🫨" }),
-				{ status: 200, headers: { 'Content-Type': 'application/json' } }
-			)
-		}
-
-		await sanityClient.create({
-			_type: 'subscriber',
-			email: normalizedEmail,
-			subscribedAt: new Date().toISOString(),
-			active: true,
-		})
-
-		try {
-			await getResend().emails.send({
-				from: EMAIL_FROM,
-				to: normalizedEmail,
-				subject: 'thanks for subscribing to my blog newsletter 🫶',
-				react: WelcomeEmail(),
-			})
-		} catch (emailError) {
-			console.error('Welcome email failed:', emailError)
-		}
-
-		return new Response(
-			JSON.stringify({ message: 'thanks for subscribing to my newsletter 🫶' }),
-			{ status: 201, headers: { 'Content-Type': 'application/json' } }
-		)
+		const outcome = await getNewsletter().subscribe(email, recaptchaToken)
+		return json(...responses[outcome.kind])
 	} catch (error) {
 		console.error('Newsletter subscription error:', error)
-		return new Response(
-			JSON.stringify({ error: 'something went wrong, please try again' }),
-			{ status: 500, headers: { 'Content-Type': 'application/json' } }
-		)
+		return json(500, { error: 'something went wrong, please try again' })
 	}
 }

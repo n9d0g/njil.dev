@@ -33,11 +33,3 @@ export const blogBySlugQuery =
 		_type == "code" => { language, code, filename }
 	}
 }`)
-
-export const subscriberByEmailQuery = defineQuery(
-	`*[_type == "subscriber" && email == $email][0]`
-)
-
-export const activeSubscribersQuery = defineQuery(
-	`*[_type == "subscriber" && active == true]{ email, active }`
-)
