@@ -69,5 +69,14 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		ssr: {
+			optimizeDeps: {
+				// astro-icon's Icon.astro imports @iconify/utils, whose barrel pulls in
+				// the CommonJS `debug` package. Vite doesn't scan .astro files inside
+				// node_modules, so without this it reaches the workerd dev runner
+				// unbundled and every page 500s with "module is not defined".
+				include: ['astro-icon > @iconify/utils'],
+			},
+		},
 	},
 })
