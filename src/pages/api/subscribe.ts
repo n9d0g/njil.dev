@@ -10,6 +10,7 @@ const json = (status: number, body: object) =>
 
 const responses: Record<SubscribeOutcome['kind'], [number, object]> = {
 	subscribed: [201, { message: 'thanks for subscribing to my newsletter 🫶' }],
+	reactivated: [201, { message: 'welcome back! thanks for resubscribing 🫶' }],
 	'already-subscribed': [200, { message: "you're already subscribed 🫨" }],
 	'invalid-email': [400, { error: 'please enter a valid email address' }],
 	'not-human': [403, { error: 'reCAPTCHA verification failed' }],

@@ -90,6 +90,22 @@ describe('subscribe', () => {
 		expect(mailer.sent).toHaveLength(0)
 	})
 
+	test('reactivates an inactive Subscriber and welcomes them back', async () => {
+		const { newsletter, store, mailer } = setup({
+			subscribers: [subscriber('nate@example.com', false)],
+		})
+
+		const outcome = await newsletter.subscribe('nate@example.com', 'token')
+
+		expect(outcome).toEqual({ kind: 'reactivated' })
+		expect(store.subscribers.size).toBe(1)
+		expect(store.subscribers.get('nate@example.com')).toMatchObject({
+			active: true,
+			subscribedAt: expect.not.stringMatching(/^2026-01-01/),
+		})
+		expect(mailer.sent.map((m) => m.to)).toEqual(['nate@example.com'])
+	})
+
 	test('still subscribes when the Welcome email fails', async () => {
 		const { newsletter, store } = setup({ failFor: ['nate@example.com'] })
 

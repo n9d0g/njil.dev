@@ -42,6 +42,7 @@ export interface NewsletterConfig {
 
 export type SubscribeOutcome =
 	| { kind: 'subscribed' }
+	| { kind: 'reactivated' }
 	| { kind: 'already-subscribed' }
 	| { kind: 'invalid-email' }
 	| { kind: 'not-human' }
@@ -80,9 +81,8 @@ export function createNewsletter({
 
 		const normalizedEmail = email.toLowerCase()
 
-		if (await store.find(normalizedEmail)) {
-			return { kind: 'already-subscribed' }
-		}
+		const existing = await store.find(normalizedEmail)
+		if (existing?.active) return { kind: 'already-subscribed' }
 
 		await store.save({
 			email: normalizedEmail,
@@ -100,7 +100,7 @@ export function createNewsletter({
 		])
 		if (failed > 0) console.error(`Welcome email failed for ${normalizedEmail}`)
 
-		return { kind: 'subscribed' }
+		return { kind: existing ? 'reactivated' : 'subscribed' }
 	}
 
 	async function announce(

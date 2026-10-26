@@ -2,27 +2,33 @@ import type { SanityClient } from '@sanity/client'
 import { defineQuery } from 'groq'
 import type {
 	ActiveSubscribersQueryResult,
-	SubscriberByEmailQueryResult,
+	Subscriber as SubscriberDocument,
 } from '@app-types/sanity.types'
-import type { Subscriber, SubscriberStore } from '../index'
-
-export const subscriberByEmailQuery = defineQuery(
-	`*[_type == "subscriber" && email == $email][0]`
-)
+import type { SubscriberStore } from '../index'
 
 export const activeSubscribersQuery = defineQuery(
 	`*[_type == "subscriber" && active == true]{ email, active }`
 )
 
-export function createSanityStore(client: SanityClient): SubscriberStore {
-	const findDocument = (email: string) =>
-		client.fetch<SubscriberByEmailQueryResult>(subscriberByEmailQuery, {
-			email,
-		})
+// Ids are derived from the email so concurrent saves can't duplicate a
+// Subscriber, and the "." keeps them out of the public dataset (ADR-0001)
+export async function subscriberId(email: string) {
+	const digest = await crypto.subtle.digest(
+		'SHA-256',
+		new TextEncoder().encode(email)
+	)
+	const hex = Array.from(new Uint8Array(digest), (b) =>
+		b.toString(16).padStart(2, '0')
+	).join('')
+	return `subscriber.${hex}`
+}
 
+export function createSanityStore(client: SanityClient): SubscriberStore {
 	return {
 		async find(email) {
-			const doc = await findDocument(email)
+			const doc = await client.getDocument<SubscriberDocument>(
+				await subscriberId(email)
+			)
 			if (!doc?.email) return null
 			return {
 				email: doc.email,
@@ -31,13 +37,12 @@ export function createSanityStore(client: SanityClient): SubscriberStore {
 			}
 		},
 
-		async save(subscriber: Subscriber) {
-			const existing = await findDocument(subscriber.email)
-			if (existing) {
-				await client.patch(existing._id).set(subscriber).commit()
-			} else {
-				await client.create({ _type: 'subscriber', ...subscriber })
-			}
+		async save(subscriber) {
+			await client.createOrReplace({
+				_id: await subscriberId(subscriber.email),
+				_type: 'subscriber',
+				...subscriber,
+			})
 		},
 
 		async listActive() {
