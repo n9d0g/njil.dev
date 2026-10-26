@@ -1,11 +1,9 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import BlogCard from '@components/general/BlogCard.astro'
-import { sanityClient } from 'sanity:client'
-import { blogListQuery } from '@lib/queries'
-import type { BlogListQueryResult } from '@app-types/sanity.types'
+import { blog } from '@lib/blog/live'
 
-const blogs = await sanityClient.fetch<BlogListQueryResult>(blogListQuery)
+const posts = await blog.listBlogPosts()
 ---
 
 <Layout title="Nathan Lardizabal | Blog">
@@ -15,22 +13,6 @@ const blogs = await sanityClient.fetch<BlogListQueryResult>(blogListQuery)
 	</p>
 	<hr class="my-4 border-slate-700" />
 	<section class="grid grid-cols-1 gap-4 md:grid-cols-2">
-		{
-			blogs.map((blog) => {
-				const imageUrl =
-					blog.coverImage?.asset?.url || blog.images?.[0]?.asset?.url
-
-				return (
-					<BlogCard
-						slug={blog.slug.current}
-						title={blog.title}
-						description={blog.description}
-						publishedAt={blog.publishedAt}
-						tags={blog.tags}
-						coverImage={imageUrl}
-					/>
-				)
-			})
-		}
+		{posts.map((post) => <BlogCard {post} />)}
 	</section>
 </Layout>
