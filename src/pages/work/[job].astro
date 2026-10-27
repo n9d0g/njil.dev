@@ -1,0 +1,73 @@
+---
+import { Icon } from 'astro-icon/components'
+import Layout from '@layouts/Layout.astro'
+import { career } from '@lib/career/live'
+
+const job = await career.getJob(Astro.params.job ?? '')
+
+if (!job) return Astro.rewrite('/404')
+
+const { Content } = job
+---
+
+<Layout
+	title={`Nathan Lardizabal | ${job.company}`}
+	description={job.description}
+>
+	<a
+		href="/work"
+		class="mb-8 flex w-fit items-center text-xs text-gray-500 transition hover:text-gray-50"
+	>
+		<Icon name="mdi:chevron-left" class="h-4 w-auto" /> my work
+	</a>
+	<header class="flex items-center gap-4">
+		{
+			job.logo && (
+				<img src={job.logo} alt="" class="size-12 rounded object-contain" />
+			)
+		}
+		<div>
+			<h1 class="text-2xl font-semibold">{job.position}</h1>
+			<p class="mt-1 text-sm font-light text-gray-300">
+				{job.company} | {job.location}
+			</p>
+			<p class="mt-1 text-xs font-light text-gray-400">{job.period}</p>
+		</div>
+	</header>
+	<hr class="my-4 border-slate-700" />
+	<ul class="flex flex-wrap gap-x-4 gap-y-2">
+		{
+			job.tech.map(({ icon, name }) => (
+				<li class="flex items-center gap-2 text-sm font-light text-slate-300">
+					<Icon name={icon} class="h-5 w-auto" aria-hidden="true" />
+					{name}
+				</li>
+			))
+		}
+	</ul>
+	<article class="prose dark:prose-invert my-8 font-light">
+		<Content />
+	</article>
+	{
+		job.links.length > 0 && (
+			<section>
+				<h2 class="mb-2 text-sm text-slate-400">sites</h2>
+				<ul class="flex flex-col gap-1">
+					{job.links.map(({ label, url }) => (
+						<li>
+							<a
+								href={url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="flex w-fit items-center text-sm font-light text-slate-300 transition hover:text-slate-50"
+							>
+								{label}
+								<Icon name="mdi:open-in-new" class="ml-1 h-3 w-auto" />
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		)
+	}
+</Layout>
