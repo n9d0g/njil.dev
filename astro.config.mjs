@@ -55,6 +55,12 @@ export default defineConfig({
 				context: 'server',
 				access: 'secret',
 			}),
+			// Optional: without it the homepage renders without the Contribution graph
+			GITHUB_TOKEN: envField.string({
+				context: 'server',
+				access: 'secret',
+				optional: true,
+			}),
 			SANITY_PROJECT_ID: envField.string({
 				context: 'server',
 				access: 'public',

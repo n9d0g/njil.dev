@@ -1,10 +1,15 @@
 ---
 import Layout from '@layouts/Layout.astro'
 import Hero from '@components/home/Hero.astro'
+import ContributionGraph from '@components/home/ContributionGraph.astro'
+import { getContributions } from '@lib/contributions/live'
+
+const graph = await getContributions().getContributionGraph()
 ---
 
 <Layout title="Nathan Lardizabal | Frontend Developer">
 	<section class="flex flex-col">
 		<Hero />
+		{graph && <ContributionGraph {graph} />}
 	</section>
 </Layout>

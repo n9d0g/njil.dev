@@ -1,12 +1,25 @@
-import type { CollectionEntry } from 'astro:content'
+import type { CollectionEntry, render } from 'astro:content'
+
+export interface Tech {
+	icon: string
+	name: string
+}
 
 export interface Job {
+	slug: string
 	position: string
 	company: string
 	location: string
 	description: string
-	tech: string[]
+	tech: Tech[]
+	links: { label: string; url: string }[]
+	logo?: string
 	period: string
+}
+
+// A Job with its write-up, for its own page
+export interface JobPage extends Job {
+	Content: Awaited<ReturnType<typeof render>>['Content']
 }
 
 export interface Project {
@@ -14,15 +27,16 @@ export interface Project {
 	url: string
 	repo: string
 	description: string
-	tech: string[]
+	tech: Tech[]
 	period: string
 }
 
 export interface CareerContent {
-	getCollection(name: 'job'): Promise<Pick<CollectionEntry<'job'>, 'data'>[]>
+	getCollection(name: 'job'): Promise<CollectionEntry<'job'>[]>
 	getCollection(
 		name: 'project'
 	): Promise<Pick<CollectionEntry<'project'>, 'data'>[]>
+	render(entry: CollectionEntry<'job'>): ReturnType<typeof render>
 }
 
 // Frontmatter dates are calendar months stored as UTC midnight, so they're
@@ -40,16 +54,30 @@ const newestFirst = <T extends { data: { startDate: Date } }>(entries: T[]) =>
 	)
 
 export function createCareer(content: CareerContent) {
+	const toJob = ({ id, data }: CollectionEntry<'job'>): Job => ({
+		slug: id,
+		position: data.position,
+		company: data.company,
+		location: data.location,
+		description: data.description,
+		tech: data.tech,
+		links: data.links,
+		logo: data.logo,
+		period: period(data),
+	})
+
 	async function getJobs(): Promise<Job[]> {
 		const entries = await content.getCollection('job')
-		return newestFirst(entries).map(({ data }) => ({
-			position: data.position,
-			company: data.company,
-			location: data.location,
-			description: data.description,
-			tech: data.tech,
-			period: period(data),
-		}))
+		return newestFirst(entries).map(toJob)
+	}
+
+	async function getJob(slug: string): Promise<JobPage | null> {
+		const entries = await content.getCollection('job')
+		const entry = entries.find((e) => e.id === slug)
+		if (!entry) return null
+
+		const { Content } = await content.render(entry)
+		return { ...toJob(entry), Content }
 	}
 
 	async function getProjects(): Promise<Project[]> {
@@ -64,5 +92,5 @@ export function createCareer(content: CareerContent) {
 		}))
 	}
 
-	return { getJobs, getProjects }
+	return { getJobs, getJob, getProjects }
 }

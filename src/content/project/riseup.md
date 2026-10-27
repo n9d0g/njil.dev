@@ -8,13 +8,13 @@ startDate: 2023-10-01
 description: 'Monorepo for the Rise Up League. Site built with TypeScript, React, Next.js (App Router), shadcn-ui component library, and Tailwind. Utilizing MongoDB and Mongoose ORM for the backend, registration done through Stripe. Deployed with Vercel.'
 tech:
   [
-    'logos:typescript-icon',
-    'vscode-icons:file-type-reactjs',
-    'vscode-icons:file-type-next',
-    'vscode-icons:file-type-mongo',
-    'simple-icons:stripe',
-    'vscode-icons:file-type-tailwind',
-    'simple-icons:vercel',
+    { icon: 'logos:typescript-icon', name: 'TypeScript' },
+    { icon: 'vscode-icons:file-type-reactjs', name: 'React' },
+    { icon: 'vscode-icons:file-type-next', name: 'Next.js' },
+    { icon: 'vscode-icons:file-type-mongo', name: 'MongoDB' },
+    { icon: 'simple-icons:stripe', name: 'Stripe' },
+    { icon: 'vscode-icons:file-type-tailwind', name: 'Tailwind CSS' },
+    { icon: 'simple-icons:vercel', name: 'Vercel' },
   ]
 points: ['point 1', 'point 2', 'point 3']
 ---

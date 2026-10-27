@@ -4,6 +4,34 @@ import { PUBLIC_RECAPTCHA_SITE_KEY } from 'astro:env/client'
 const siteKey = PUBLIC_RECAPTCHA_SITE_KEY
 ---
 
+<form id="newsletter-form" class="flex max-w-dvw flex-col gap-2">
+	<label for="email" class="mb-2 text-center text-sm text-slate-400">
+		subscribe to my blog for updates!
+	</label>
+	<div class="flex gap-2 lg:mx-auto lg:w-[calc(100%-16rem)]">
+		<input
+			type="email"
+			id="email"
+			name="email"
+			placeholder="your@email.com"
+			required
+			class="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 transition focus:border-slate-500 focus:outline-none"
+		/>
+		<button
+			type="submit"
+			aria-busy="false"
+			class="cursor-pointer rounded-lg bg-slate-700 px-4 py-2 text-sm text-slate-100 transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+		>
+			subscribe
+		</button>
+	</div>
+	<p id="form-message" class="text-center text-xs" aria-live="polite"></p>
+	<p class="mt-1 text-center text-[10px] text-slate-600">
+		protected by reCAPTCHA
+	</p>
+</form>
+
+<!-- define:vars makes this script inline, so it runs where it sits: keep it after the form -->
 <script define:vars={{ siteKey }}>
 	const form = document.getElementById('newsletter-form')
 	const messageEl = document.getElementById('form-message')
@@ -51,30 +79,3 @@ const siteKey = PUBLIC_RECAPTCHA_SITE_KEY
 		}
 	})
 </script>
-
-<form id="newsletter-form" class="flex max-w-dvw flex-col gap-2">
-	<label for="email" class="mb-2 text-center text-sm text-slate-400">
-		subscribe to my blog for updates!
-	</label>
-	<div class="flex gap-2 lg:mx-auto lg:w-[calc(100%-16rem)]">
-		<input
-			type="email"
-			id="email"
-			name="email"
-			placeholder="your@email.com"
-			required
-			class="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 transition focus:border-slate-500 focus:outline-none"
-		/>
-		<button
-			type="submit"
-			aria-busy="false"
-			class="cursor-pointer rounded-lg bg-slate-700 px-4 py-2 text-sm text-slate-100 transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
-		>
-			subscribe
-		</button>
-	</div>
-	<p id="form-message" class="text-center text-xs" aria-live="polite"></p>
-	<p class="mt-1 text-center text-[10px] text-slate-600">
-		protected by reCAPTCHA
-	</p>
-</form>

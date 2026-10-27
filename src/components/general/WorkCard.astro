@@ -6,17 +6,25 @@ interface Props {
 	job: Job
 }
 
-const { position, company, location, period, description, tech } =
+const { slug, position, company, location, period, description, tech, logo } =
 	Astro.props.job
 ---
 
-<article
-	class="flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400"
+<a
+	href={`/work/${slug}`}
+	class="group flex flex-col justify-between rounded border border-gray-700 p-4 transition hover:border-gray-400"
 >
 	<div>
-		<h2 class="text-base text-slate-100">
-			{position}
-		</h2>
+		<div class="flex items-center gap-3">
+			{
+				logo && (
+					<img src={logo} alt="" class="size-8 rounded object-contain" />
+				)
+			}
+			<h2 class="text-base text-slate-100">
+				{position}
+			</h2>
+		</div>
 		<h3 class="my-1 text-xs font-light text-gray-300">
 			{company} | {location}
 		</h3>
@@ -30,14 +38,19 @@ const { position, company, location, period, description, tech } =
 	<div class="flex flex-col">
 		<div class="mt-4 flex gap-3">
 			{
-				tech.map((techIcon) => (
+				tech.map(({ icon, name }) => (
 					<Icon
-						name={techIcon}
-						class="h-7 w-auto rounded-lg grayscale transition hover:grayscale-0"
-						aria-hidden="true"
+						name={icon}
+						title={name}
+						class="h-7 w-auto rounded-lg grayscale transition group-hover:grayscale-0"
 					/>
 				))
 			}
 		</div>
+		<p
+			class="mt-4 flex items-center self-end text-xs text-gray-500 transition group-hover:text-gray-50"
+		>
+			read more <Icon name="mdi:chevron-right" class="h-4 w-auto" />
+		</p>
 	</div>
-</article>
+</a>
