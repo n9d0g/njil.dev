@@ -7,7 +7,7 @@ Nathan's personal site: work history, projects, and a blog with an email newslet
 ### Career
 
 **Job**:
-A position Nathan has held at a company, shown on `/work`.
+A position Nathan has held at a company, listed on `/work` and written up on its own page at `/work/<job>`.
 _Avoid_: Work, experience, role
 
 **Project**:

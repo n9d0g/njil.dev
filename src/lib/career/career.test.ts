@@ -5,6 +5,7 @@ import { createCareer } from './index'
 const date = (iso: string) => new Date(`${iso}T00:00:00Z`)
 
 const job = (company: string, startDate: string, endDate?: string) => ({
+	id: company.toLowerCase(),
 	data: {
 		company,
 		position: 'Frontend Developer',
@@ -12,8 +13,13 @@ const job = (company: string, startDate: string, endDate?: string) => ({
 		startDate: date(startDate),
 		endDate: endDate ? date(endDate) : undefined,
 		description: `work at ${company}`,
-		tech: ['logos:react'],
-		points: [],
+		tech: [{ icon: 'logos:react', name: 'React' }],
+		links: [
+			{
+				label: `${company.toLowerCase()}.com`,
+				url: `https://${company.toLowerCase()}.com`,
+			},
+		],
 	},
 })
 
@@ -26,15 +32,18 @@ const project = (title: string, startDate: string, endDate?: string) => ({
 		startDate: date(startDate),
 		endDate: endDate ? date(endDate) : undefined,
 		description: `about ${title}`,
-		tech: ['logos:astro'],
+		tech: [{ icon: 'logos:astro', name: 'Astro' }],
 		points: [],
 	},
 })
+
+const Content = () => 'rendered body'
 
 function careerWith({ jobs = [] as unknown[], projects = [] as unknown[] }) {
 	return createCareer({
 		getCollection: async (name: string) =>
 			(name === 'job' ? jobs : projects) as never,
+		render: async () => ({ Content }) as never,
 	})
 }
 
@@ -54,13 +63,53 @@ describe('getJobs', () => {
 			['Manulife', '10/2019 - 5/2020'],
 		])
 		expect(jobs[0]).toEqual({
+			slug: 'quotemedia',
 			company: 'QuoteMedia',
 			position: 'Frontend Developer',
 			location: 'Toronto, ON',
 			description: 'work at QuoteMedia',
-			tech: ['logos:react'],
+			tech: [{ icon: 'logos:react', name: 'React' }],
+			links: [{ label: 'quotemedia.com', url: 'https://quotemedia.com' }],
+			logo: undefined,
 			period: '9/2022 - present',
 		})
+	})
+
+	test("carries a Job's logo when it has one", async () => {
+		const withLogo = job('Leons', '2021-06-01', '2022-07-01')
+		const [leons] = await careerWith({
+			jobs: [
+				{ ...withLogo, data: { ...withLogo.data, logo: '/logos/leons.svg' } },
+			],
+		}).getJobs()
+
+		expect(leons.logo).toBe('/logos/leons.svg')
+	})
+})
+
+describe('getJob', () => {
+	test('finds a Job by slug, with its write-up ready to render', async () => {
+		const found = await careerWith({
+			jobs: [
+				job('QuoteMedia', '2022-08-01'),
+				job('Leons', '2021-06-01', '2022-07-01'),
+			],
+		}).getJob('leons')
+
+		expect(found).toMatchObject({
+			slug: 'leons',
+			company: 'Leons',
+			period: '6/2021 - 7/2022',
+		})
+		expect(found?.Content).toBe(Content)
+	})
+
+	test('returns null for an unknown slug', async () => {
+		const found = await careerWith({
+			jobs: [job('QuoteMedia', '2022-08-01')],
+		}).getJob('nope')
+
+		expect(found).toBeNull()
 	})
 })
 
@@ -83,7 +132,7 @@ describe('getProjects', () => {
 			url: 'https://fcc.dev',
 			repo: 'https://github.com/n9d0g/fcc',
 			description: 'about fcc',
-			tech: ['logos:astro'],
+			tech: [{ icon: 'logos:astro', name: 'Astro' }],
 			period: '3/2022 - 2/2024',
 		})
 	})
