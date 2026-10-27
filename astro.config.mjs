@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 import { defineConfig, envField } from 'astro/config'
 import cloudflare from '@astrojs/cloudflare'
 import react from '@astrojs/react'
@@ -8,6 +11,17 @@ import sanity from '@sanity/astro'
 const DEFAULT_SANITY_PROJECT_ID = 'nbid6gbs'
 const sanityProjectId =
 	process.env.SANITY_PROJECT_ID || DEFAULT_SANITY_PROJECT_ID
+
+// Local mkcert cert covering local.njil.dev. Dev serves HTTPS only when it's
+// present, so CI and fresh clones fall back to plain http://localhost.
+const LOCAL_CERT_DIR =
+	process.env.LOCAL_CERT_DIR || join(homedir(), 'Documents/dev/.certs')
+const localCert = join(LOCAL_CERT_DIR, 'cert.pem')
+const localKey = join(LOCAL_CERT_DIR, 'cert-key.pem')
+const https =
+	existsSync(localCert) && existsSync(localKey)
+		? { cert: readFileSync(localCert), key: readFileSync(localKey) }
+		: undefined
 
 export default defineConfig({
 	integrations: [
@@ -30,8 +44,10 @@ export default defineConfig({
 	},
 	site: 'https://www.njil.dev',
 	server: {
-		port: 3001,
+		// 443 so https://local.njil.dev needs no port; plain http stays on 3001
+		port: https ? 443 : 3001,
 		host: true,
+		allowedHosts: ['local.njil.dev'],
 	},
 	env: {
 		schema: {
@@ -75,6 +91,7 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		server: { https },
 		ssr: {
 			optimizeDeps: {
 				// astro-icon's Icon.astro imports @iconify/utils, whose barrel pulls in
