@@ -2,14 +2,29 @@
 import Layout from '@layouts/Layout.astro'
 import Hero from '@components/home/Hero.astro'
 import ContributionGraph from '@components/home/ContributionGraph.astro'
+import LatestBlogPosts from '@components/home/LatestBlogPosts.astro'
 import { getContributions } from '@lib/contributions/live'
+import { blog } from '@lib/blog/live'
 
-const graph = await getContributions().getContributionGraph()
+const LATEST_POSTS = 2
+
+const [graph, latestPosts] = await Promise.all([
+	getContributions().getContributionGraph(),
+	// The homepage still renders without the Blog, like it does without GitHub
+	blog
+		.listBlogPosts()
+		.then((posts) => posts.slice(0, LATEST_POSTS))
+		.catch((error) => {
+			console.error('Latest Blog posts unavailable:', error)
+			return []
+		}),
+])
 ---
 
 <Layout title="Nathan Lardizabal | Frontend Developer">
 	<section class="flex flex-col">
 		<Hero />
 		{graph && <ContributionGraph {graph} />}
+		{latestPosts.length > 0 && <LatestBlogPosts posts={latestPosts} />}
 	</section>
 </Layout>

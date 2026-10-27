@@ -255,6 +255,17 @@ export type BlogListQueryResult = Array<{
 }>;
 
 // Source: ../src/lib/blog/index.ts
+// Variable: blogLinksQuery
+// Query: *[	_type == "blog"	&& defined(slug.current)]|order(publishedAt desc){	title,	slug,	tags[]->{ name }}
+export type BlogLinksQueryResult = Array<{
+  title: string | null;
+  slug: Slug | null;
+  tags: Array<{
+    name: string | null;
+  }> | null;
+}>;
+
+// Source: ../src/lib/blog/index.ts
 // Variable: blogBySlugQuery
 // Query: *[_type == "blog" && slug.current == $slug][0]{	title,	author,	publishedAt,	description,	tags[]->{ name, slug },	images[]{ asset->{ url }, alt },	body[]{		...,		_type == "image" => { asset->{ url }, alt, caption },		_type == "code" => { language, code, filename }	}}
 export type BlogBySlugQueryResult = {
@@ -327,6 +338,7 @@ export type BlogAnnouncedQueryResult = false | true;
 declare global {
   interface SanityQueries {
     "*[\n\t_type == \"blog\"\n\t&& defined(slug.current)\n]|order(publishedAt desc)[0...12]{\n\t_id,\n\ttitle,\n\tslug,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\timages[]{ asset->{ url } }[0...1]\n}": BlogListQueryResult;
+    "*[\n\t_type == \"blog\"\n\t&& defined(slug.current)\n]|order(publishedAt desc){\n\ttitle,\n\tslug,\n\ttags[]->{ name }\n}": BlogLinksQueryResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n\ttitle,\n\tauthor,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\timages[]{ asset->{ url }, alt },\n\tbody[]{\n\t\t...,\n\t\t_type == \"image\" => { asset->{ url }, alt, caption },\n\t\t_type == \"code\" => { language, code, filename }\n\t}\n}": BlogBySlugQueryResult;
     "*[_type == \"subscriber\" && active == true]{ email, active }": ActiveSubscribersQueryResult;
     "defined(*[_type == \"blog\" && _id == $id][0].announcedAt)": BlogAnnouncedQueryResult;

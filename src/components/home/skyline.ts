@@ -65,11 +65,8 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 	scene.add(sun)
 
 	const geometry = new BoxGeometry(0.8, 1, 0.8).translate(0, 0.5, 0)
-	const mesh = new InstancedMesh(
-		geometry,
-		new MeshStandardMaterial({ roughness: 0.6 }),
-		days.length
-	)
+	const material = new MeshStandardMaterial({ roughness: 0.6 })
+	const mesh = new InstancedMesh(geometry, material, days.length)
 	days.forEach(({ day }, i) =>
 		mesh.setColorAt(i, new Color(LEVEL_COLORS[day.level]))
 	)
@@ -102,7 +99,8 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 		camera.updateProjectionMatrix()
 		controls.update()
 	}
-	new ResizeObserver(resize).observe(root)
+	const resizeObserver = new ResizeObserver(resize)
+	resizeObserver.observe(root)
 	resize()
 
 	const matrix = new Matrix4()
@@ -161,10 +159,11 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 
 	// Only animate while the graph is on screen
 	let visible = true
-	new IntersectionObserver(([entry]) => {
+	const visibilityObserver = new IntersectionObserver(([entry]) => {
 		visible = entry.isIntersecting
 		if (visible) requestAnimationFrame(frame)
-	}).observe(root)
+	})
+	visibilityObserver.observe(root)
 
 	const start = performance.now()
 	let rising = true
@@ -176,4 +175,17 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 		requestAnimationFrame(frame)
 	}
 	requestAnimationFrame(frame)
+
+	// Browsers cap live WebGL contexts, so free this one when the page is left
+	return function dispose() {
+		visible = false
+		resizeObserver.disconnect()
+		visibilityObserver.disconnect()
+		controls.dispose()
+		geometry.dispose()
+		material.dispose()
+		mesh.dispose()
+		renderer.dispose()
+		renderer.forceContextLoss()
+	}
 }
