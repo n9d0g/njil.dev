@@ -14,6 +14,10 @@ _Avoid_: Work, experience, role
 Something Nathan built outside of a Job, shown on `/projects`.
 _Avoid_: Portfolio item, side project
 
+**Contribution graph**:
+Nathan's GitHub contributions for the last year, one count per day, shown on the homepage.
+_Avoid_: Activity graph, commit graph, heatmap
+
 ### Blog
 
 **Blog post**:
