@@ -1,0 +1,25 @@
+---
+import BlogCard from '@components/general/BlogCard.astro'
+import type { BlogPostSummary } from '@lib/blog'
+
+interface Props {
+	posts: BlogPostSummary[]
+}
+
+const { posts } = Astro.props
+---
+
+<section class="my-8">
+	<div class="mb-4 flex items-baseline justify-between">
+		<h2 class="text-sm text-slate-400">latest posts</h2>
+		<a
+			href="/blog"
+			class="text-xs text-gray-500 transition hover:text-gray-50"
+		>
+			see all →
+		</a>
+	</div>
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+		{posts.map((post) => <BlogCard {post} heading="h3" />)}
+	</div>
+</section>
