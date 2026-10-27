@@ -4,9 +4,11 @@ import type { BlogPostSummary } from '@lib/blog'
 
 interface Props {
 	post: BlogPostSummary
+	// h3 where the cards sit under a section heading
+	heading?: 'h2' | 'h3'
 }
 
-const { post } = Astro.props
+const { post, heading: Heading = 'h2' } = Astro.props
 const { title, description, displayDate, tags, coverImageUrl } = post
 ---
 
@@ -28,9 +30,11 @@ const { title, description, displayDate, tags, coverImageUrl } = post
 		}
 		<div class="flex flex-1 flex-col justify-between p-4">
 			<div>
-				<h2 class="text-base text-slate-100 transition group-hover:text-white">
+				<Heading
+					class="text-base text-slate-100 transition group-hover:text-white"
+				>
 					{title}
-				</h2>
+				</Heading>
 				<p class="my-1 text-xs font-light text-gray-400">
 					{displayDate}
 				</p>
