@@ -21,7 +21,7 @@ const HOVER_COLOR = new Color('#f8fafc')
 const RISE_MS = 1200
 const STAGGER_MS = 15
 // Fixed tilt: the skyline only spins around, so vertical swipes still scroll
-const POLAR_ANGLE = 0.85
+const POLAR_ANGLE = 1.15
 
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3
 
