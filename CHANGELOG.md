@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.5.0](https://github.com/n9d0g/njil.dev/compare/v2.4.4...v2.5.0) (2026-10-27)
+
+
+### Features
+
+* :sparkles: /contact page sends a Contact message instead of mailto: ([31ee678](https://github.com/n9d0g/njil.dev/commit/31ee67809a36d65042f281effae163d901150b51))
+* :sparkles: /contact page sends a Contact message instead of mailto: ([2817c48](https://github.com/n9d0g/njil.dev/commit/2817c48b2fb209c390c58bdd00067dd639af36e9)), closes [#84](https://github.com/n9d0g/njil.dev/issues/84)
+* :sparkles: 3D Contribution graph on the homepage ([b0fb03a](https://github.com/n9d0g/njil.dev/commit/b0fb03ac97ac4ed32a629764d022c13b3ffb8726))
+* :sparkles: 3D Contribution graph on the homepage ([a4900eb](https://github.com/n9d0g/njil.dev/commit/a4900eb79a1a8b166305aaaf635a4940a6c04936)), closes [#13](https://github.com/n9d0g/njil.dev/issues/13)
+* :sparkles: a page for each Job at /work/[job] ([e6a1c36](https://github.com/n9d0g/njil.dev/commit/e6a1c36d409068e3b4d04b14250da2457b915634))
+* :sparkles: a page for each Job at /work/[job] ([cb9e08b](https://github.com/n9d0g/njil.dev/commit/cb9e08b8ec353a9f46952761f2b38cfb58ba3878)), closes [#16](https://github.com/n9d0g/njil.dev/issues/16)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: contact page copy ([7123933](https://github.com/n9d0g/njil.dev/commit/7123933a9a8547707048504e883427ce073e3238))
+* :bug: Newsletter form script runs before the form exists ([0be8df5](https://github.com/n9d0g/njil.dev/commit/0be8df5691abe5435c85d5fc2cf0e8289810738e))
+* :bug: Newsletter form script runs before the form exists ([d316b11](https://github.com/n9d0g/njil.dev/commit/d316b11c87dd7d522ab4c86e47ff670fd67ca0bb))
+
+
+### Refactors
+
+* :recycle: extract mail and human-check modules from the Newsletter ([5ae5b3a](https://github.com/n9d0g/njil.dev/commit/5ae5b3af59902e6a9a30df5a15d29f66698a3ef6))
+* :recycle: extract mail and human-check modules from the Newsletter ([64162ce](https://github.com/n9d0g/njil.dev/commit/64162ce31561e044aa80acd4d2166eb82ab563a9)), closes [#83](https://github.com/n9d0g/njil.dev/issues/83)
+
 ## [2.4.4](https://github.com/n9d0g/njil.dev/compare/v2.4.3...v2.4.4) (2026-10-26)
 
 
