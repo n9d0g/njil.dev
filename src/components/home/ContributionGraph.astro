@@ -74,8 +74,6 @@ const label = (count: number, date: string) =>
 <script>
 	import type { ContributionGraph } from '@lib/contributions'
 
-	const root = document.querySelector<HTMLElement>('[data-contribution-graph]')
-
 	const hasWebGL = () => {
 		try {
 			return !!document.createElement('canvas').getContext('webgl2')
@@ -84,8 +82,13 @@ const label = (count: number, date: string) =>
 		}
 	}
 
-	if (root && hasWebGL()) {
+	// Runs on every page view, including client-side navigations back home
+	document.addEventListener('astro:page-load', () => {
+		const root = document.querySelector<HTMLElement>('[data-contribution-graph]')
+		if (!root || !hasWebGL()) return
+
 		const graph: ContributionGraph = JSON.parse(root.dataset.contributionGraph!)
+		let dispose: (() => void) | undefined
 
 		// three.js is large: only fetch it once the graph is about to be seen
 		const observer = new IntersectionObserver(
@@ -94,12 +97,22 @@ const label = (count: number, date: string) =>
 				observer.disconnect()
 
 				const { mountSkyline } = await import('./skyline')
-				mountSkyline(root, graph)
+				if (!root.isConnected) return
+				dispose = mountSkyline(root, graph)
 				root.querySelector('[data-flat]')?.remove()
 				document.querySelector('[data-hint]')?.classList.remove('hidden')
 			},
 			{ rootMargin: '200px' }
 		)
 		observer.observe(root)
-	}
+
+		document.addEventListener(
+			'astro:before-swap',
+			() => {
+				observer.disconnect()
+				dispose?.()
+			},
+			{ once: true }
+		)
+	})
 </script>

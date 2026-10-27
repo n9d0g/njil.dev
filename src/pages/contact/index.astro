@@ -1,9 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro'
-import { PUBLIC_RECAPTCHA_SITE_KEY } from 'astro:env/client'
 import { MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH } from '@lib/contact'
 
-const siteKey = PUBLIC_RECAPTCHA_SITE_KEY
 const inputClass =
 	'rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 transition focus:border-slate-500 focus:outline-none'
 ---
@@ -56,55 +54,58 @@ const inputClass =
 	</form>
 </Layout>
 
-<script define:vars={{ siteKey }}>
-	const form = document.getElementById('contact-form')
-	const messageEl = document.getElementById('contact-form-message')
-	const submitBtn = form.querySelector('button[type="submit"]')
+<script>
+	import { humanCheckToken } from '@lib/human-check/browser'
 
-	form.addEventListener('submit', async (e) => {
-		e.preventDefault()
+	// Runs on every page view, including client-side navigations
+	document.addEventListener('astro:page-load', () => {
+		const form = document.getElementById('contact-form') as HTMLFormElement | null
+		if (!form) return
+		const messageEl = document.getElementById('contact-form-message')!
+		const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!
 
-		const data = new FormData(form)
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault()
 
-		submitBtn.disabled = true
-		submitBtn.textContent = 'sending...'
+			const data = new FormData(form)
 
-		try {
-			await new Promise((resolve) => grecaptcha.ready(resolve))
-			const recaptchaToken = await grecaptcha.execute(siteKey, {
-				action: 'contact',
-			})
+			submitBtn.disabled = true
+			submitBtn.textContent = 'sending...'
 
-			const response = await fetch('/api/contact', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					name: data.get('name'),
-					email: data.get('email'),
-					message: data.get('message'),
-					recaptchaToken,
-				}),
-			})
+			try {
+				const recaptchaToken = await humanCheckToken('contact')
 
-			const body = await response.json()
+				const response = await fetch('/api/contact', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						name: data.get('name'),
+						email: data.get('email'),
+						message: data.get('message'),
+						recaptchaToken,
+					}),
+				})
 
-			if (response.ok) {
-				messageEl.textContent = body.message || 'thanks for reaching out!'
-				messageEl.className = 'text-xs text-green-400'
-				form.reset()
-			} else {
-				messageEl.textContent =
-					body.error || 'something went wrong, please try again.'
+				const body = await response.json()
+
+				if (response.ok) {
+					messageEl.textContent = body.message || 'thanks for reaching out!'
+					messageEl.className = 'text-xs text-green-400'
+					form.reset()
+				} else {
+					messageEl.textContent =
+						body.error || 'something went wrong, please try again.'
+					messageEl.className = 'text-xs text-red-400'
+				}
+			} catch {
+				messageEl.textContent = 'something went wrong, please try again.'
 				messageEl.className = 'text-xs text-red-400'
+			} finally {
+				submitBtn.disabled = false
+				submitBtn.textContent = 'send'
 			}
-		} catch (error) {
-			messageEl.textContent = 'something went wrong, please try again.'
-			messageEl.className = 'text-xs text-red-400'
-		} finally {
-			submitBtn.disabled = false
-			submitBtn.textContent = 'send'
-		}
+		})
 	})
 </script>
