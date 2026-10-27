@@ -1,0 +1,105 @@
+---
+import type { ContributionGraph } from '@lib/contributions'
+
+interface Props {
+	graph: ContributionGraph
+}
+
+const { graph } = Astro.props
+
+// Tailwind slate-800 for empty days, then blue-900 → blue-300 by level
+const LEVEL_CLASSES = [
+	'bg-slate-800',
+	'bg-blue-900',
+	'bg-blue-700',
+	'bg-blue-500',
+	'bg-blue-300',
+]
+
+const label = (count: number, date: string) =>
+	`${count} contribution${count === 1 ? '' : 's'} on ${new Date(
+		`${date}T00:00:00Z`
+	).toLocaleDateString('en-CA', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+		timeZone: 'UTC',
+	})}`
+---
+
+<figure class="my-8">
+	<div
+		data-contribution-graph={JSON.stringify(graph)}
+		class="relative flex h-56 items-center justify-center overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] sm:h-72"
+	>
+		<!-- Shown until the 3D skyline mounts, and instead of it without WebGL or JS -->
+		<div
+			data-flat
+			class="grid w-full grid-flow-col grid-rows-7 gap-[2px] p-4"
+			aria-hidden="true"
+		>
+			{
+				graph.weeks.map((week, x) =>
+					week.map((day) => (
+						<span
+							title={label(day.count, day.date)}
+							class:list={['aspect-square rounded-[1px]', LEVEL_CLASSES[day.level]]}
+							style={`grid-column: ${x + 1}; grid-row: ${new Date(`${day.date}T00:00:00Z`).getUTCDay() + 1}`}
+						/>
+					))
+				)
+			}
+		</div>
+		<p
+			data-tooltip
+			class="pointer-events-none absolute hidden rounded bg-slate-900/90 px-2 py-1 text-xs text-slate-100"
+		>
+		</p>
+	</div>
+	<figcaption
+		class="mt-2 flex justify-between text-xs font-light text-gray-500"
+	>
+		<a
+			href={graph.profileUrl}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="transition hover:text-gray-50"
+		>
+			{graph.total.toLocaleString('en-CA')} contributions on GitHub in the last year
+		</a>
+		<span data-hint class="hidden">drag to spin</span>
+	</figcaption>
+</figure>
+
+<script>
+	import type { ContributionGraph } from '@lib/contributions'
+
+	const root = document.querySelector<HTMLElement>('[data-contribution-graph]')
+
+	const hasWebGL = () => {
+		try {
+			return !!document.createElement('canvas').getContext('webgl2')
+		} catch {
+			return false
+		}
+	}
+
+	if (root && hasWebGL()) {
+		const graph: ContributionGraph = JSON.parse(root.dataset.contributionGraph!)
+
+		// three.js is large: only fetch it once the graph is about to be seen
+		const observer = new IntersectionObserver(
+			async (entries) => {
+				if (!entries.some((e) => e.isIntersecting)) return
+				observer.disconnect()
+
+				const { mountSkyline } = await import('./skyline')
+				mountSkyline(root, graph)
+				root.querySelector('[data-flat]')?.remove()
+				document.querySelector('[data-hint]')?.classList.remove('hidden')
+			},
+			{ rootMargin: '200px' }
+		)
+		observer.observe(root)
+	}
+</script>
