@@ -18,6 +18,12 @@ _Avoid_: Portfolio item, side project
 Nathan's GitHub contributions for the last year, one count per day, shown on the homepage.
 _Avoid_: Activity graph, commit graph, heatmap
 
+### Navigation
+
+**Command palette**:
+The ⌘K / Ctrl K dialog for jumping to any page, Job or Blog post.
+_Avoid_: Search, quick switcher, spotlight
+
 ### Blog
 
 **Blog post**:

@@ -1,6 +1,7 @@
 import { defineQuery } from 'groq'
 import type {
 	BlogBySlugQueryResult,
+	BlogLinksQueryResult,
 	BlogListQueryResult,
 } from '@app-types/sanity.types'
 
@@ -13,6 +14,9 @@ export interface BlogPostSummary {
 	tags: string[]
 	coverImageUrl?: string
 }
+
+// Just enough to link to a Blog post, for every post at once
+export type BlogPostLink = Pick<BlogPostSummary, 'path' | 'title' | 'tags'>
 
 export interface BlogPost extends Omit<BlogPostSummary, 'coverImageUrl'> {
 	author?: string
@@ -35,6 +39,15 @@ const blogListQuery = defineQuery(`*[
 	description,
 	tags[]->{ name, slug },
 	images[]{ asset->{ url } }[0...1]
+}`)
+
+const blogLinksQuery = defineQuery(`*[
+	_type == "blog"
+	&& defined(slug.current)
+]|order(publishedAt desc){
+	title,
+	slug,
+	tags[]->{ name }
 }`)
 
 const blogBySlugQuery =
@@ -90,6 +103,22 @@ export function createBlog(client: BlogClient) {
 		})
 	}
 
+	async function listAllBlogPosts(): Promise<BlogPostLink[]> {
+		const posts = await client.fetch<BlogLinksQueryResult>(blogLinksQuery)
+
+		return posts.flatMap((post) => {
+			const slug = post.slug?.current
+			if (!slug) return []
+			return [
+				{
+					path: blogPostPath(slug),
+					title: post.title ?? 'Untitled',
+					tags: tagNames(post.tags),
+				},
+			]
+		})
+	}
+
 	async function getBlogPost(slug: string): Promise<BlogPost | null> {
 		const post = await client.fetch<BlogBySlugQueryResult>(blogBySlugQuery, {
 			slug,
@@ -111,5 +140,5 @@ export function createBlog(client: BlogClient) {
 		}
 	}
 
-	return { listBlogPosts, getBlogPost }
+	return { listBlogPosts, listAllBlogPosts, getBlogPost }
 }
