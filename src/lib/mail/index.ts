@@ -6,6 +6,7 @@ export interface Message {
 	subject: string
 	react: ReactElement
 	headers?: Record<string, string>
+	replyTo?: string
 }
 
 export interface Mailer {

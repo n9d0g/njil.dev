@@ -36,3 +36,9 @@ The single email a Subscriber receives when they join or rejoin the Newsletter.
 **Announcement**:
 The email sent to every active Subscriber when a Blog post is published.
 _Avoid_: New-blog email, newsletter blast, notification
+
+### Contact
+
+**Contact message**:
+A note a visitor sends Nathan from `/contact`, with an optional name, the visitor's email address and the message itself. Nathan replies to it by email.
+_Avoid_: Message (on its own), enquiry, submission, contact
