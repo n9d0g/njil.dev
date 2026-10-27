@@ -1,17 +1,12 @@
 ---
 import NavbarItem from './NavbarItem.astro'
-
-const navItems = [
-	{ href: '/', label: 'home' },
-	{ href: '/work', label: 'work' },
-	{ href: '/projects', label: 'projects' },
-	{ href: '/blog', label: 'blog' },
-	{ href: '/contact', label: 'contact' },
-]
+import CommandPalette from './CommandPalette.astro'
+import { pages } from '@lib/command-palette'
 ---
 
 <nav
-	class="container mx-auto flex w-full max-w-2xl justify-start gap-4 py-10 font-light"
+	class="container mx-auto flex w-full max-w-2xl justify-start gap-3 py-10 font-light sm:gap-4"
 >
-	{navItems.map((item) => <NavbarItem href={item.href} label={item.label} />)}
+	{pages.map((item) => <NavbarItem href={item.href} label={item.label} />)}
+	<CommandPalette />
 </nav>

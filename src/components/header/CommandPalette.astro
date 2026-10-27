@@ -1,0 +1,221 @@
+<button
+	type="button"
+	data-palette-open
+	aria-haspopup="dialog"
+	aria-keyshortcuts="Meta+K Control+K"
+	class="ml-auto cursor-pointer rounded max-[359px]:hidden border border-slate-700 px-2 text-xs text-gray-500 transition hover:border-slate-500 hover:text-gray-50"
+>
+	<span class="sr-only">open command palette</span>
+	<kbd data-palette-key aria-hidden="true" class="font-sans">⌘K</kbd>
+</button>
+
+<dialog
+	data-palette
+	aria-label="command palette"
+	class="mx-auto mt-[15vh] w-[calc(100%-2rem)] max-w-lg overflow-hidden rounded-lg border border-slate-700 bg-slate-900 p-0 text-slate-100 backdrop:bg-slate-950/70 backdrop:backdrop-blur-sm"
+>
+	<input
+		type="text"
+		role="combobox"
+		aria-expanded="true"
+		aria-controls="palette-results"
+		aria-autocomplete="list"
+		aria-label="jump to a page, job or blog post"
+		placeholder="jump to..."
+		autocomplete="off"
+		spellcheck="false"
+		class="w-full border-b border-slate-700 bg-transparent px-4 py-3 text-sm placeholder-slate-500 focus:outline-none"
+	/>
+	<ul
+		id="palette-results"
+		role="listbox"
+		aria-label="results"
+		class="max-h-80 overflow-y-auto py-2"
+	>
+	</ul>
+	<p data-palette-notice hidden class="px-4 pb-3 text-xs text-gray-500"></p>
+</dialog>
+
+<script>
+	import {
+		matchEntries,
+		pageEntries,
+		type PaletteEntry,
+		type PaletteGroup,
+	} from '@lib/command-palette'
+
+	const GROUP_LABELS: Record<PaletteGroup, string> = {
+		pages: 'pages',
+		work: 'work',
+		blog: 'blog',
+	}
+
+	// Jobs and Blog posts, fetched the first time the palette opens. The pages
+	// ship with the script, so the palette works even if this fails
+	let remote: Promise<PaletteEntry[] | null> | undefined
+	const loadRemote = () =>
+		(remote ??= fetch('/api/command-palette')
+			.then((response) => {
+				if (!response.ok) throw new Error(`${response.status}`)
+				return response.json() as Promise<PaletteEntry[]>
+			})
+			.catch(() => {
+				remote = undefined // try again next time it opens
+				return null
+			}))
+
+	// Page transitions swap the header, so the dialog is looked up every time
+	const elements = () => {
+		const dialog = document.querySelector<HTMLDialogElement>('[data-palette]')
+		if (!dialog) return null
+		return {
+			dialog,
+			input: dialog.querySelector('input')!,
+			list: dialog.querySelector('ul')!,
+			notice: dialog.querySelector<HTMLElement>('[data-palette-notice]')!,
+		}
+	}
+
+	const bound = new WeakSet<HTMLDialogElement>()
+	let entries: PaletteEntry[] = pageEntries()
+	let active = 0
+
+	function render() {
+		const els = elements()
+		if (!els) return
+		const { input, list } = els
+		const results = matchEntries(entries, input.value)
+		active = Math.min(active, Math.max(results.length - 1, 0))
+
+		list.replaceChildren(
+			...results.flatMap((entry, i) => {
+				const items: HTMLLIElement[] = []
+				if (entry.group !== results[i - 1]?.group) {
+					const heading = document.createElement('li')
+					heading.setAttribute('role', 'presentation')
+					heading.className = 'px-4 pt-2 pb-1 text-xs text-gray-500'
+					heading.textContent = GROUP_LABELS[entry.group]
+					items.push(heading)
+				}
+
+				const option = document.createElement('li')
+				option.id = `palette-option-${i}`
+				option.setAttribute('role', 'option')
+				option.setAttribute('aria-selected', String(i === active))
+				option.className = 'aria-selected:bg-slate-800'
+				option.addEventListener('mousemove', () => {
+					if (active !== i) select(i)
+				})
+
+				const link = document.createElement('a')
+				link.href = entry.href
+				link.tabIndex = -1
+				link.className =
+					'flex items-baseline justify-between gap-4 px-4 py-2 text-sm'
+				link.textContent = entry.label
+				if (entry.detail) {
+					const detail = document.createElement('span')
+					detail.className = 'truncate text-xs font-light text-gray-400'
+					detail.textContent = entry.detail
+					link.append(detail)
+				}
+				link.addEventListener('click', () => els.dialog.close())
+
+				option.append(link)
+				items.push(option)
+				return items
+			})
+		)
+
+		if (results.length === 0) {
+			const empty = document.createElement('li')
+			empty.className = 'px-4 py-2 text-sm text-gray-500'
+			empty.textContent = 'nothing found'
+			list.append(empty)
+			input.removeAttribute('aria-activedescendant')
+		} else {
+			input.setAttribute('aria-activedescendant', `palette-option-${active}`)
+		}
+	}
+
+	function select(index: number) {
+		active = index
+		render()
+		document
+			.getElementById(`palette-option-${active}`)
+			?.scrollIntoView({ block: 'nearest' })
+	}
+
+	function bind({ dialog, input, list }: NonNullable<ReturnType<typeof elements>>) {
+		if (bound.has(dialog)) return
+		bound.add(dialog)
+
+		input.addEventListener('input', () => {
+			active = 0
+			render()
+		})
+		input.addEventListener('keydown', (e) => {
+			const count = list.querySelectorAll('[role="option"]').length
+			if (e.key === 'ArrowDown' && count) {
+				e.preventDefault()
+				select((active + 1) % count)
+			} else if (e.key === 'ArrowUp' && count) {
+				e.preventDefault()
+				select((active - 1 + count) % count)
+			} else if (e.key === 'Enter') {
+				e.preventDefault()
+				list
+					.querySelector<HTMLAnchorElement>(`#palette-option-${active} a`)
+					?.click()
+			}
+		})
+		// A click on the backdrop lands on the dialog itself
+		dialog.addEventListener('click', (e) => {
+			if (e.target === dialog) dialog.close()
+		})
+	}
+
+	async function open() {
+		const els = elements()
+		if (!els) return
+		bind(els)
+		// Reset here, not on close: the close event is async, so a quick
+		// Escape then ⌘K would reopen before it ran
+		els.input.value = ''
+		active = 0
+		els.dialog.showModal()
+		els.input.focus()
+		render()
+
+		const loaded = await loadRemote()
+		els.notice.hidden = loaded !== null
+		els.notice.textContent = "couldn't load work and blog posts"
+		entries = [...pageEntries(), ...(loaded ?? [])]
+		if (els.dialog.open) render()
+	}
+
+	function toggle() {
+		const els = elements()
+		if (els?.dialog.open) els.dialog.close()
+		else open()
+	}
+
+	document.addEventListener('keydown', (e) => {
+		if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+			e.preventDefault()
+			toggle()
+		}
+	})
+	document.addEventListener('click', (e) => {
+		if ((e.target as Element).closest('[data-palette-open]')) toggle()
+	})
+
+	const showShortcut = () => {
+		const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent)
+		document
+			.querySelectorAll('[data-palette-key]')
+			.forEach((key) => (key.textContent = isMac ? '⌘K' : 'Ctrl K'))
+	}
+	showShortcut()
+	document.addEventListener('astro:after-swap', showShortcut)
+</script>

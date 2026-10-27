@@ -59,6 +59,25 @@ describe('listBlogPosts', () => {
 	})
 })
 
+describe('listAllBlogPosts', () => {
+	test('links to every Blog post that has a slug', async () => {
+		const posts = await blogReturning([
+			{
+				title: 'chemex',
+				slug: { _type: 'slug', current: 'chemex' },
+				tags: [{ name: 'coffee' }],
+			},
+			{ title: null, slug: { _type: 'slug', current: 'draft' }, tags: null },
+			{ title: 'no slug', slug: null, tags: null },
+		]).listAllBlogPosts()
+
+		expect(posts).toEqual([
+			{ path: '/blog/chemex/', title: 'chemex', tags: ['coffee'] },
+			{ path: '/blog/draft/', title: 'Untitled', tags: [] },
+		])
+	})
+})
+
 describe('getBlogPost', () => {
 	test('returns null for an unknown slug', async () => {
 		expect(await blogReturning(null).getBlogPost('nope')).toBeNull()
