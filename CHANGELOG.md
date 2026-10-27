@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.6.0](https://github.com/n9d0g/njil.dev/compare/v2.5.0...v2.6.0) (2026-10-27)
+
+
+### Features
+
+* ⌘K Command palette ([8694bd7](https://github.com/n9d0g/njil.dev/commit/8694bd771c97ccf9b42fee10e745fe5272c5b048))
+* ⌘K Command palette ([dc0f33e](https://github.com/n9d0g/njil.dev/commit/dc0f33e7f2b354583348e4d6574567bdbfe6912d)), closes [#90](https://github.com/n9d0g/njil.dev/issues/90)
+* latest Blog posts on the homepage ([36300e8](https://github.com/n9d0g/njil.dev/commit/36300e88be6d562f114f1d1741871b640d9fcca1))
+* latest Blog posts on the homepage ([bf5d3e7](https://github.com/n9d0g/njil.dev/commit/bf5d3e7cc3a5fe1d19b3073c952500cb716a7ea9)), closes [#89](https://github.com/n9d0g/njil.dev/issues/89)
+* page transitions with Astro View Transitions ([272fa30](https://github.com/n9d0g/njil.dev/commit/272fa30c6b8cd4e636208c57b89054ca3a2e6e61))
+* page transitions with Astro View Transitions ([93a0bd6](https://github.com/n9d0g/njil.dev/commit/93a0bd67370e9533206539e0e84b7e48c50bcbde)), closes [#88](https://github.com/n9d0g/njil.dev/issues/88)
+
 ## [2.5.0](https://github.com/n9d0g/njil.dev/compare/v2.4.4...v2.5.0) (2026-10-27)
 
 
