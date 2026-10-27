@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0](https://github.com/n9d0g/njil.dev/compare/v2.6.0...v2.7.0) (2026-10-27)
+
+
+### Features
+
+* serve dev over HTTPS at https://local.njil.dev ([a799d5a](https://github.com/n9d0g/njil.dev/commit/a799d5ac41dea1b25f6007a49e505241662bf7f9))
+* serve dev over HTTPS at https://local.njil.dev ([f30cd6c](https://github.com/n9d0g/njil.dev/commit/f30cd6c025f6c0bd57aa7a5d7b4d6b3a0553830f))
+
 ## [2.6.0](https://github.com/n9d0g/njil.dev/compare/v2.5.0...v2.6.0) (2026-10-27)
 
 
