@@ -3,6 +3,14 @@
 	"name": "njil-prod",
 	"compatibility_date": "2025-10-02",
 	"compatibility_flags": ["nodejs_compat"],
+	// Sentry tags server events with the deployed Worker version as the release
+	"version_metadata": { "binding": "CF_VERSION_METADATA" },
+	// Sentry reads these at runtime. Keep SENTRY_DSN in sync with sentry.client.config.ts
+	"vars": {
+		"SENTRY_DSN": "https://c7152c0ccd91aa68c38ef1a91ec2635c@o1146391.ingest.us.sentry.io/4512334158495744",
+		"SENTRY_ENVIRONMENT": "production",
+		"SENTRY_TRACES_SAMPLE_RATE": "0.1",
+	},
 	"routes": [
 		{ "pattern": "njil.dev", "custom_domain": true },
 		{ "pattern": "www.njil.dev", "custom_domain": true },
@@ -10,6 +18,13 @@
 	"env": {
 		"dev": {
 			"name": "njil-qa",
+			// vars aren't inherited from the top level
+			"version_metadata": { "binding": "CF_VERSION_METADATA" },
+			"vars": {
+				"SENTRY_DSN": "https://c7152c0ccd91aa68c38ef1a91ec2635c@o1146391.ingest.us.sentry.io/4512334158495744",
+				"SENTRY_ENVIRONMENT": "dev",
+				"SENTRY_TRACES_SAMPLE_RATE": "1.0",
+			},
 			"routes": [{ "pattern": "dev.njil.dev", "custom_domain": true }],
 		},
 	},
