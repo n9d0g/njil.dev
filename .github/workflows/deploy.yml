@@ -44,6 +44,7 @@ jobs:
           CLOUDFLARE_ENV: ${{ github.ref_name == 'dev' && 'dev' || '' }}
           PUBLIC_RECAPTCHA_SITE_KEY: ${{ vars.PUBLIC_RECAPTCHA_SITE_KEY }}
           SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Deploy to Cloudflare
         id: deploy

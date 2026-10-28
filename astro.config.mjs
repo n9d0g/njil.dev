@@ -7,6 +7,7 @@ import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
 import icon from 'astro-icon'
 import sanity from '@sanity/astro'
+import sentry from '@sentry/astro'
 
 const DEFAULT_SANITY_PROJECT_ID = 'nbid6gbs'
 const sanityProjectId =
@@ -32,6 +33,17 @@ export default defineConfig({
 			projectId: sanityProjectId,
 			dataset: 'production',
 			useCdn: true,
+		}),
+		// Source maps upload only when SENTRY_AUTH_TOKEN is set (CI builds)
+		sentry({
+			org: 'n9d0g',
+			project: 'njil-dev',
+			authToken: process.env.SENTRY_AUTH_TOKEN,
+			sourcemaps: {
+				disable: !process.env.SENTRY_AUTH_TOKEN,
+				filesToDeleteAfterUpload: ['dist/**/*.map'],
+			},
+			telemetry: false,
 		}),
 	],
 	output: 'server',
