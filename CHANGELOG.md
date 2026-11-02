@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.0](https://github.com/n9d0g/njil.dev/compare/v2.7.0...v2.8.0) (2026-10-28)
+
+
+### Features
+
+* report errors and traces to Sentry ([5794ccc](https://github.com/n9d0g/njil.dev/commit/5794cccdd75a462719531c6731327c2e2e7aaf4f))
+* report errors and traces to Sentry ([9f0f08a](https://github.com/n9d0g/njil.dev/commit/9f0f08ac658b5e1508c3fca7de358c50f10f5fd5))
+
 ## [2.7.0](https://github.com/n9d0g/njil.dev/compare/v2.6.0...v2.7.0) (2026-10-27)
 
 
