@@ -16,15 +16,15 @@
 		"typegen": "sanity schema extract --force && sanity typegen generate"
 	},
 	"dependencies": {
-		"@sanity/code-input": "^7.3.5",
-		"@sanity/vision": "^6.9.2",
-		"react": "^19.2.8",
-		"react-dom": "^19.2.8",
-		"sanity": "^6.9.2",
-		"styled-components": "^6.5.2"
+		"@sanity/code-input": "^7.3.14",
+		"@sanity/vision": "^6.21.0",
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1",
+		"sanity": "^6.21.0",
+		"styled-components": "^6.6.0"
 	},
 	"devDependencies": {
-		"@types/react": "^19.2.18",
+		"@types/react": "^19.3.0",
 		"typescript": "^6.0.3"
 	},
 	"engines": {
