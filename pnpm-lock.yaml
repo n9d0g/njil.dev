@@ -227,8 +227,8 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(astro@7.4.4(@types/node@26.6.6)(@volar/typescript@2.4.30(typescript@6.0.3))(esbuild@0.28.2)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.1))
       groq:
-        specifier: ^3.99.0
-        version: 3.99.0
+        specifier: ^6.21.0
+        version: 6.21.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -4944,10 +4944,6 @@ packages:
   groq-js@2.0.1:
     resolution: {integrity: sha512-v4GZDlS8T2hNQqnBRisdpMI8GnN7HMQ6bxfpEdz11rNbBUzyhM3aT8fwKbvl1gYVm+Lb1RN0phYdHh1liUzdGA==}
     engines: {node: '>=22.12'}
-
-  groq@3.99.0:
-    resolution: {integrity: sha512-ZwKAWzvVCw51yjmIf5484KgsAzZAlGTM4uy9lki4PjAYxcEME2Xf93d31LhHzgUAr2JI79H+cNKoRjDHdv1BXQ==}
-    engines: {node: '>=18'}
 
   groq@6.21.0:
     resolution: {integrity: sha512-xxw5Fz/8xD0neK5PnfczzkFgPSz2FVAQMxuysZhCj9TnVpkR7yI83wrdQwzikZ/pGZElrVvfGeWrDsbPwYeOcw==}
@@ -12387,8 +12383,6 @@ snapshots:
   groq-js@2.0.1:
     dependencies:
       obug: 2.2.1
-
-  groq@3.99.0: {}
 
   groq@6.21.0: {}
 
