@@ -33,7 +33,7 @@
 		"@iconify-json/vscode-icons": "^1.2.95",
 		"@portabletext/types": "^4.0.2",
 		"@sanity/astro": "^3.6.0",
-		"@sanity/client": "^7.28.0",
+		"@sanity/client": "^8.14.1",
 		"@sanity/webhook": "^4.0.4",
 		"@sentry/astro": "^11.10.0",
 		"@sentry/cloudflare": "^11.10.0",
