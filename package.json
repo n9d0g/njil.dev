@@ -25,7 +25,7 @@
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^14.4.3",
-		"@astrojs/react": "^6.0.6",
+		"@astrojs/react": "^7.1.2",
 		"@astrojs/ts-plugin": "^1.10.12",
 		"@iconify-json/logos": "^1.2.18",
 		"@iconify-json/mdi": "^1.2.3",
