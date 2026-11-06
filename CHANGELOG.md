@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/n9d0g/njil.dev/compare/v2.8.0...v2.8.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **dev:** stop .env restart loop and trim startup URLs ([bf91644](https://github.com/n9d0g/njil.dev/commit/bf91644a934625b16d0e8124de7482c4b50918e4))
+
 ## [2.8.0](https://github.com/n9d0g/njil.dev/compare/v2.7.0...v2.8.0) (2026-10-28)
 
 
