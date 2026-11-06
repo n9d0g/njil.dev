@@ -24,6 +24,25 @@ const https =
 		? { cert: readFileSync(localCert), key: readFileSync(localKey) }
 		: undefined
 
+// The local cert is shared across sites, and Vite lists every hostname in it
+// at startup. Keep only localhost and local.njil.dev in the printed URLs.
+// Vite fills resolvedUrls in a prepended 'listening' listener; this one runs
+// after it and before Astro prints the banner.
+const LOCAL_HOSTNAMES = new Set(['localhost', 'local.njil.dev'])
+const onlyLocalNjilUrls = {
+	name: 'only-local-njil-urls',
+	apply: 'serve',
+	configureServer(server) {
+		server.httpServer?.on('listening', () => {
+			const urls = server.resolvedUrls
+			if (!urls) return
+			urls.local = urls.local.filter((url) =>
+				LOCAL_HOSTNAMES.has(new URL(url).hostname)
+			)
+		})
+	},
+}
+
 export default defineConfig({
 	integrations: [
 		react(),
@@ -102,8 +121,16 @@ export default defineConfig({
 		},
 	},
 	vite: {
-		plugins: [tailwindcss()],
-		server: { https },
+		plugins: [tailwindcss(), onlyLocalNjilUrls],
+		server: {
+			https,
+			watch: {
+				// .env is a 1Password named pipe whose mtime changes on every read, so
+				// watching it restarts the dev server in a loop. Restart manually after
+				// editing variables in 1Password.
+				ignored: ['**/.env'],
+			},
+		},
 		ssr: {
 			optimizeDeps: {
 				// astro-icon's Icon.astro imports @iconify/utils, whose barrel pulls in
