@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.9.0](https://github.com/n9d0g/njil.dev/compare/v2.8.1...v2.9.0) (2026-11-10)
+
+
+### Features
+
+* **home:** Contribution graph loading skeleton and full-plane framing ([398ff5f](https://github.com/n9d0g/njil.dev/commit/398ff5f0651b5ec9a8f1f3ff8ac697a2533524fe))
+* **home:** Contribution graph loading skeleton and full-plane framing ([1ffe361](https://github.com/n9d0g/njil.dev/commit/1ffe3611076b889034b02d1dec15f054627286af))
+* **home:** show a skeleton while the contribution graph loads and keep the whole plane in frame ([fc0f758](https://github.com/n9d0g/njil.dev/commit/fc0f75898a8a409c31f622ad51a0d41af05ab365))
+
 ## [2.8.1](https://github.com/n9d0g/njil.dev/compare/v2.8.0...v2.8.1) (2026-11-06)
 
 
