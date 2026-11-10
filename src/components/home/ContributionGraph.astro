@@ -30,12 +30,14 @@ const label = (count: number, date: string) =>
 <figure class="my-8">
 	<div
 		data-contribution-graph={JSON.stringify(graph)}
-		class="relative flex h-56 items-center justify-center overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] sm:h-72"
+		class="group relative flex h-56 items-center justify-center overflow-hidden [perspective:600px] sm:h-72 md:left-1/2 md:h-[32rem] md:w-[min(64rem,calc(100vw-4rem))] md:-translate-x-1/2"
 	>
-		<!-- Shown until the 3D skyline mounts, and instead of it without WebGL or JS -->
+		<!-- On desktop the graph bleeds past the content column, so the spinning
+		     year has room to be big; on phones it stays within the margins -->
+		<!-- Shown instead of the 3D skyline without WebGL or JS -->
 		<div
 			data-flat
-			class="grid w-full grid-flow-col grid-rows-7 gap-[2px] p-4"
+			class="grid w-full grid-flow-col grid-rows-7 gap-[2px] p-4 group-data-[loading]:hidden"
 			aria-hidden="true"
 		>
 			{
@@ -49,6 +51,13 @@ const label = (count: number, date: string) =>
 					))
 				)
 			}
+		</div>
+		<!-- Shown while three.js loads, roughly where the skyline's plane will be -->
+		<div
+			data-skeleton
+			class="hidden w-[87%] [aspect-ratio:53/7] md:w-2/3 rotate-x-[66deg] rounded-sm bg-slate-800 transition-opacity duration-500 group-data-[loading]:block motion-safe:animate-pulse motion-reduce:transition-none"
+			aria-hidden="true"
+		>
 		</div>
 		<p
 			data-tooltip
@@ -71,6 +80,18 @@ const label = (count: number, date: string) =>
 	</figcaption>
 </figure>
 
+<!-- Swaps the flat grid for the skeleton before first paint, and again after
+     each client-side navigation, which re-runs inline scripts -->
+<script is:inline>
+	;(() => {
+		const root = document.querySelector('[data-contribution-graph]')
+		try {
+			if (root && document.createElement('canvas').getContext('webgl2'))
+				root.dataset.loading = ''
+		} catch {}
+	})()
+</script>
+
 <script>
 	import type { ContributionGraph } from '@lib/contributions'
 
@@ -89,17 +110,36 @@ const label = (count: number, date: string) =>
 
 		const graph: ContributionGraph = JSON.parse(root.dataset.contributionGraph!)
 		let dispose: (() => void) | undefined
+		root.dataset.loading = ''
 
-		// three.js is large: only fetch it once the graph is about to be seen
+		// The graph sits near the top of the homepage, so start fetching three.js
+		// straight away, but only build the scene once it's about to be seen
+		const skyline = import('./skyline')
+		// Fall back to the flat grid if three.js never arrives
+		skyline.catch(() => {
+			observer.disconnect()
+			delete root.dataset.loading
+		})
 		const observer = new IntersectionObserver(
 			async (entries) => {
 				if (!entries.some((e) => e.isIntersecting)) return
 				observer.disconnect()
 
-				const { mountSkyline } = await import('./skyline')
-				if (!root.isConnected) return
-				dispose = mountSkyline(root, graph)
-				root.querySelector('[data-flat]')?.remove()
+				const { mountSkyline } = await skyline.catch(() => ({ mountSkyline: null }))
+				if (!mountSkyline || !root.isConnected) return
+				dispose = mountSkyline(root, graph, () => {
+					root.querySelector('[data-flat]')?.remove()
+					const skeleton = root.querySelector<HTMLElement>('[data-skeleton]')
+					if (!skeleton) return
+					if (matchMedia('(prefers-reduced-motion: reduce)').matches)
+						return skeleton.remove()
+					skeleton.addEventListener('transitionend', () => skeleton.remove(), {
+						once: true,
+					})
+					// The pulse animates opacity, so stop it before fading out
+					skeleton.classList.remove('motion-safe:animate-pulse')
+					skeleton.classList.add('opacity-0')
+				})
 				document.querySelector('[data-hint]')?.classList.remove('hidden')
 			},
 			{ rootMargin: '200px' }
