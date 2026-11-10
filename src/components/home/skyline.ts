@@ -10,6 +10,7 @@ import {
 	Raycaster,
 	Scene,
 	Vector2,
+	Vector3,
 	WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -22,6 +23,9 @@ const RISE_MS = 1200
 const STAGGER_MS = 15
 // Fixed tilt: the skyline only spins around, so vertical swipes still scroll
 const POLAR_ANGLE = 1.15
+const MAX_HEIGHT = 4.4
+// How much of the canvas the plane may fill, in clip space, at its widest
+const FRAME_FILL = { x: 0.98, y: 0.96 }
 
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3
 
@@ -35,7 +39,11 @@ const label = ({ count, date }: ContributionDay) =>
 		timeZone: 'UTC',
 	})}`
 
-export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
+export function mountSkyline(
+	root: HTMLElement,
+	graph: ContributionGraph,
+	onReady: () => void
+) {
 	const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 	const tooltip = root.querySelector<HTMLElement>('[data-tooltip]')!
 
@@ -50,12 +58,19 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 	// Square root keeps one huge day from flattening every other column
 	const max = Math.sqrt(Math.max(1, ...days.map(({ day }) => day.count)))
 	const heightOf = (count: number) =>
-		count === 0 ? 0.15 : 0.4 + (4 * Math.sqrt(count)) / max
+		count === 0 ? 0.15 : 0.4 + ((MAX_HEIGHT - 0.4) * Math.sqrt(count)) / max
 
 	const renderer = new WebGLRenderer({ antialias: true, alpha: true })
 	renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
 	renderer.domElement.setAttribute('aria-hidden', 'true')
-	renderer.domElement.classList.add('absolute', 'inset-0', 'cursor-grab')
+	renderer.domElement.classList.add(
+		'absolute',
+		'inset-0',
+		'cursor-grab',
+		'opacity-0'
+	)
+	if (!reducedMotion)
+		renderer.domElement.classList.add('transition-opacity', 'duration-500')
 	root.prepend(renderer.domElement)
 
 	const scene = new Scene()
@@ -85,18 +100,47 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 
 	controls.target.set(0, 1, 0)
 
-	// Wide canvases fit the whole year with a margin. Phone-sized ones show
-	// about half of it, close enough to read, and spinning brings the rest round
+	// The plane spins, so frame the cylinder it sweeps rather than the plane
+	// itself: then no corner leaves the canvas at any angle
+	const radius = Math.hypot(graph.weeks.length / 2 + 0.4, 3.4)
+	const sweep = Array.from({ length: 64 }, (_, i) => {
+		const angle = (i / 64) * Math.PI * 2
+		const [x, z] = [Math.cos(angle) * radius, Math.sin(angle) * radius]
+		return [new Vector3(x, 0, z), new Vector3(x, MAX_HEIGHT, z)]
+	}).flat()
+	const projected = new Vector3()
+	const fits = (distance: number) => {
+		camera.position
+			.setFromSphericalCoords(distance, POLAR_ANGLE, 0)
+			.add(controls.target)
+		camera.lookAt(controls.target)
+		camera.updateMatrixWorld()
+		return sweep.every((point) => {
+			projected.copy(point).project(camera)
+			return (
+				projected.z < 1 &&
+				Math.abs(projected.x) <= FRAME_FILL.x &&
+				Math.abs(projected.y) <= FRAME_FILL.y
+			)
+		})
+	}
+
 	function resize() {
 		const { clientWidth: width, clientHeight: height } = root
+		if (!width || !height) return
 		renderer.setSize(width, height)
 		camera.aspect = width / height
-		const visibleWeeks = graph.weeks.length * (width < 640 ? 0.5 : 1.15)
-		const halfWidth = Math.tan((camera.fov * Math.PI) / 360) * camera.aspect
-		camera.position
-			.setFromSphericalCoords(visibleWeeks / 2 / halfWidth, POLAR_ANGLE, 0)
-			.add(controls.target)
 		camera.updateProjectionMatrix()
+		// Closest camera distance that still fits the whole sweep. Search only
+		// within the draw distance: past it nothing fits, which would send the
+		// search the wrong way
+		let [near, far] = [radius, camera.far / 2]
+		for (let i = 0; i < 24; i++) {
+			const mid = (near + far) / 2
+			if (fits(mid)) far = mid
+			else near = mid
+		}
+		fits(far)
 		controls.update()
 	}
 	const resizeObserver = new ResizeObserver(resize)
@@ -167,11 +211,17 @@ export function mountSkyline(root: HTMLElement, graph: ContributionGraph) {
 
 	const start = performance.now()
 	let rising = true
+	let ready = false
 	function frame(now: number) {
 		if (!visible) return
 		if (rising) rising = placeColumns(reducedMotion ? Infinity : now - start)
 		controls.update()
 		renderer.render(scene, camera)
+		if (!ready) {
+			ready = true
+			renderer.domElement.classList.remove('opacity-0')
+			onReady()
+		}
 		requestAnimationFrame(frame)
 	}
 	requestAnimationFrame(frame)
