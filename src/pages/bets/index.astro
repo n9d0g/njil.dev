@@ -1,0 +1,133 @@
+---
+import Layout from '@layouts/Layout.astro'
+import { signedScore, type Bet, type Outcome } from '@lib/bets'
+import { bets } from '@lib/bets/live'
+
+// Unlisted: only Nathan and Christina use it. Not in the nav or Command palette
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+
+const board = await bets.getBoard()
+const { nathan, christina } = board.unrecorded
+
+const result: Record<Exclude<Outcome, 'open'>, string> = {
+	nathan: 'Nathan won',
+	christina: 'Christina won',
+	void: 'Void',
+}
+const resultClass: Record<Exclude<Outcome, 'open'>, string> = {
+	nathan: 'text-emerald-400',
+	christina: 'text-rose-400',
+	void: 'text-slate-400',
+}
+
+const sides = (bet: Bet) => [
+	['Nathan', bet.sides.nathan],
+	['Christina', bet.sides.christina],
+]
+---
+
+<Layout title="Bets" noindex>
+	<section class="text-center">
+		<h1 class="text-sm font-light tracking-widest text-slate-400 uppercase">
+			Nathan vs Christina
+		</h1>
+		<p
+			class:list={[
+				'my-2 text-7xl font-semibold tabular-nums',
+				board.score < 0
+					? 'text-rose-400'
+					: board.score > 0
+						? 'text-emerald-400'
+						: 'text-slate-100',
+			]}
+		>
+			{signedScore(board.score)}
+		</p>
+		<p class="text-slate-300">{board.leader}</p>
+	</section>
+
+	<hr class="my-8 border-slate-700" />
+
+	<section>
+		<h2 class="mb-4 text-xl font-semibold">
+			open bets <span class="text-slate-500">{board.open.length}</span>
+		</h2>
+		{
+			board.open.length === 0 ? (
+				<p class="text-sm text-slate-400">Nothing riding right now.</p>
+			) : (
+				<ul class="flex flex-col gap-4">
+					{board.open.map((bet) => (
+						<li class="rounded border border-gray-700 p-4">
+							<h3 class="text-base text-slate-100">{bet.about}</h3>
+							<p class="mt-1 text-xs font-light text-gray-400">
+								Made {bet.madeOn}
+								{bet.settlesOn && ` · settles ${bet.settlesOn}`}
+							</p>
+							<dl class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+								{sides(bet).map(([who, side]) => (
+									<div>
+										<dt class="text-xs text-slate-500">{who}</dt>
+										<dd class="text-slate-200">{side}</dd>
+									</div>
+								))}
+							</dl>
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</section>
+
+	<hr class="my-8 border-slate-700" />
+
+	<section>
+		<h2 class="mb-4 text-xl font-semibold">
+			settled bets <span class="text-slate-500">{board.settled.length}</span>
+		</h2>
+		<ul class="flex flex-col gap-4">
+			{
+				board.settled.map((bet) => {
+					const outcome = bet.outcome as Exclude<Outcome, 'open'>
+					return (
+						<li class="rounded border border-gray-700 p-4">
+							<div class="flex items-start justify-between gap-4">
+								<h3 class="text-base text-slate-100">{bet.about}</h3>
+								<span
+									class:list={[
+										'shrink-0 text-xs font-medium',
+										resultClass[outcome],
+									]}
+								>
+									{result[outcome]}
+								</span>
+							</div>
+							<p class="mt-1 text-xs font-light text-gray-400">
+								Made {bet.madeOn}
+								{bet.settledOn && ` · settled ${bet.settledOn}`}
+							</p>
+							<dl class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+								{sides(bet).map(([who, side]) => (
+									<div>
+										<dt class="text-xs text-slate-500">{who}</dt>
+										<dd class="text-slate-200">{side}</dd>
+									</div>
+								))}
+							</dl>
+						</li>
+					)
+				})
+			}
+			{
+				nathan + christina > 0 && (
+					<li class="rounded border border-dashed border-gray-700 p-4 text-sm text-slate-400">
+						Plus {nathan + christina} earlier Bets, details lost:
+						{christina > 0 && ` Christina won ${christina}`}
+						{nathan > 0 && christina > 0 && ','}
+						{nathan > 0 && ` Nathan won ${nathan}`}.
+					</li>
+				)
+			}
+		</ul>
+	</section>
+</Layout>

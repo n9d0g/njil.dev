@@ -52,3 +52,32 @@ _Avoid_: New-blog email, newsletter blast, notification
 **Contact message**:
 A note a visitor sends Nathan from `/contact`, with an optional name, the visitor's email address and the message itself. Nathan replies to it by email.
 _Avoid_: Message (on its own), enquiry, submission, contact
+
+### Bets
+
+**Bet**:
+A wager between Nathan and Christina, his wife, about something that hasn't happened yet, recorded with exactly what was bet on. Every Bet is worth one point.
+_Avoid_: Wager, challenge
+
+**Open Bet**:
+A Bet that has been made but not settled yet. Some stay open for years.
+_Avoid_: Pending bet, active bet
+
+**Settled Bet**:
+A Bet whose outcome is known: won by Nathan, won by Christina, or void.
+
+**Void Bet**:
+A Settled Bet that neither of them won. It counts for nobody.
+_Avoid_: Push, draw, cancelled bet
+
+**Side**:
+What one of them claimed in a Bet, in their own words. Every Bet has a Side for Nathan and a Side for Christina.
+_Avoid_: Position, pick, prediction
+
+**Unrecorded Bets**:
+Bets settled before the counter existed whose details are lost. Only how many each of them won is kept, and they count toward the Score.
+_Avoid_: Opening balance, legacy bets
+
+**Score**:
+Bets Nathan has won minus Bets Christina has won, so it's negative when he's behind.
+_Avoid_: Tally, balance, record
