@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ['dev', 'main']
+
+# A new push to the same pull request cancels the older run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Branch protection requires this job ("check") on dev and main, so a PR
+  # with auto-merge on merges as soon as it passes (ADR-0004).
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version-file: '.node-version'
+          cache: true
+
+      - name: Check
+        run: vp check
+
+      - name: Test
+        run: vp test run
