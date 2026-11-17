@@ -50,10 +50,9 @@ jobs:
       # Tags are the counter; package.json mirrors them and the footer reads
       # it. Nothing to release (chore, ci, docs…) keeps the current version.
       # A re-run of an already-tagged commit keeps its version. dev deploys
-      # don't release and build with package.json as it is.
+      # never release: they build with the last released version.
       - name: Version
         id: version
-        if: github.ref_name == 'main'
         env:
           COMMITS_JSON: ${{ toJSON(github.event.commits) }}
         run: |
@@ -63,6 +62,8 @@ jobs:
           LAST=${LAST:-0.0.0}
           if [ -n "$HERE" ]; then
             VERSION="$HERE"; NEW=""
+          elif [ "$GITHUB_REF_NAME" != "main" ]; then
+            VERSION="$LAST"; NEW=""
           else
             MESSAGES=$(jq -c 'if type == "array" and length > 0 then map(.message) else empty end' <<< "$COMMITS_JSON" 2>/dev/null || true)
             [ -n "$MESSAGES" ] || MESSAGES=$(git log -1 --format=%B | jq -Rs '[.]')
@@ -95,8 +96,9 @@ jobs:
 
       # Only once the deploy is live, so a version always means "this ran".
       # The tag goes on the deployed commit; the package.json bump goes on top
-      # of main and dev as they are now (another PR may have merged
-      # meanwhile). Pushes with the built-in token don't start another deploy.
+      # of main as it is now (another PR may have merged meanwhile). Not dev:
+      # its branch protection rejects pushes without CI. Pushes with the
+      # built-in token don't start another deploy.
       - name: Release
         id: release
         if: steps.version.outputs.new != ''
@@ -111,19 +113,16 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          for BRANCH in main dev; do
-            DONE=""
-            for _ in 1 2 3; do
-              git fetch --depth=1 origin "$BRANCH"
-              git checkout -f -B "bump-${BRANCH}" FETCH_HEAD
-              sed -i -E 's/^(\t"version": )"[^"]*"/\1"'"$VERSION"'"/' package.json
-              if git diff --quiet; then DONE=1; break; fi # already bumped
-              git commit -qam "chore: release ${VERSION}"
-              if git push origin "HEAD:${BRANCH}"; then DONE=1; break; fi
-              sleep 5
-            done
-            [ -n "$DONE" ] || echo "::warning::Couldn't push the package.json bump to ${BRANCH}; the next release sets it."
+          for _ in 1 2 3; do
+            git fetch --depth=1 origin main
+            git checkout -f -B release FETCH_HEAD
+            sed -i -E 's/^(\t"version": )"[^"]*"/\1"'"$VERSION"'"/' package.json
+            git diff --quiet && exit 0 # already bumped
+            git commit -qam "chore: release ${VERSION}"
+            git push origin HEAD:main && exit 0
+            sleep 5
           done
+          echo "::warning::Couldn't push the package.json bump; the next release sets it."
 
       - name: Notify Discord
         if: always()
