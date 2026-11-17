@@ -7,9 +7,11 @@ import '@styles/globals.css'
 interface Props {
 	title: string
 	description?: string
+	// Unlisted pages ask search engines to stay out
+	noindex?: boolean
 }
 
-const { title, description } = Astro.props
+const { title, description, noindex = false } = Astro.props
 const metaDescription =
 	description ??
 	'Nathan Lardizabal - Senior frontend developer based in Toronto 📍'
@@ -26,6 +28,7 @@ const metaDescription =
 		/>
 		<meta charset="UTF-8" />
 		<meta name="description" content={metaDescription} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />

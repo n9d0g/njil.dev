@@ -15,6 +15,21 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type Bet = {
+  _id: string;
+  _type: "bet";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  about?: string;
+  nathanSide?: string;
+  christinaSide?: string;
+  madeOn?: string;
+  settlesOn?: string;
+  outcome?: "open" | "nathan" | "christina" | "void";
+  settledOn?: string;
+};
+
 export type Subscriber = {
   _id: string;
   _type: "subscriber";
@@ -232,7 +247,21 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = Subscriber | Tag | Slug | TagReference | SanityImageAssetReference | Blog | SanityImageCrop | SanityImageHotspot | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = Bet | Subscriber | Tag | Slug | TagReference | SanityImageAssetReference | Blog | SanityImageCrop | SanityImageHotspot | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+
+// Source: ../src/lib/bets/index.ts
+// Variable: betsQuery
+// Query: *[_type == "bet"]{	_id,	about,	nathanSide,	christinaSide,	madeOn,	settlesOn,	outcome,	settledOn}
+export type BetsQueryResult = Array<{
+  _id: string;
+  about: string | null;
+  nathanSide: string | null;
+  christinaSide: string | null;
+  madeOn: string | null;
+  settlesOn: string | null;
+  outcome: "christina" | "nathan" | "open" | "void" | null;
+  settledOn: string | null;
+}>;
 
 // Source: ../src/lib/blog/index.ts
 // Variable: blogListQuery
@@ -337,6 +366,7 @@ export type BlogAnnouncedQueryResult = false | true;
 // Query TypeMap
 declare global {
   interface SanityQueries {
+    "*[_type == \"bet\"]{\n\t_id,\n\tabout,\n\tnathanSide,\n\tchristinaSide,\n\tmadeOn,\n\tsettlesOn,\n\toutcome,\n\tsettledOn\n}": BetsQueryResult;
     "*[\n\t_type == \"blog\"\n\t&& defined(slug.current)\n]|order(publishedAt desc)[0...12]{\n\t_id,\n\ttitle,\n\tslug,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\timages[]{ asset->{ url } }[0...1]\n}": BlogListQueryResult;
     "*[\n\t_type == \"blog\"\n\t&& defined(slug.current)\n]|order(publishedAt desc){\n\ttitle,\n\tslug,\n\ttags[]->{ name }\n}": BlogLinksQueryResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n\ttitle,\n\tauthor,\n\tpublishedAt,\n\tdescription,\n\ttags[]->{ name, slug },\n\timages[]{ asset->{ url }, alt },\n\tbody[]{\n\t\t...,\n\t\t_type == \"image\" => { asset->{ url }, alt, caption },\n\t\t_type == \"code\" => { language, code, filename }\n\t}\n}": BlogBySlugQueryResult;
