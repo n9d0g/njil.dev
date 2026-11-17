@@ -6,7 +6,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	test: {
-		include: ['src/**/*.test.ts'],
+		include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],
 	},
 	staged: {
 		'*': 'vp check --fix',
@@ -39,8 +39,6 @@ export default defineConfig({
 		semi: false,
 		ignorePatterns: [
 			// generated files
-			'CHANGELOG.md',
-			'.release-please-manifest.json',
 			'src/types/sanity.types.ts',
 			'cms/schema.json',
 		],
